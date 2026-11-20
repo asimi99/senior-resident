@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import fftconvolve, butter, lfilter
-SR=44100; DUR=86.6; N=int(SR*DUR); rng=np.random.default_rng(11)
+SR=44100; DUR=86.2; N=int(SR*DUR); rng=np.random.default_rng(11)
 BPM=120; beat=60/BPM; bar=4*beat; s16=beat/4
-HOOK=10.0; DROP=18.1; BRK0=57.4; BRK1=61.885; END=84.8
+HOOK=9.0; DROP=16.0; BRK0=57.0; BRK1=61.47; END=84.4
 def note(m): return 440*2**((m-69)/12)
 dry=np.zeros((N,2)); duck=np.zeros((N,2))   # duck bus gets sidechained
 def add(bus,sig,t0,pan=0.0,gain=1.0):

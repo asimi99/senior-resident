@@ -299,10 +299,10 @@ function pricingHTML(){
   var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Pearl export to Anki'];
   var live = billingLive() && CFG.STRIPE_LINK;
   return '<div class="sheet" role="dialog" aria-label="Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
-    + '<div class="ph2">'+IC.logo+'<h2>Senior Resident PGY3</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
+    + '<div class="ph2">'+IC.logo+'<h2>Senior Resident PGY2 tier</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
     + '<div class="prices one"><div class="price"><b>'+money(CFG.PRICE_MONTH)+'</b><span>a month</span><em>Cancel anytime</em></div></div>'
-    + '<p class="muted sm c">Fellow, '+money(CFG.PRICE_FELLOW||25)+' a month, adds exam mode from your PDFs with second chance review.</p>'
-    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+(live?'Get PGY3':'Tell me when paid plans open')+'</button>'
+    + '<p class="muted sm c">The PGY3 tier, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions and exam mode from your PDFs.</p>'
+    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+(live?'Get PGY2':'Tell me when paid plans open')+'</button>'
     + '<p class="muted sm c" id="buymsg">'+(live?'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe.':'Paid plans are not open yet. You will be first to hear. Prices cover the AI and server costs of running it.')+'</p></div>';
 }
 function openModal(html){ modalEl.innerHTML = html; modalEl.hidden = false; }

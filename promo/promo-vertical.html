@@ -34,7 +34,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 .card h4{font-size:23px;line-height:1.3;letter-spacing:-.01em}
 .o{border:2px solid #d9e2ee;border-radius:12px;padding:11px 13px;background:#f7f9fd;display:flex;gap:11px;align-items:center;font-size:19px;position:relative}
 .o kbd{font:700 14px Inter;width:26px;height:26px;border-radius:7px;border:2px solid #d9e2ee;display:grid;place-items:center;color:#586a80;background:#fff;flex:none}
-.o .tx{position:relative}.o .tx s{position:absolute;left:0;top:52%;height:2.5px;background:#1b7f4d;width:0;text-decoration:none}
+.o .tx{position:relative}.o .tx s{position:absolute;left:0;top:52%;height:2.5px;background:#d9701a;width:0;text-decoration:none}
 .fb{border-radius:12px;padding:11px 14px;font-size:18px;line-height:1.45;border-left:5px solid;opacity:0}
 .fb b{display:block;font-size:13px;letter-spacing:.07em;text-transform:uppercase}
 .fb.bad{background:#fbe6e3;border-color:#b3362b}.fb.bad b{color:#b3362b}.fb.good{background:#e2f4ea;border-color:#1b7f4d}.fb.good b{color:#1b7f4d}
@@ -160,15 +160,18 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 .hk3>div{opacity:0}
 .sw{position:relative;display:inline-block}.sw svg{position:absolute;left:0;right:0;bottom:-20px;width:100%;height:18px;overflow:visible}
 .hq{top:560px!important;height:1010px!important}
-.tally{position:absolute;left:110px;right:110px;top:1630px;display:flex;gap:16px;justify-content:center}
-.tally i{width:74px;height:74px;border-radius:20px;display:grid;place-items:center;font-style:normal;font-size:40px;font-weight:800;opacity:0}
+.tally{position:absolute;left:0;right:0;top:1622px;display:grid;grid-template-columns:repeat(10,66px);gap:14px;justify-content:center}
+.tally i{width:66px;height:66px;border-radius:18px;display:grid;place-items:center;font-style:normal;font-size:34px;font-weight:800;opacity:0}
 .tally i.x{background:#3a1a1c;color:#ff8b7e;border:3px solid #b3362b}.tally i.v{background:#12321f;color:#7fe0a6;border:3px solid #1b7f4d}
+.conn{width:5px;height:64px;border-radius:3px;background:linear-gradient(#f2cf7a,#6fb1ff);flex:none}
+#pillw .conn:last-child{background:linear-gradient(#6fb1ff,#6fb1ff)}#pillw .conn:first-child{background:linear-gradient(#f2cf7a,#f2cf7a)}
+#exui{display:grid!important;grid-template-columns:96px 1fr;grid-template-rows:auto 1fr;gap:18px}#exui .exh{grid-column:1/3}#exui .exg{grid-row:2;grid-column:1;grid-template-columns:1fr;align-content:start;gap:9px}#exui .exq{grid-row:2;grid-column:2;gap:16px;justify-content:center}
 </style></head><body>
 <div class="bg"></div><div class="grid"></div>
 
 <div class="scene" data-s="-100,6.6" style="display:block;padding:0">
   <div class="hk3"><div id="hl_1">Guess the answer.</div><div id="hl_2">Skim the explanation.</div><div id="hl_3" class="warn">Nod. <span class="sw">Move on.<svg viewBox="0 0 300 18" preserveAspectRatio="none"><path id="sw1" d="M4 10C70 3 190 3 296 9" fill="none" stroke="#ffb86b" stroke-width="7" stroke-linecap="round"/></svg></span></div></div>
-  <div class="hq" id="hq1"><div class="hh"><span id="hqn">Question 14 of 40</span><span>Tutor</span></div><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:72%"></span><div class="op" data-o="0"><i style="width:42%"></i></div><div class="op" data-o="1"><i style="width:55%"></i></div><div class="op" data-o="2"><i style="width:38%"></i></div><div class="op" data-o="3"><i style="width:48%"></i></div>
+  <div class="hq" id="hq1"><div class="hh"><span id="hqn">Question 1 of 30</span><span>Tutor</span></div><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:72%"></span><div class="op" data-o="0"><i style="width:42%"></i></div><div class="op" data-o="1"><i style="width:55%"></i></div><div class="op" data-o="2"><i style="width:38%"></i></div><div class="op" data-o="3"><i style="width:48%"></i></div>
     <div class="hbad" id="hbad"><span id="hbtx">Incorrect</span></div>
     <div class="hexp" id="hexp"><b>Explanation</b><div id="hscr"><span class="ln" style="width:97%"></span><span class="ln" style="width:92%"></span><span class="ln" style="width:95%"></span><span class="ln" style="width:60%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:96%"></span><span class="ln" style="width:88%"></span><span class="ln" style="width:93%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:45%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:94%"></span><span class="ln" style="width:97%"></span><span class="ln" style="width:85%"></span><span class="ln" style="width:70%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:92%"></span><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:88%"></span><span class="ln" style="width:52%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:95%"></span><span class="ln" style="width:91%"></span><span class="ln" style="width:97%"></span><span class="ln" style="width:64%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:93%"></span><span class="ln" style="width:89%"></span><span class="ln" style="width:40%"></span></div></div>
     <div class="hnx" id="hnx">Next</div></div>
@@ -177,10 +180,10 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 </div>
 
 <div class="scene" data-s="6.6,12.6"><div class="col" style="gap:30px">
-  <div class="h s gold" data-a="6.8,rise,.08">Sometimes it is a knowledge gap.</div>
-  <div class="stemcard" id="stem" style="" data-a="6.9,pop">A 19-year-old man has abdominal pain that <span class="hlb" id="hl2">began near the umbilicus and moved to the right lower quadrant</span>. <span class="hlg" id="hl1">Rovsing sign is positive.</span> Temperature is 38.6&deg;C.</div>
-  <div class="h s blue" data-a="9.1,rise,.08">Sometimes it is the clue you read past.</div>
-  <div class="pill2" data-a="10.9,pop">Senior Resident trains both.</div>
+  <div class="h s gold" data-a="6.8,rise,.08">Sometimes it's a knowledge gap.</div>
+  <div id="stemw" style="overflow:hidden"><div class="stemcard" id="stem" style="" data-a="6.9,pop">A 19-year-old man has abdominal pain that <span class="hlb" id="hl2">began near the umbilicus and moved to the right lower quadrant</span>. <span class="hlg" id="hl1">Rovsing sign is positive.</span> Temperature is 38.6&deg;C.</div></div>
+  <div id="pillw" style="overflow:hidden;height:0;display:flex;flex-direction:column;align-items:center;gap:22px"><i class="conn"></i><div class="pill2" style="font-size:62px;padding:30px 54px">Senior Resident trains both.</div><i class="conn"></i></div>
+  <div class="h s blue" data-a="9.1,rise,.08">Sometimes it's the clue you read past.</div>
 </div></div>
 
 <div class="scene" data-s="12.6,15.5"><div class="col" style="gap:26px">
@@ -191,7 +194,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 
 <div class="scene" data-s="15.5,43.5" style="display:block">
   <div class="frame" data-a="15.65,up"><div class="chrome"><i></i><i></i><i></i><b></b></div><div class="body">
-    <div class="qb"><span class="qn">Question 14 of 40</span>
+    <div class="qb"><span class="qn">Question 14 of 30</span>
       <p>A 19-year-old man has 18 hours of abdominal pain that began near the umbilicus and moved to the right lower quadrant. He has nausea and no appetite. He has had no recent cold or sore throat. Temperature is 38.6&deg;C. There is guarding and rebound tenderness at McBurney point. WBC is 16,000/mm&sup3;.</p>
       <p>Which of the following is the most likely diagnosis?</p>
       <ol><li>Mesenteric adenitis</li><li>Acute appendicitis</li><li>Gastroenteritis</li><li>Kidney stone</li></ol></div>
@@ -234,7 +237,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 <div class="scene" data-s="47.4,55.1"><div class="two" style="grid-template-columns:1fr 860px">
   <div class="col" style="align-items:flex-start;gap:22px"><div class="lab" data-a="47.55,track">Exam mode</div>
     <div class="h" style="text-align:left;font-size:116px" data-a="47.75,slam,.09">Got a PDF of practice questions?</div>
-    <div class="h blue" style="text-align:left;font-size:116px" data-a="49.7,mask">Sit it like the real thing.</div></div>
+    <div class="h blue" style="text-align:left;font-size:116px" data-a="49.7,mask">Sit it like the real thing.</div><div class="sub" style="text-align:left" data-a="50.6,mask">It simulates a real practice exam: timed, flagged, scored at the end.</div></div>
   <div class="pdfstage">
     <div class="pdff" id="pdff"><svg viewBox="0 0 64 64"><path d="M16 6h22l12 12v36a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4z" fill="#e7f0fc" stroke="#1a5fb4" stroke-width="3"/><path d="M38 6v12h12" fill="none" stroke="#1a5fb4" stroke-width="3" stroke-linejoin="round"/><rect x="18" y="34" width="28" height="13" rx="3" fill="#1a5fb4"/><text x="32" y="44.5" font-family="Inter" font-weight="800" font-size="10" fill="#fff" text-anchor="middle">PDF</text></svg><b>Practice questions.pdf</b><em>40 questions</em></div>
     <div class="exui" id="exui"><div class="exh">Practice questions<span id="extm">60:00</span></div>
@@ -290,10 +293,10 @@ const anims=$$('[data-a]').map(e=>{const p=e.dataset.a.split(',');const o={e,t:+
   if(o.k==='slam'||o.k==='rise'){const out=[];[...e.childNodes].forEach(n=>{if(n.nodeType===3){n.textContent.split(/(\s+)/).forEach(w=>{if(!w)return;if(/^\s+$/.test(w)){out.push(document.createTextNode(' '));return}const s=document.createElement('span');s.className='w';s.textContent=w;out.push(s)})}else out.push(n)});e.replaceChildren(...out);o.ws=[...e.querySelectorAll('.w')];e.style.opacity=1}
   if(o.k==='type'){o.txt=e.textContent;e.style.opacity=1;e.textContent=''}
   return o});
-$('#exg').innerHTML=Array.from({length:24},(_,i)=>`<u>${i+1}</u>`).join('');
+$('#exg').innerHTML=Array.from({length:10},(_,i)=>`<u>${i+1}</u>`).join('');
 function card(id,t,a,b){const e=$(id);const o=Math.min(eo(pr(t,a,.4)),1-pr(t,b,.3));e.style.opacity=o;e.style.transform=`translateY(${(1-eo(pr(t,a,.4)))*22}px)`}
 function pick(id,t,at,cls){const e=$(id);const on=t>=at;const col={bad:['#b3362b','#fbe6e3'],good:['#1b7f4d','#e2f4ea']}[cls];e.style.borderColor=on?col[0]:'';e.style.background=on?col[1]:'';const k=e.querySelector('kbd');k.style.background=on?col[0]:'';k.style.color=on?'#fff':'';k.style.borderColor=on?'transparent':'';e.style.transform=`scale(${1+0.03*Math.sin(Math.PI*pr(t,at,.3))})`}
-function strike(id,t,at){const e=$(id);const p=eo(pr(t,at,.35));e.querySelector('s').style.width=(p*100)+'%';e.style.borderColor=p>0?'#1b7f4d':'';e.style.background=p>0?'#e2f4ea':'';e.querySelector('.tx').style.color=p>0?'#6b7d92':''}
+function strike(id,t,at){const e=$(id);const p=eo(pr(t,at,.35));e.querySelector('s').style.width=(p*100)+'%';e.style.borderColor=p>0?'#d9701a':'';e.style.background=p>0?'#fff0e2':'';e.querySelector('.tx').style.color=p>0?'#8a6a52':''}
 function fbk(id,t,a,b){$(id).style.opacity=Math.min(eo(pr(t,a,.3)),b?1-pr(t,b,.25):1)}
 const P0=[900,1700];
 const ME='Both give RLQ pain and fever. How do I split them?', AT='Two things in the stem. Any recent cold or sore throat? And is there guarding with rebound?';
@@ -303,7 +306,7 @@ const CUR=[[15.6,P0],[19.2,P0],[19.9,'#c1a'],[21.3,'#c1a'],[21.9,'#c1b'],[25.2,'
 function pt(p){ if(Array.isArray(p)) return p; const r=$(p).getBoundingClientRect(); return [r.left+r.width*.62, r.top+r.height*.55]; }
 const HOOK=10, SEG=[[6.6,12.6,1.35],[12.6,15.5,1],[15.5,43.5,1.3],[43.5,47.4,1.15],[47.4,55.1,1.15],[55.1,58.971,1.35],[58.971,62.871,0],[62.871,66.771,1.2],[66.771,71.771,1.1]];
 function remap(T){if(T<HOOK)return 6.6-(HOOK-T);let x=T-HOOK;for(const [a,b,f] of SEG){if(!f)continue;const d=(b-a)*f;if(x<d)return a+x/f;x-=d}return 71.771+x}
-const CYC=(()=>{const d=[3.9,1.3,1.0,.8,.65,.55,.45,.4,.4],r=[0,1,0,0,1,0,0,1,0],o=[1,2,0,3,1,2,3,0,2];let t=.25;return d.map((x,i)=>{const c={a:t,d:x,r:r[i],o:o[i],n:14+i};t+=x;return c})})();
+const CYC=(()=>{let g=Array.from({length:29},(_,i)=>Math.max(.085,.62*Math.pow(.86,i)));const sm=g.reduce((a,b)=>a+b,0);g=g.map(x=>x*5.6/sm);const d=[3.9].concat(g),o=[1,2,0,3,1,2,3,0,2,1,3,0];let t=.25;return d.map((x,i)=>{const c={a:t,d:x,r:(i===1||i===4)?1:0,o:o[i%12],n:1+i};t+=x;return c})})();
 $('#tally').innerHTML=CYC.map(c=>`<i class="${c.r?'v':'x'}">${c.r?'✓':'✕'}</i>`).join('');
 function hook(T){
   if(T>HOOK+.2)return;
@@ -311,12 +314,12 @@ function hook(T){
   const sw=$('#sw1');sw.style.strokeDasharray=300;sw.style.strokeDashoffset=300*(1-eio(pr(T,3.6,.45)));
   let k=0;while(k<CYC.length-1&&T>=CYC[k+1].a)k++;const c=CYC[k],u=cl((T-c.a)/c.d),hold=T>=CYC[CYC.length-1].a+CYC[CYC.length-1].d;
   const q=$('#hq1'),ops=[...q.querySelectorAll('.op')],picked=u>=.2||hold,col=c.r?['#1b7f4d','#e2f4ea']:['#b3362b','#fbe6e3'];
-  $('#hqn').textContent='Question '+c.n+' of 40';
+  $('#hqn').textContent='Question '+c.n+' of 30';
   ops.forEach((o,i)=>{const on=picked&&i===c.o;o.style.borderColor=on?col[0]:'';o.style.background=on?col[1]:''});
   const hb=$('#hbad');hb.style.opacity=picked?1:0;hb.style.background=col[1];hb.style.color=col[0];hb.style.borderLeftColor=col[0];$('#hbtx').textContent=c.r?'Correct':'Incorrect';
   const ex=$('#hexp'),sc=eio(cl((u-.36)/.4));ex.style.opacity=(u>=.3||hold)?1:0;$('#hscr').style.transform=`translateY(${-sc*(c.r?120:560)}px)`;ex.style.setProperty('--sb',(sc*190)+'px');
   $('#hnx').style.transform=`scale(${1-.08*Math.sin(Math.PI*cl((u-.8)/.08))})`;
-  const out=hold?0:cl((u-.88)/.12),inn=k===0?eo(pr(T,.25,.4)):cl(u/.1);
+  const fast=c.d<.3,out=(hold||fast)?0:cl((u-.88)/.12),inn=k===0?eo(pr(T,.25,.4)):(fast?1:cl(u/.1));
   q.style.transform=`translateX(${-out*150+(1-inn)*150}px)`;q.style.opacity=Math.min(inn,1-out*(k<CYC.length-1?1:0));
   [...$('#tally').children].forEach((e,i)=>{const p=pr(T,CYC[i].a+CYC[i].d*.25,.25);e.style.opacity=cl(p*2);e.style.transform=`scale(${.5+.5*back(p)})`});
   const nb=$('#hnx').getBoundingClientRect(),cp=eio(pr(T,2.7,.6)),hx=900+(nb.left+nb.width*.5-900)*cp,hy=1700+(nb.top+nb.height*.55-1700)*cp;const hc=$('#hcur');hc.style.transform=`translate(${hx}px,${hy}px)`;hc.style.opacity=Math.min(pr(T,2.6,.2),1-pr(T,3.9,.3));
@@ -338,6 +341,7 @@ function seek(T){const t=remap(T);
   hook(T);
   {const p=$('#sw2'),L=300;p.style.strokeDasharray=L;p.style.strokeDashoffset=L*(1-eio(pr(t,68.3,.5)))}
   $('#hl1').style.backgroundSize=(eio(pr(t,7.6,.7))*100)+'% 100%';$('#hl2').style.backgroundSize=(eio(pr(t,9.7,.9))*100)+'% 100%';
+  {const sw=$('#stemw'),pw=$('#pillw');if(!sw._h){sw._h=$('#stem').offsetHeight+10;pw._h=pw.scrollHeight}const p=eio(pr(t,10.75,.6));sw.style.height=(sw._h*(1-p))+'px';sw.style.opacity=1-p;pw.style.height=(pw._h*p)+'px';pw.style.opacity=p;pw.style.transform=`scale(${.8+.2*back(pr(t,10.85,.6))})`}
   // demo
   $('#panel').style.height=(eio(pr(t,16.2,.9))*1056)+'px';
   const sk=$('#skel');sk.style.opacity=Math.min(pr(t,17.0,.3),1-pr(t,18.2,.3));sk.querySelectorAll('.reading u').forEach((u,i)=>u.style.opacity=.3+.7*Math.abs(Math.sin(t*4-i*.6)));sk.querySelectorAll('i,b').forEach((x,i)=>x.style.opacity=.55+.45*Math.sin(t*5-i*.5));
@@ -362,7 +366,7 @@ function seek(T){const t=remap(T);
   const pf=$('#pdff'),dp=pr(t,48,.6),go=pr(t,49.7,.5);pf.style.opacity=Math.min(cl(dp*2),1-go);pf.style.transform=`translateY(${(1-back(dp))*-260}px) rotate(${(1-back(dp))*-10+go*6}deg) scale(${1-go*.45})`;
   const xu=$('#exui'),xp=eo(pr(t,49.9,.5));xu.style.opacity=Math.min(xp,1-pr(t,53.1,.3)*.75);xu.style.transform=`scale(${.86+.14*xp})`;
   const sel=$('#exsel');const on=t>=51.1;sel.style.borderColor=on?'#1a5fb4':'';sel.style.background=on?'#e7f0fc':'';sel.querySelector('kbd').style.background=on?'#1a5fb4':'';sel.querySelector('kbd').style.color=on?'#fff':'';
-  const done=Math.floor(pr(t,50.7,2.2)*24);[...$('#exg').children].forEach((u,k)=>{const f=k<done;u.style.background=f?'#e7f0fc':'';u.style.color=f?'#1a5fb4':'';u.style.borderColor=f?'transparent':''});
+  const done=Math.floor(pr(t,50.7,2.2)*7);[...$('#exg').children].forEach((u,k)=>{const f=k<done;u.style.background=f?'#e7f0fc':'';u.style.color=f?'#1a5fb4':'';u.style.borderColor=f?'transparent':''});
   const left=3600-Math.round(pr(t,50.1,3)*2380);$('#extm').textContent=Math.floor(left/60)+':'+('0'+left%60).slice(-2);
   const sp=pr(t,53,.5),sv=eo(pr(t,53.2,1.0))*78;const sc=$('#scorec');sc.style.opacity=cl(sp*1.5);sc.style.transform=`scale(${.7+.3*back(sp)})`;$('#ringv').style.background=`conic-gradient(#1a5fb4 ${sv}%,#d9e2ee 0)`;$('#ringn').textContent=Math.round(sv)+'%';
   $$('.prow').forEach((r,i)=>{const pp=eo(pr(t,59.971+i*.25,.8));const w=+r.querySelector('u').dataset.w;r.querySelector('u').style.width=(w*pp)+'%';r.querySelector('em').textContent=Math.round(w*pp)+'%'});
