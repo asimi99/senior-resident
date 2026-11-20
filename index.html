@@ -77,7 +77,13 @@ h3{font-size:18px;margin:0 0 6px;letter-spacing:-.01em} .steps p,.feat p{margin:
 .feat svg{width:26px;height:26px;color:var(--brand);margin-bottom:12px}
 .banks{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
 .banks span{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;font-size:14.5px;font-weight:500;color:var(--muted)}
-.plans{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:780px}
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.plan .pk{margin:-8px 0 0;color:var(--muted);font-size:14.5px}
+.tblw{overflow-x:auto;margin-top:28px}.cmpt{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}.cmpt th,.cmpt td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:center}.cmpt th:first-child,.cmpt td:first-child{text-align:left}.cmpt thead th{font-size:14px;color:var(--muted);font-weight:700}
+.cmpt td.y::before,.cmpt td.n::before{content:"";display:inline-block;width:20px;height:20px;border-radius:50%;vertical-align:middle}
+.cmpt td.y::before{background:var(--good-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b7f4d' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4L18 8'/%3E%3C/svg%3E") center/13px no-repeat}
+.cmpt td.n::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239aabc0' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M7 7l10 10M17 7L7 17'/%3E%3C/svg%3E") center/14px no-repeat}
+.why{margin-top:28px;border:1px solid var(--line);border-radius:18px;padding:22px 24px;background:var(--bg)}.why h3{margin:0 0 8px}.why p{margin:0 0 10px;color:var(--muted)}.why ul{margin:0 0 10px;padding-left:20px;color:var(--muted)}.why li{margin:4px 0}.why b{color:var(--fg)}
 .plan{background:var(--surface);border:1.5px solid var(--line);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px}
 .plan.pro{border-color:var(--brand);box-shadow:0 18px 44px rgba(26,95,180,.14);position:relative}
 .plan .tag{position:absolute;top:-12px;left:24px;background:var(--brand);color:#fff;font-size:12px;font-weight:700;border-radius:99px;padding:3px 12px}
@@ -179,12 +185,30 @@ footer a{color:var(--muted)}
 </div></section>
 
 <section id="pricing" style="background:var(--surface);border-block:1px solid var(--line)"><div class="in">
-  <h2>Simple pricing</h2>
-  <p class="sub" id="priceSub">Start free. Upgrade when it is part of your routine.</p>
+  <h2>Pricing that covers what it costs to run</h2>
+  <p class="sub" id="priceSub">Start free. Move up when it is part of your routine.</p>
   <div class="plans">
-    <div class="plan"><h3>Free</h3><div class="pr">$0</div><ul><li><span><b id="freeN">3</b> questions a day</span></li><li>Guided and Harder levels</li><li>Reasoning profile and pearls</li><li>Works with any question bank</li></ul><a class="btn ghost" href="app/">Start free</a></div>
-    <div class="plan pro"><span class="tag">Pro</span><h3>Pro</h3><div class="pr"><span id="pm">$15</span> <small>a month</small></div><ul><li><span><b id="proN">40</b> questions a day, a full block</span></li><li>Exam mode: any PDF becomes a timed exam, with second chance review</li><li>Hardest level at exam pace</li><li>Extra help steps when you are stuck</li><li>Follow-up questions with your senior</li><li>Pearl export to Anki</li></ul><a class="btn" href="app/#pro" id="proBtn">Get Pro</a></div>
+    <div class="plan"><h3>PGY2</h3><p class="pk">Free</p><div class="pr">$0</div><ul><li><span><b id="freeN">3</b> questions a day</span></li><li>Guided and Harder levels</li><li>Works with any question bank</li></ul><a class="btn ghost" href="app/">Start free</a></div>
+    <div class="plan pro"><span class="tag">Core plan</span><h3>PGY3</h3><p class="pk">Coaching beside your question bank</p><div class="pr"><span id="pm">$15</span> <small>a month</small></div><ul><li><span><b id="proN">40</b> questions a day, a full block</span></li><li>Hardest level and narrowing from your cross-outs</li><li>Page the attending</li><li>Pearl export to Anki</li></ul><a class="btn" href="app/#pro" id="proBtn">Get PGY3</a></div>
+    <div class="plan"><h3>Fellow</h3><p class="pk">Everything, plus exams from your PDFs</p><div class="pr"><span id="pf">$25</span> <small>a month</small></div><ul><li>Everything in PGY3</li><li>Exam mode: any PDF becomes a timed exam</li><li>Second chance review</li><li>Answer keys built when the PDF has none</li></ul><a class="btn ghost" href="app/#pro" id="felBtn">Get Fellow</a></div>
   </div>
+  <div class="tblw"><table class="cmpt"><thead><tr><th></th><th>PGY2</th><th>PGY3</th><th>Fellow</th></tr></thead><tbody>
+    <tr><td>Coached questions a day</td><td id="tF">3</td><td id="tP">40</td><td id="tL">40</td></tr>
+    <tr><td>Chrome side panel and web app</td><td class="y"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Guided and Harder levels</td><td class="y"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Reasoning profile and pearls</td><td class="y"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Hardest level at exam pace</td><td class="n"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Narrowing from your cross-outs</td><td class="n"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Page the attending</td><td class="n"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Pearl export to Anki</td><td class="n"></td><td class="y"></td><td class="y"></td></tr>
+    <tr><td>Exam mode from any PDF</td><td class="n"></td><td class="n"></td><td class="y"></td></tr>
+    <tr><td>Second chance review</td><td class="n"></td><td class="n"></td><td class="y"></td></tr>
+    <tr><td>Answer keys for PDFs without one</td><td class="n"></td><td class="n"></td><td class="y"></td></tr>
+  </tbody></table></div>
+  <div class="why"><h3>Where the money goes</h3>
+    <p>Every question you work through is read and coached by a paid AI model, and that is billed to us per question. A long vignette with images costs more than a short one, and turning a whole PDF into an exam costs more again, which is why exam mode sits in its own plan.</p>
+    <ul><li><b>AI usage.</b> The model that reads the stem, builds the steps and answers when you page the attending.</li><li><b>Servers.</b> Sign-in, saved progress and the daily limits.</li><li><b>Upkeep.</b> Keeping it working as question banks change their pages.</li></ul>
+    <p>Prices are set to cover those and keep the tool maintained. The free plan is capped at a few questions a day for the same reason.</p></div>
   <p class="note" id="priceNote" style="margin-top:18px"></p>
 </div></section>
 
@@ -216,7 +240,7 @@ footer a{color:var(--muted)}
   <details><summary>What happens to my questions?</summary><p>The question you are on is sent to the AI model to build that session, then kept in your own browser so you can pick up where you left off. It is not sold, shared or used to build a question database. See the <a href="privacy.html">privacy page</a>.</p></details>
   <details><summary>Can it be wrong?</summary><p>Yes. It is an AI study aid and it can make mistakes. When it disagrees with your question bank's answer key, trust the key and check the explanation. It is not medical advice and must not be used for patient care.</p></details>
   <details><summary>Does it change anything in my question bank?</summary><p>No. It is read only. It never selects an answer, submits a block or edits your notes.</p></details>
-  <details><summary>Can I cancel?</summary><p>Yes, anytime, from the Account page. You keep Pro until the end of the period you paid for.</p></details>
+  <details><summary>Can I cancel?</summary><p>Yes, anytime, from the Account page. You keep your plan until the end of the period you paid for.</p></details>
 </div></section>
 
 <footer><div class="in"><a class="brand" href="./" style="font-size:15px"><img src="assets/logo.svg" alt="" style="width:22px;height:22px">Senior Resident</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><span style="flex-basis:100%">A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body.</span></div></footer>
@@ -224,11 +248,11 @@ footer a{color:var(--muted)}
 <script>
 (function(){
   var C = window.SR_CONFIG || {}; function $(i){ return document.getElementById(i); }
-  $('freeN').textContent = C.FREE_DAILY; $('proN').textContent = C.PRO_DAILY; $('pm').textContent = '$' + C.PRICE_MONTH;
+  $('freeN').textContent = C.FREE_DAILY; $('proN').textContent = C.PRO_DAILY; $('pm').textContent = '$' + C.PRICE_MONTH; $('pf').textContent = '$' + (C.PRICE_FELLOW || 25); $('tF').textContent = C.FREE_DAILY; $('tP').textContent = C.PRO_DAILY; $('tL').textContent = C.PRO_DAILY;
   if (!C.BILLING_LIVE){
     $('priceSub').textContent = 'Everything is unlocked during early access. This is what it will cost after.';
-    $('proBtn').textContent = 'Join the Pro list';
-    $('priceNote').textContent = 'Prices in ' + C.CURRENCY + '. Early users hear first when Pro opens.';
+    $('proBtn').textContent = 'Join the PGY3 list'; $('felBtn').textContent = 'Join the Fellow list';
+    $('priceNote').textContent = 'Prices in ' + C.CURRENCY + '. Early users hear first when paid plans open.';
   } else $('priceNote').textContent = 'Prices in ' + C.CURRENCY + '. Secure checkout by Stripe. Cancel anytime.';
 })();
 </script>
