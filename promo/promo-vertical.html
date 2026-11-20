@@ -155,20 +155,24 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 .chips{max-width:980px}.chips span{font-size:46px}.dev{font-size:42px;padding:24px 30px}
 .btn{font-size:56px;padding:30px 64px}.url{font-size:36px}
 .xl{font-size:170px}
+
+.hk3{position:absolute;left:70px;right:70px;top:150px;display:flex;flex-direction:column;gap:18px;font-weight:800;font-size:86px;letter-spacing:-.035em;line-height:1.08}
+.hk3>div{opacity:0}
+.sw{position:relative;display:inline-block}.sw svg{position:absolute;left:0;right:0;bottom:-20px;width:100%;height:18px;overflow:visible}
+.hq{top:560px!important;height:1010px!important}
+.tally{position:absolute;left:110px;right:110px;top:1630px;display:flex;gap:16px;justify-content:center}
+.tally i{width:74px;height:74px;border-radius:20px;display:grid;place-items:center;font-style:normal;font-size:40px;font-weight:800;opacity:0}
+.tally i.x{background:#3a1a1c;color:#ff8b7e;border:3px solid #b3362b}.tally i.v{background:#12321f;color:#7fe0a6;border:3px solid #1b7f4d}
 </style></head><body>
 <div class="bg"></div><div class="grid"></div>
 
-<div class="scene" data-s="-1.935,6.6" style="display:block;padding:0">
-  <div class="hk">
-    <div class="xl" style="font-size:176px" data-a="2.265,slam,.14">You got it wrong.</div>
-    <div class="sub" style="font-size:62px" data-a="3.2,type,1.0">You read the explanation. You nod.</div>
-    <div class="h warn" style="font-size:150px;text-align:left" data-a="4.6,rise,.13">Next week, same trap.</div>
-  </div>
-  <div class="hq" id="hq1"><div class="hh"><span>Question 14 of 40</span><span>Tutor</span></div><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:72%"></span><div class="op"><i style="width:42%"></i></div><div class="op" id="hqb"><i style="width:55%"></i></div><div class="op"><i style="width:38%"></i></div><div class="op"><i style="width:48%"></i></div>
-    <div class="hbad" id="hbad"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="3.200" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Incorrect</div>
+<div class="scene" data-s="-100,6.6" style="display:block;padding:0">
+  <div class="hk3"><div id="hl_1">Guess the answer.</div><div id="hl_2">Skim the explanation.</div><div id="hl_3" class="warn">Nod. <span class="sw">Move on.<svg viewBox="0 0 300 18" preserveAspectRatio="none"><path id="sw1" d="M4 10C70 3 190 3 296 9" fill="none" stroke="#ffb86b" stroke-width="7" stroke-linecap="round"/></svg></span></div></div>
+  <div class="hq" id="hq1"><div class="hh"><span id="hqn">Question 14 of 40</span><span>Tutor</span></div><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:72%"></span><div class="op" data-o="0"><i style="width:42%"></i></div><div class="op" data-o="1"><i style="width:55%"></i></div><div class="op" data-o="2"><i style="width:38%"></i></div><div class="op" data-o="3"><i style="width:48%"></i></div>
+    <div class="hbad" id="hbad"><span id="hbtx">Incorrect</span></div>
     <div class="hexp" id="hexp"><b>Explanation</b><div id="hscr"><span class="ln" style="width:97%"></span><span class="ln" style="width:92%"></span><span class="ln" style="width:95%"></span><span class="ln" style="width:60%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:96%"></span><span class="ln" style="width:88%"></span><span class="ln" style="width:93%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:45%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:94%"></span><span class="ln" style="width:97%"></span><span class="ln" style="width:85%"></span><span class="ln" style="width:70%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:92%"></span><span class="ln" style="width:96%"></span><span class="ln" style="width:90%"></span><span class="ln" style="width:88%"></span><span class="ln" style="width:52%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:95%"></span><span class="ln" style="width:91%"></span><span class="ln" style="width:97%"></span><span class="ln" style="width:64%"></span><span class="ln" style="width:0%"></span><span class="ln" style="width:93%"></span><span class="ln" style="width:89%"></span><span class="ln" style="width:40%"></span></div></div>
     <div class="hnx" id="hnx">Next</div></div>
-  <div class="hq" id="hq2"><div class="hh"><span>Question 15 of 40</span><span>Tutor</span></div><span class="ln" style="width:94%"></span><span class="ln" style="width:97%"></span><span class="ln" style="width:88%"></span><span class="ln" style="width:60%"></span><div class="op"><i style="width:50%"></i></div><div class="op"><i style="width:40%"></i></div><div class="op"><i style="width:58%"></i></div><div class="op"><i style="width:44%"></i></div></div>
+  <div class="tally" id="tally"></div>
   <svg id="hcur" viewBox="0 0 24 24"><path d="M4 2l15 9-6.500 1.800L16 20l-3.200 1.500-3.400-7.300L4 18z" fill="#fff" stroke="#0f1f33" stroke-width="1.400" stroke-linejoin="round"/></svg>
 </div>
 
@@ -225,14 +229,12 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
   <div class="lab" data-a="43.65,track">What you walk away with</div>
   <div class="xl" style="font-size:176px" data-a="43.9,slam,.2">Exams end.</div>
   <div class="h blue" style="font-size:124px" data-a="44.7,mask">Clinical reasoning stays.</div>
-  <div class="sub" data-a="45.6,mask" style="margin-top:14px">Pass the exam. Then walk onto the ward able to think.</div>
 </div></div>
 
 <div class="scene" data-s="47.4,55.1"><div class="two" style="grid-template-columns:1fr 860px">
   <div class="col" style="align-items:flex-start;gap:22px"><div class="lab" data-a="47.55,track">Exam mode</div>
     <div class="h" style="text-align:left;font-size:116px" data-a="47.75,slam,.09">Got a PDF of practice questions?</div>
-    <div class="h blue" style="text-align:left;font-size:116px" data-a="49.7,mask">Sit it like the real thing.</div>
-    <div class="sub" style="text-align:left" data-a="53,mask">Timed or tutor mode. Scored when you submit.</div></div>
+    <div class="h blue" style="text-align:left;font-size:116px" data-a="49.7,mask">Sit it like the real thing.</div></div>
   <div class="pdfstage">
     <div class="pdff" id="pdff"><svg viewBox="0 0 64 64"><path d="M16 6h22l12 12v36a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4z" fill="#e7f0fc" stroke="#1a5fb4" stroke-width="3"/><path d="M38 6v12h12" fill="none" stroke="#1a5fb4" stroke-width="3" stroke-linejoin="round"/><rect x="18" y="34" width="28" height="13" rx="3" fill="#1a5fb4"/><text x="32" y="44.5" font-family="Inter" font-weight="800" font-size="10" fill="#fff" text-anchor="middle">PDF</text></svg><b>Practice questions.pdf</b><em>40 questions</em></div>
     <div class="exui" id="exui"><div class="exh">Practice questions<span id="extm">60:00</span></div>
@@ -275,7 +277,7 @@ html,body{width:1080px;height:1920px;overflow:hidden;background:#081226;font-fam
 <div class="scene" data-s="66.771,71.771"><div class="col" style="gap:30px">
   <svg class="logo" style="width:150px;height:150px" data-a="66.871,pop" viewBox="0 0 120 120"><defs><linearGradient id="lgx2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b8cf0"/><stop offset="1" stop-color="#103a80"/></linearGradient></defs><rect width="120" height="120" rx="28" fill="url(#lgx2)"/><rect x="16" y="28" width="88" height="68" rx="16" fill="#fff"/><rect x="26" y="38" width="68" height="36" rx="8" fill="#0f3a80"/><path d="M34 56h13l5-11 8 22 6-15 4 4h16" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke="#7fd0ff" stroke-width="5"/><circle cx="34" cy="85" r="4" fill="#1a5fb4"/><circle cx="48" cy="85" r="4" fill="#1a5fb4" opacity=".45"/><rect x="72" y="81" width="22" height="8" rx="4" fill="#1a5fb4" opacity=".45"/></svg>
   <div class="h" data-a="67.271,slam,.1">Stop memorizing answers.</div>
-  <div class="h blue" style="margin-top:-24px" data-a="68.071,mask">Learn to think like a clinician.</div>
+  <div class="h blue" style="margin-top:-24px;padding-bottom:34px" data-a="68.071,mask">Learn to think like a <span class="sw">clinician.<svg viewBox="0 0 300 18" preserveAspectRatio="none"><path id="sw2" d="M4 10C70 3 190 3 296 9" fill="none" stroke="#6fb1ff" stroke-width="7" stroke-linecap="round"/></svg></span></div>
   <div class="btn" data-a="68.871,pop">Free to start</div>
   <div class="url" data-a="69.271,up">Senior Resident &nbsp;·&nbsp; asimi99.github.io/senior-resident</div>
 </div></div>
@@ -299,8 +301,27 @@ const ELIM=[[29.7,'Good elimination','The pain came before the nausea, and there
 const CUR=[[15.6,P0],[19.2,P0],[19.9,'#c1a'],[21.3,'#c1a'],[21.9,'#c1b'],[25.2,'#c1b'],[26.0,'#c2b'],[28.6,'#c2b'],[29.5,'#e3'],[30.4,'#e3'],[30.9,'#e4'],[33.6,'#e4'],[34.4,'#g1'],[34.8,'#g1'],[35.2,'#g2'],[35.6,'#g2'],[35.9,'#g1'],[36.0,'#g1'],[36.4,'#pgbtn'],[36.6,'#pgbtn'],[37.1,[930,1640]],[40.6,[930,1640]],[41.1,'#g1'],[43.5,'#g1']];
 
 function pt(p){ if(Array.isArray(p)) return p; const r=$(p).getBoundingClientRect(); return [r.left+r.width*.62, r.top+r.height*.55]; }
-const SHIFT=1.935;
-function seek(T){const t=T-SHIFT;
+const HOOK=10, SEG=[[6.6,12.6,1.35],[12.6,15.5,1],[15.5,43.5,1.3],[43.5,47.4,1.15],[47.4,55.1,1.15],[55.1,58.971,1.35],[58.971,62.871,0],[62.871,66.771,1.2],[66.771,71.771,1.1]];
+function remap(T){if(T<HOOK)return 6.6-(HOOK-T);let x=T-HOOK;for(const [a,b,f] of SEG){if(!f)continue;const d=(b-a)*f;if(x<d)return a+x/f;x-=d}return 71.771+x}
+const CYC=(()=>{const d=[3.9,1.3,1.0,.8,.65,.55,.45,.4,.4],r=[0,1,0,0,1,0,0,1,0],o=[1,2,0,3,1,2,3,0,2];let t=.25;return d.map((x,i)=>{const c={a:t,d:x,r:r[i],o:o[i],n:14+i};t+=x;return c})})();
+$('#tally').innerHTML=CYC.map(c=>`<i class="${c.r?'v':'x'}">${c.r?'✓':'✕'}</i>`).join('');
+function hook(T){
+  if(T>HOOK+.2)return;
+  [['#hl_1',.9],['#hl_2',1.9],['#hl_3',3.2]].forEach(([id,a])=>{const e=$(id),p=pr(T,a,.35);e.style.opacity=cl(p*1.5);e.style.transform=`translateY(${(1-eo(p))*40}px)`});
+  const sw=$('#sw1');sw.style.strokeDasharray=300;sw.style.strokeDashoffset=300*(1-eio(pr(T,3.6,.45)));
+  let k=0;while(k<CYC.length-1&&T>=CYC[k+1].a)k++;const c=CYC[k],u=cl((T-c.a)/c.d),hold=T>=CYC[CYC.length-1].a+CYC[CYC.length-1].d;
+  const q=$('#hq1'),ops=[...q.querySelectorAll('.op')],picked=u>=.2||hold,col=c.r?['#1b7f4d','#e2f4ea']:['#b3362b','#fbe6e3'];
+  $('#hqn').textContent='Question '+c.n+' of 40';
+  ops.forEach((o,i)=>{const on=picked&&i===c.o;o.style.borderColor=on?col[0]:'';o.style.background=on?col[1]:''});
+  const hb=$('#hbad');hb.style.opacity=picked?1:0;hb.style.background=col[1];hb.style.color=col[0];hb.style.borderLeftColor=col[0];$('#hbtx').textContent=c.r?'Correct':'Incorrect';
+  const ex=$('#hexp'),sc=eio(cl((u-.36)/.4));ex.style.opacity=(u>=.3||hold)?1:0;$('#hscr').style.transform=`translateY(${-sc*(c.r?120:560)}px)`;ex.style.setProperty('--sb',(sc*190)+'px');
+  $('#hnx').style.transform=`scale(${1-.08*Math.sin(Math.PI*cl((u-.8)/.08))})`;
+  const out=hold?0:cl((u-.88)/.12),inn=k===0?eo(pr(T,.25,.4)):cl(u/.1);
+  q.style.transform=`translateX(${-out*150+(1-inn)*150}px)`;q.style.opacity=Math.min(inn,1-out*(k<CYC.length-1?1:0));
+  [...$('#tally').children].forEach((e,i)=>{const p=pr(T,CYC[i].a+CYC[i].d*.25,.25);e.style.opacity=cl(p*2);e.style.transform=`scale(${.5+.5*back(p)})`});
+  const nb=$('#hnx').getBoundingClientRect(),cp=eio(pr(T,2.7,.6)),hx=900+(nb.left+nb.width*.5-900)*cp,hy=1700+(nb.top+nb.height*.55-1700)*cp;const hc=$('#hcur');hc.style.transform=`translate(${hx}px,${hy}px)`;hc.style.opacity=Math.min(pr(T,2.6,.2),1-pr(T,3.9,.3));
+}
+function seek(T){const t=remap(T);
   scenes.forEach(s=>{const on=t>=s.a-0.01&&t<=s.b;const o=Math.min(pr(t,s.a,.3),1-pr(t,s.b-.3,.3));s.e.style.opacity=on?o:0;s.e.style.visibility=on?'visible':'hidden'});
   anims.forEach(a=>{const e=a.e,p=pr(t,a.t,.6),q=eo(p);
     if(a.k==='up'){e.style.opacity=cl(p*1.6);e.style.transform=`translateY(${(1-q)*46}px)`}
@@ -314,13 +335,8 @@ function seek(T){const t=T-SHIFT;
     else if(a.k==='slam'){a.ws.forEach((w,i)=>{const pp=pr(t,a.t+i*(a.x||.15),.28);w.style.opacity=cl(pp*2);w.style.transform=`scale(${1+1.1*Math.pow(1-pp,3)})`;w.style.filter=pp<1?`blur(${(1-pp)*10}px)`:''})}
     else if(a.k==='rise'){a.ws.forEach((w,i)=>{const pp=pr(t,a.t+i*(a.x||.12),.45);w.style.opacity=cl(pp*1.6);w.style.transform=`translateY(${(1-eo(pp))*70}px) rotate(${(1-eo(pp))*6}deg)`})}
   });
-  // hook
-  {const t=T;const b=$('#hqb'),w=t>=.5;b.style.borderColor=w?'#b3362b':'';b.style.background=w?'#fbe6e3':'';$('#hbad').style.opacity=eo(pr(t,.55,.3));
-   $('#hexp').style.opacity=eo(pr(t,1.3,.35));const sc=eio(pr(t,1.7,1.5));$('#hscr').style.transform=`translateY(${-sc*560}px)`;$('#hexp').style.setProperty('--sb',(sc*190)+'px');
-   const nb=$('#hnx').getBoundingClientRect(),cp=eio(pr(t,2.7,.5)),hx=900+(nb.left+nb.width*.5-900)*cp,hy=1650+(nb.top+nb.height*.55-1650)*cp;const hc=$('#hcur');hc.style.transform=`translate(${hx}px,${hy}px)`;hc.style.opacity=Math.min(pr(t,2.6,.2),1-pr(t,3.5,.3));
-   $('#hnx').style.transform=`scale(${1-.08*Math.sin(Math.PI*pr(t,3.2,.25))})`;
-   const go=eio(pr(t,3.3,.5));$('#hq1').style.transform=`translateX(${-go*140}px) scale(${1-go*.06})`;$('#hq1').style.opacity=Math.min(eo(pr(t,.15,.4)),1-go);
-   $('#hq2').style.transform=`translateX(${(1-go)*240}px)`;const out=1-pr(t,3.85,.3);$('#hq1').style.opacity=Math.min(eo(pr(t,.15,.4)),1-go)*out;$('#hq2').style.opacity=go*out;}
+  hook(T);
+  {const p=$('#sw2'),L=300;p.style.strokeDasharray=L;p.style.strokeDashoffset=L*(1-eio(pr(t,68.3,.5)))}
   $('#hl1').style.backgroundSize=(eio(pr(t,7.6,.7))*100)+'% 100%';$('#hl2').style.backgroundSize=(eio(pr(t,9.7,.9))*100)+'% 100%';
   // demo
   $('#panel').style.height=(eio(pr(t,16.2,.9))*1056)+'px';

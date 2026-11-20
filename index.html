@@ -77,6 +77,8 @@ h3{font-size:18px;margin:0 0 6px;letter-spacing:-.01em} .steps p,.feat p{margin:
 .feat svg{width:26px;height:26px;color:var(--brand);margin-bottom:12px}
 .banks{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
 .banks span{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 14px;font-size:14.5px;font-weight:500;color:var(--muted)}
+.watch{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,340px);gap:40px;align-items:center}.watch video{width:100%;aspect-ratio:9/16;border-radius:22px;background:#081226;box-shadow:0 24px 60px rgba(15,31,51,.25);display:block}
+@media(max-width:720px){.watch{grid-template-columns:minmax(0,1fr)}.watch video{max-width:340px;margin:0 auto}}
 .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .plan .pk{margin:-8px 0 0;color:var(--muted);font-size:14.5px}
 .tblw{overflow-x:auto;margin-top:28px}.cmpt{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}.cmpt th,.cmpt td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:center}.cmpt th:first-child,.cmpt td:first-child{text-align:left}.cmpt thead th{font-size:14px;color:var(--muted);font-weight:700}
@@ -114,7 +116,7 @@ footer a{color:var(--muted)}
 <body>
 <header class="nav"><div class="in">
   <a class="brand" href="./"><img src="assets/logo.svg" alt="">Senior Resident</a>
-  <nav><a class="h" href="#how">How it works</a><a class="h" href="#pricing">Pricing</a><a class="h" href="#faq">Questions</a><a class="btn sm" href="app/">Open the app</a></nav>
+  <nav><a class="h" href="#watch" id="navWatch" hidden>Watch</a><a class="h" href="#how">How it works</a><a class="h" href="#pricing">Pricing</a><a class="h" href="#faq">Questions</a><a class="btn sm" href="app/">Open the app</a></nav>
 </div></header>
 
 <section class="hero"><div class="in">
@@ -147,6 +149,11 @@ footer a{color:var(--muted)}
       </div>
     </div>
   </div>
+</div></section>
+
+<section id="watch" hidden><div class="in watch">
+  <div><h2>Watch it work</h2><p class="sub">One question, start to finish: four decisions, one page to the attending, and the answer you reached yourself.</p><a class="btn" href="app/">Try it on your next question</a></div>
+  <video id="promo" controls playsinline preload="none" poster="assets/promo-poster.jpg"></video>
 </div></section>
 
 <section id="how"><div class="in">
@@ -248,6 +255,7 @@ footer a{color:var(--muted)}
 <script>
 (function(){
   var C = window.SR_CONFIG || {}; function $(i){ return document.getElementById(i); }
+  fetch('assets/promo.mp4',{method:'HEAD'}).then(function(r){ if(r.ok){ $('promo').src='assets/promo.mp4'; $('watch').hidden=false; $('navWatch').hidden=false; } }).catch(function(){});
   $('freeN').textContent = C.FREE_DAILY; $('proN').textContent = C.PRO_DAILY; $('pm').textContent = '$' + C.PRICE_MONTH; $('pf').textContent = '$' + (C.PRICE_FELLOW || 25); $('tF').textContent = C.FREE_DAILY; $('tP').textContent = C.PRO_DAILY; $('tL').textContent = C.PRO_DAILY;
   if (!C.BILLING_LIVE){
     $('priceSub').textContent = 'Everything is unlocked during early access. This is what it will cost after.';
