@@ -132,8 +132,12 @@
   document.addEventListener('mouseup', popIfReady, true);
   document.addEventListener('keydown', popIfReady, true);
 
-  var last = '', tmr = null, OFF = false, MANUAL = false;
-  function check(){ if (OFF || MANUAL) return; var id = stemKey(); if (id && id !== last){ last = id; send({ t: 'newq', qid: id }); } }
+  var last = '', lastStruck = '', tmr = null, OFF = false, MANUAL = false;
+  function check(){
+    if (OFF) return; var id = stemKey(), sc = struckChoices(), sk = sc.join('|');
+    if (!MANUAL && id && id !== last){ last = id; lastStruck = sk; send({ t: 'newq', qid: id }); return; }
+    if (id && sk !== lastStruck){ lastStruck = sk; if (isOpen) send({ t: 'struck', struck: sc }); }   // tell the panel when cross-outs change, so it can offer to narrow
+  }
   new MutationObserver(function(){ if (!tmr) tmr = setTimeout(function(){ tmr = null; check(); }, IS_UW ? 250 : 700); }).observe(document.body, { childList: true, subtree: true, characterData: true });
   setInterval(check, IS_UW ? 1500 : 2500);
   setTimeout(check, 800);

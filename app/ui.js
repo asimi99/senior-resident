@@ -117,6 +117,17 @@ function pageHTML(c, i){
   h += '<div class="askrow"><textarea id="pageTxt" rows="1" placeholder="What is confusing you on this step?"></textarea><button type="button" class="btn sm" data-act="pagesend"'+(c.pageBusy?' disabled':'')+'>Page</button></div></div>';
   return h;
 }
+function narbarHTML(c){
+  if (c.note) return '<div class="narbar quiet"><span>'+esc(c.note)+'</span></div>';
+  if (!c.pending || c.generating) return '';
+  var n = c.pending.length, was = (c.struck||[]).length;
+  var msg = n ? 'You have '+n+' choice'+(n===1?'':'s')+' crossed out.' : 'You uncrossed your choices.';
+  return '<div class="narbar"><span>'+msg+'</span><button type="button" class="btn sm" data-act="narrow">'+(n ? 'Narrow the steps' : 'Rebuild the steps')+'</button><button type="button" class="ibs" data-act="narrowx" aria-label="Dismiss"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+}
+function narrowTo(c, struck){
+  c.struck = struck; c.pending = null; c.note = ''; c.steps = []; c.meta = null; c.reveal = null; c.st = fresh(); c.error = null; c.saved = false; renderAll(); gen(c);
+}
+function flashNote(c, t){ c.note = t; renderStage(); setTimeout(function(){ if (c.note === t){ c.note = ''; renderStage(); } }, 2400); }
 function recapHTML(c){
   var n = 0, ok = 0, slips = [];
   c.steps.forEach(function(s, i){ var f = c.st.first[i]; if (f===undefined) return; n++; if (f==='good') ok++; else { var k = SKILLS[s.skill] || 'a step'; if (slips.indexOf(k) < 0) slips.push(k); } });
@@ -193,7 +204,8 @@ function cardHTML(c){
 function caseHTML(c){
   var src = [c.src, c.title].filter(Boolean).join(' · ');
   var nar = (c.struck && c.struck.length) ? '<span class="lv nar">'+c.struck.length+' crossed out</span>' : '';
-  return '<div class="qhead">'+(src?'<span class="src">'+esc(src)+'</span>':'')+nar+'<span class="lv">'+esc((LEVELS.filter(function(l){return l[0]===(c.level||LEVEL)})[0]||LEVELS[0])[1])+'</span><span class="spacer"></span>'+(EMBED&&c.qid?'<button type="button" class="lnk" data-act="reread" title="Reads which choices you have crossed out in your question bank and rebuilds the steps around the ones left">Re-read my cross-outs</button>':'')+'<button type="button" class="lnk" data-act="closecase">Close</button></div>'
+  return '<div class="qhead">'+(src?'<span class="src">'+esc(src)+'</span>':'')+nar+'<span class="lv">'+esc((LEVELS.filter(function(l){return l[0]===(c.level||LEVEL)})[0]||LEVELS[0])[1])+'</span><span class="spacer"></span>'+(EMBED&&c.qid?'<button type="button" class="ibs" data-act="reread" title="Check my cross-outs again" aria-label="Check my cross-outs again"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>':'')+'<button type="button" class="ibs" data-act="closecase" title="Close this question" aria-label="Close this question"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+    + narbarHTML(c)
     + stemHTML(c) + '<div class="bar" id="bar" aria-hidden="true">'+barHTML(c)+'</div><main class="card" id="card">'+cardHTML(c)+'</main>';
 }
 
@@ -457,7 +469,9 @@ stage.addEventListener('click', async function(e){
   }
   var c2 = cases[cur]; if (!c2) return;
   var st = c2.st, i = st.i;
-  if (act==='reread'){ statusMsg = ''; if (window.parent!==window) window.parent.postMessage({ type:'sr-grab', reread:true }, '*'); el.textContent = 'Reading'; return; }
+  if (act==='reread'){ statusMsg = ''; if (window.parent!==window) window.parent.postMessage({ type:'sr-grab', reread:true }, '*'); el.classList.add('spin'); return; }
+  if (act==='narrow'){ var nc = cases[cur]; if (nc && nc.pending) narrowTo(nc, nc.pending); return; }
+  if (act==='narrowx'){ var xc = cases[cur]; if (xc){ xc.skipped = (xc.pending||[]).join('|'); xc.pending = null; renderStage(); } return; }
   if (act==='closecase'){ if (c2.ctl) c2.ctl.abort(); cases.splice(cur, 1); cur = Math.min(cur, cases.length-1); renderStage(); persist(); return; }
   if (act==='cross'){ e.stopPropagation(); crossToggle(c2, i, +el.dataset.k); return; }
   if (act==='pick') pick(c2, +el.dataset.k);
@@ -502,6 +516,12 @@ window.addEventListener('message', async function(e){
     if (gr2.error && ger) ger.textContent = 'Google sign in did not go through. Sign in with email for now.';
     return;
   }
+  if (d.type==='sr-struck'){
+    var sc0 = cases[cur]; if (!sc0 || view!=='coach' || !sc0.qid) return;
+    var ns = (Array.isArray(d.struck) ? d.struck : []).slice(0, 8).map(function(x){ return String(x).slice(0, 200); }), sig = ns.join('|');
+    sc0.pending = (sig === (sc0.struck||[]).join('|') || sig === sc0.skipped) ? null : ns;
+    if (!sc0.generating) renderStage(); return;
+  }
   if (d.type==='sr-status'){ statusMsg = String(d.text||''); if (view==='coach' && cur===-1) renderStage(); return; }
   if (d.type!=='sr-question') return;
   statusMsg = '';
@@ -511,10 +531,8 @@ window.addEventListener('message', async function(e){
     if (ex>=0){
       var oc = cases[ex]; if (d.num) oc.num = String(d.num);
       view = 'coach'; cur = ex;
-      if (d.reread && !oc.generating && struck.join('|') !== (oc.struck||[]).join('|')){
-        oc.struck = struck; oc.steps = []; oc.meta = null; oc.reveal = null; oc.st = fresh(); oc.error = null; oc.saved = false; renderAll(); gen(oc); return;
-      }
-      renderAll(); if (d.reread){ statusMsg = ''; var rb = stage.querySelector('[data-act="reread"]'); if (rb) rb.textContent = struck.length ? 'Same cross-outs as before' : 'Nothing crossed out yet'; }
+      if (d.reread && !oc.generating && struck.join('|') !== (oc.struck||[]).join('|')){ narrowTo(oc, struck); return; }
+      renderAll(); if (d.reread){ statusMsg = ''; flashNote(oc, struck.length ? 'Same cross-outs as before. Nothing to change.' : 'Nothing is crossed out yet.'); }
       if (!oc.generating) done(oc); return;
     }
   }

@@ -27,6 +27,7 @@
   function onPort(m){
     if (m.t === 'close') window.close();
     if (m.t === 'grab') doGrab(true);
+    if (m.t === 'struck') toCoach({ type: 'sr-struck', struck: m.struck || [] });
     if (m.t === 'newq'){ clearTimeout(window.__srT); window.__srT = setTimeout(function(){ doGrab(false); }, 450); }
   }
   connect();

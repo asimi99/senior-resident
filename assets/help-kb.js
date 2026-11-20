@@ -7,7 +7,7 @@ window.SR_HELP_KB = [
  'If it does not read the question: reload the question bank tab, then click the toolbar icon again. On sites it does not know, click the toolbar icon while the question is on screen, or use New and paste the text or a screenshot.',
  'Auto-read is a switch in the footer of the panel. Off means it only reads when you ask.',
  'It only reads the page. It never clicks, answers or changes anything in the question bank.',
- 'Cross-outs: if you cross out choices in the question bank, click Re-read my cross-outs at the top of the case and the steps are rebuilt around the choices still open.',
+ 'Cross-outs: when you cross out choices in the question bank, a small bar appears in the panel offering to narrow the steps to the choices still open. One tap rebuilds them. The circular arrow at the top of a case checks your cross-outs again by hand.',
  'Senior Resident never tells you which choice is correct, not in the steps, not at the end and not when you page the attending. The last step leaves one choice standing. After that it shows one short pearl, nothing more. It does not write a full explanation. For that, read the explanation in your question bank, or page the attending with a specific question.',
  'Page the attending: on any step, type a specific question in the box and press Page. You get a nudge, not the answer.',
  'To undo a choice in a step, click the same option again. Right-click an option to cross it out yourself, and click a crossed-out option to uncross it.',

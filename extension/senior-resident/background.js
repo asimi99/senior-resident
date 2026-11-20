@@ -76,6 +76,7 @@ chrome.runtime.onMessage.addListener(function(m, sender, reply){
     return true;
   }
   if (m.t === 'close'){ closePanel(sender.tab && sender.tab.windowId); return; }
+  if (m.t === 'struck'){ if (panelPort) panelPort.postMessage({ t: 'struck', struck: m.struck || [] }); return; }
   if (m.t === 'newq'){
     if (panelPort) Promise.all([autoOn(), siteMode((sender.tab && sender.tab.url) || '')]).then(function(r){ if (r[0] && r[1] === 'auto' && panelPort) panelPort.postMessage({ t: 'newq', qid: m.qid }); });
     else if (sender.tab) bgCoach(sender.tab.id, m.qid);
