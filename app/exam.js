@@ -178,7 +178,7 @@ function exHomeHTML(){
   h += '<section class="panel hero"><h2>Turn a PDF of practice questions into an exam</h2><p class="muted">Sit it timed or in tutor mode. Then review every miss with your senior. The PDF is read in your browser and stays on this device.</p>';
   if (EX.busy === 'read') h += waitHTML(EX.msg || 'Reading the PDF').replace('<span>', '<span id="exMsg">');
   else h += '<label class="drop" id="exDrop"><strong>Drop a PDF here, or choose a file</strong><span class="muted sm">Text PDFs with lettered answer choices work best. An answer key at the end is picked up on its own.</span><input type="file" id="exFile" accept="application/pdf"></label>'
-    + (EX.msg ? '<p class="er">' + esc(EX.msg) + '</p>' : '');
+    + (EX.msg ? '<p class="er">' + esc(EX.msg) + ' <button type="button" class="lnk" data-h="report" data-code="exam_pdf" data-where="exam" data-msg="' + esc(EX.msg) + '">Report this</button></p>' : '');
   h += '</section>';
   if (exams.length){
     h += '<section class="panel"><h2>Your exams</h2><div class="exlist">' + exams.map(function(e){

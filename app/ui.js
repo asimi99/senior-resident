@@ -157,8 +157,8 @@ function cardHTML(c){
   var st=c.st, i=st.i, s=c.steps[i], h='';
   if (!s){
     if (c.error && c.error.code==='rate_limited') return paywallHTML();
-    if (c.error) return fbHtml('bad', esc(errCopy(c.error)), 'Could not continue') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button></div>';
-    if (c.stopped) return fbHtml('note','Stopped. Start again when you are ready.','Stopped') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button></div>';
+    if (c.error) return fbHtml('bad', esc(errCopy(c.error)), 'Could not continue') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button><button type="button" class="btn ghost" data-h="report" data-where="case">Report this</button></div>';
+    if (c.stopped) return fbHtml('note','Stopped. Start again when you are ready.','Stopped') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button><button type="button" class="btn ghost" data-h="report" data-where="case">Report this</button></div>';
     if (c.queued) return waitHTML('Waiting for the questions before it');
     if (!c.generating) return fbHtml('note','This step is not ready yet.','One moment') + '<div class="row"><button type="button" class="btn" data-act="retry">Rebuild this question</button></div>';
     return (i===0 ? '<div class="skel"><i style="width:38%"></i><i style="width:92%"></i><i style="width:74%"></i><b></b><b></b><b></b></div>' : '')
@@ -185,7 +185,7 @@ function cardHTML(c){
   if (st.solved && s.type==='final'){
     if (c.reveal){ h += revealHTML(c); c.revealShown = true; h += chatHTML(c); }
     else if (c.generating || c.queued) h += waitHTML(c.queued?'Waiting for the questions before it':'Preparing the explanation');
-    else h += fbHtml('bad','The explanation did not come through.','Cut off') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button></div>';
+    else h += fbHtml('bad','The explanation did not come through.','Cut off') + '<div class="row"><button type="button" class="btn" data-act="retry">Try again</button><button type="button" class="btn ghost" data-h="report" data-where="case">Report this</button></div>';
   }
   h += '<div class="row foot"><button type="button" class="btn ghost" data-act="back"'+(i===0?' disabled':'')+'>Back</button><span class="spacer"></span>';
   if (s.type==='final'){

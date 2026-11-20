@@ -49,3 +49,18 @@ create policy "sr waitlist insert" on public.sr_waitlist for insert to authentic
 -- To give someone Pro by hand (yourself, a classmate):
 -- insert into public.sr_profiles (user_id, plan) select id, 'pro' from auth.users where email = 'someone@example.com'
 --   on conflict (user_id) do update set plan = 'pro', current_period_end = null;
+
+-- Feedback, error reports and help escalations. Anyone can send one; only you (dashboard / service role) can read them.
+create table if not exists public.sr_feedback (
+  id bigint generated always as identity primary key,
+  ts timestamptz not null default now(),
+  user_id uuid default auth.uid() references auth.users(id) on delete set null,
+  kind text not null check (kind in ('idea','problem','other','error','escalation')),
+  body text not null default '' check (char_length(body) <= 8000),
+  email text not null default '' check (char_length(email) <= 200),
+  meta jsonb not null default '{}'::jsonb,
+  status text not null default 'open'
+);
+alter table public.sr_feedback enable row level security;
+drop policy if exists "sr feedback insert" on public.sr_feedback;
+create policy "sr feedback insert" on public.sr_feedback for insert to anon, authenticated with check (user_id is null or user_id = auth.uid());
