@@ -212,7 +212,7 @@ function reviewHTML(){
   }
   h += '</section><section class="panel"><div class="row"><h2>Pearls</h2><span class="spacer"></span>'
     + (pearls.length?'<button type="button" class="btn ghost sm" data-act="copypearls">Copy all</button><button type="button" class="btn ghost sm" data-act="exportpearls">Anki export'+(isPro()?'':' '+IC.bolt)+'</button>':'')+'</div>';
-  if (!pearls.length) h += '<p class="muted">Every finished question leaves one rule here, with the trap that goes with it.</p>';
+  if (!pearls.length) h += '<p class="muted">Every finished question leaves one rule here.</p>';
   else {
     h += '<input type="search" class="inp" id="pearlQ" placeholder="Search pearls" value="'+esc(pearlQ)+'"><div class="pearls" id="pearlList">'+pearlListHTML()+'</div>';
   }
@@ -232,7 +232,7 @@ function pearlListHTML(){
 function pearlsText(){ return pearls.map(function(p){ return (p.topic?'['+p.topic+'] ':'')+p.pearl+(p.trap?'\n  Trap: '+p.trap:''); }).join('\n\n'); }
 function pearlsCSV(){
   function q(s){ return '"'+String(s||'').replace(/"/g,'""')+'"'; }
-  return pearls.map(function(p){ return [q(p.title+(p.topic?' ('+p.topic+')':'')+': what is the rule, and what is the trap?'), q(p.pearl+(p.trap?'<br><br><b>Trap:</b> '+p.trap:'')), q('SeniorResident '+(p.topic||'').replace(/\s+/g,'_'))].join(','); }).join('\n');
+  return pearls.map(function(p){ return [q(p.title+(p.topic?' ('+p.topic+')':'')+': what is the rule?'), q(p.pearl+(p.trap?'<br><br><b>Trap:</b> '+p.trap:'')), q('SeniorResident '+(p.topic||'').replace(/\s+/g,'_'))].join(','); }).join('\n');
 }
 
 /* ---------- account and plan ---------- */
