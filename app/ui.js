@@ -397,6 +397,9 @@ stage.addEventListener('contextmenu', function(e){
 });
 function pick(c, k){
   var st = c.st, i = st.i, s = c.steps[i]; if (!s || !s.opts[k]) return;
+  var rk0 = String(s.opts[k].t||'').trim().toLowerCase();
+  if (st.sel[i] !== k && st.cross && st.cross[i] && st.cross[i][k]){ st.cross[i][k] = false; renderStage(); persist(); return; }   // clicking a crossed-out option uncrosses it
+  if (st.sel[i] !== k && st.ruled && st.ruled[rk0] && !(st.solved && s.type==='final')){ delete st.ruled[rk0]; renderStage(); persist(); return; }
   if (st.sel[i] === k){                                   // clicking the chosen option again takes it back
     if (st.solved && s.type==='final') return;
     st.sel[i] = undefined; if (st.ruled) delete st.ruled[String(s.opts[k].t||'').trim().toLowerCase()];
