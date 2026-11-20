@@ -10,6 +10,7 @@ window.SR_HELP_KB = [
  'Cross-outs: if you cross out choices in the question bank, click Re-read my cross-outs at the top of the case and the steps are rebuilt around the choices still open.',
  'Senior Resident never tells you which choice is correct, not in the steps, not at the end and not when you page the attending. The last step leaves one choice standing. After that it shows one pearl and one trap. It does not write a full explanation. For that, read the explanation in your question bank, or page the attending with a specific question.',
  'Page the attending: on any step, type a specific question in the box and press Page. You get a nudge, not the answer.',
+ 'To undo a choice in a step, click the same option again. Right-click an option to cross it out yourself.',
  'Levels: Guided, Harder, Hardest. Change it from the level control at the top of a case. It applies to the next question.',
  'Exam mode is in the web app only and needs sign-in. Drop in a PDF with lettered answer choices. Text PDFs work, scanned image PDFs often do not. An answer key at the end of the PDF is picked up. If there is none, the exam start screen has a button that writes answers and short explanations, marked as written by Senior Resident and not an official key. Tutor or timed mode, 90 seconds a question.',
  'Second chance is a switch on the exam start screen. With it on, a missed question hides the answer until you retry. The score counts the first answer.',

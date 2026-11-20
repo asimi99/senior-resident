@@ -392,6 +392,11 @@ stage.addEventListener('contextmenu', function(e){
 });
 function pick(c, k){
   var st = c.st, i = st.i, s = c.steps[i]; if (!s || !s.opts[k]) return;
+  if (st.sel[i] === k){                                   // clicking the chosen option again takes it back
+    if (st.solved && s.type==='final') return;
+    st.sel[i] = undefined; if (st.ruled) delete st.ruled[String(s.opts[k].t||'').trim().toLowerCase()];
+    renderStage(); persist(); return;
+  }
   st.sel[i] = k;
   if (st.first[i]===undefined) st.first[i] = s.opts[k].v;
   if (st.cross && st.cross[i]) st.cross[i][k] = false;
