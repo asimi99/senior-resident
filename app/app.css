@@ -308,3 +308,5 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 
 .recapline{margin:0;color:var(--muted);font-size:14.5px}.recapline b{color:var(--fg)}
 .chat .pagehd{display:flex;align-items:center;gap:8px;font-size:15px}.chat .pagehd svg{width:18px;height:18px;color:var(--brand)}.chat .pagehd span{font-size:12px;font-weight:700;color:var(--good);background:var(--good-soft);border-radius:99px;padding:1px 9px}
+
+.stood{margin:0;font-weight:700;font-size:1.02em}

@@ -124,7 +124,7 @@ function recapHTML(c){
   return '<p class="recapline"><b>'+ok+' of '+n+'</b> decisions right on the first try.'+(slips.length?' You slipped on '+esc(slips.join(', ').toLowerCase())+'.':'')+'</p>';
 }
 function revealHTML(c){
-  var r = c.reveal, h = '<div class="reveal"><div class="answer"><b>The answer</b>'+esc(r.headline)+'</div>';
+  var r = c.reveal, h = '<div class="reveal"><p class="stood">One choice is left standing. You ruled out the rest yourself.</p>';
   if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+(r.trap?'<span class="trap"><b>Trap</b>'+esc(r.trap)+'</span>':'')+'</div>';
   h += recapHTML(c);
   return h + '</div>';
