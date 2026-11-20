@@ -125,7 +125,7 @@ function recapHTML(c){
 }
 function revealHTML(c){
   var r = c.reveal, h = '<div class="reveal"><p class="stood">One choice is left standing. You ruled out the rest yourself.</p>';
-  if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+(r.trap?'<span class="trap"><b>Trap</b>'+esc(r.trap)+'</span>':'')+'</div>';
+  if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+'</div>';
   h += recapHTML(c);
   return h + '</div>';
 }

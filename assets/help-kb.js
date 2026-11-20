@@ -8,7 +8,7 @@ window.SR_HELP_KB = [
  'Auto-read is a switch in the footer of the panel. Off means it only reads when you ask.',
  'It only reads the page. It never clicks, answers or changes anything in the question bank.',
  'Cross-outs: if you cross out choices in the question bank, click Re-read my cross-outs at the top of the case and the steps are rebuilt around the choices still open.',
- 'Senior Resident never tells you which choice is correct, not in the steps, not at the end and not when you page the attending. The last step leaves one choice standing. After that it shows one pearl and one trap. It does not write a full explanation. For that, read the explanation in your question bank, or page the attending with a specific question.',
+ 'Senior Resident never tells you which choice is correct, not in the steps, not at the end and not when you page the attending. The last step leaves one choice standing. After that it shows one short pearl, nothing more. It does not write a full explanation. For that, read the explanation in your question bank, or page the attending with a specific question.',
  'Page the attending: on any step, type a specific question in the box and press Page. You get a nudge, not the answer.',
  'To undo a choice in a step, click the same option again. Right-click an option to cross it out yourself, and click a crossed-out option to uncross it.',
  'Levels: Guided, Harder, Hardest. Change it from the level control at the top of a case. It applies to the next question.',
