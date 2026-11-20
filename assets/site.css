@@ -9,7 +9,7 @@ header.nav{position:sticky;top:0;z-index:10;background:rgba(246,248,252,.88);bac
 header.nav .in{display:flex;align-items:center;gap:22px;height:62px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.015em;color:var(--fg);text-decoration:none}
 .brand img{width:30px;height:30px}
-header.nav nav{display:flex;gap:22px;margin-left:auto;font-size:15px}
+header.nav nav{display:flex;align-items:center;gap:22px;margin-left:auto;font-size:15px}
 header.nav nav a{color:var(--muted);text-decoration:none;font-weight:500} header.nav nav a:hover{color:var(--fg)} header.nav nav a.btn,header.nav nav a.btn:hover{color:#fff}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:16px;border-radius:11px;padding:12px 20px;border:1.5px solid var(--brand);background:var(--brand);color:#fff;text-decoration:none;cursor:pointer;transition:filter .15s,transform .08s}
 .btn:hover{filter:brightness(1.08)} .btn:active{transform:translateY(1px)}
