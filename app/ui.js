@@ -31,6 +31,7 @@ function renderTop(){
     + '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>'
     + (EMBED?'':'<button type="button" class="ib'+(view==='exam'?' on':'')+'" data-go="exam" title="Exam mode" aria-label="Exam mode"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></button>')
     + '<button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Review" aria-label="Review">'+IC.chart+'</button>'
+    + (EMBED?'<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg></button>':'')
     + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button>'
     + '</nav>';
 }

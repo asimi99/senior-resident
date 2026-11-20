@@ -100,5 +100,5 @@ window.addEventListener('unhandledrejection', function(e){ var r = e && e.reason
 
 (function(){ var b = document.createElement('button'); b.type = 'button'; b.className = 'helpfab'; b.dataset.h = 'open'; b.setAttribute('aria-label', 'Help and feedback');
   b.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L4 20l1.2-4.4A8 8 0 1 1 21 12z"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg><span>Help</span>';
-  if (!BG) document.body.appendChild(b); })();
+  if (!BG && !EMBED) document.body.appendChild(b); })();   // in the side panel Help lives in the top bar, so nothing covers Continue
 if (location.hash === '#help'){ history.replaceState(null, '', location.pathname + location.search); setTimeout(function(){ openHelp('ask'); }, 300); }
