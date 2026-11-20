@@ -173,6 +173,7 @@ function cardHTML(c){
   var p = st.sel[i];
   if (p!==undefined){ var o = s.opts[p]; h += fbHtml(o.v==='good'?'good':(o.v==='warn'?'warn':'bad'), esc(o.fb), o.lab); }
   if (st.otherFb[i]) h += fbHtml('note', esc(st.otherFb[i]), 'On your reasoning');
+  if (c.helpBusy) h += '<div class="skel" style="margin-top:12px"><i style="width:38%"></i><i style="width:92%"></i><i style="width:74%"></i><b></b><b></b></div>' + waitHTML('Writing new steps', true);
   if (!(st.solved && s.type==='final')) h += pageHTML(c, i);
   if (st.solved && s.type==='final'){
     if (c.reveal){ h += revealHTML(c); c.revealShown = true; h += chatHTML(c); }
@@ -181,7 +182,7 @@ function cardHTML(c){
   }
   h += '<div class="row foot"><button type="button" class="btn ghost" data-act="back"'+(i===0?' disabled':'')+'>Back</button><span class="spacer"></span>';
   if (s.type==='final'){
-    if (!st.solved) h += c.helpBusy ? '<span class="muted sm">Writing more steps</span>' : '<button type="button" class="btn" data-act="morehelp">Need more help'+(isPro()?'':' '+IC.bolt)+'</button>';
+    if (!st.solved) h += c.helpBusy ? '' : '<button type="button" class="btn" data-act="morehelp">Need more help'+(isPro()?'':' '+IC.bolt)+'</button>';
     else h += '<button type="button" class="btn ghost" data-act="restart">Redo</button>'+(EMBED?'':'<button type="button" class="btn" data-go="new">Next question</button>');
   } else {
     var can = st.sel[i]!==undefined || (st.other[i]&&st.other[i].saved);
