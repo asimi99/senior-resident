@@ -18,7 +18,7 @@ function money(n){ return '$' + n; }
 
 /* ---------- top bar ---------- */
 function pillHTML(){
-  if (!billingLive()) return '<button type="button" class="pill beta" data-go="plan">Early access</button>';
+  if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
   if (plan.name==='pro') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+'Pro</button>';
   var left = Math.max(0, plan.limit - plan.used);
   return '<button type="button" class="pill'+(left?'':' out')+'" data-go="plan">'+left+' of '+plan.limit+' left today</button>';
