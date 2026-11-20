@@ -300,3 +300,8 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 .exlay{display:flex;flex-direction:column-reverse;gap:14px}
 @media(min-width:860px){html:not(.embed) .exlay{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:start}
   html:not(.embed) .exlay .exnav{grid-template-columns:1fr;max-height:74vh;overflow:auto;padding:2px;position:sticky;top:72px}}
+
+/* help docks in the corner instead of covering the page */
+.modal:has(.sheet.help){background:none;backdrop-filter:none;align-items:flex-end;justify-content:flex-end;pointer-events:none;padding:14px}
+.sheet.help{pointer-events:auto;max-width:400px;max-height:calc(100vh - 28px);overflow:auto;border:1px solid var(--line);box-shadow:0 18px 50px rgba(15,31,51,.28)}
+@media(max-width:520px){.modal:has(.sheet.help){padding:0}.sheet.help{max-width:none;border-radius:18px 18px 0 0}}
