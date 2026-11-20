@@ -117,33 +117,24 @@ function pageHTML(c, i){
   return h;
 }
 function recapHTML(c){
-  var rows = c.steps.map(function(s, i){
-    var f = c.st.first[i]; if (f===undefined) return '';
-    return '<li class="'+(f==='good'?'ok':'slip')+'"><span class="mk">'+(f==='good'?IC.check:IC.x)+'</span><span><b>'+esc(SKILLS[s.skill]||'Step')+'</b>'+esc(s.kind2==='elim'?'First elimination':(s.kind2==='final'?'Final rule-out':s.q))+'</span></li>';
-  }).join('');
-  return rows ? '<div><h3>Your reasoning</h3><ul class="recap">'+rows+'</ul></div>' : '';
+  var n = 0, ok = 0, slips = [];
+  c.steps.forEach(function(s, i){ var f = c.st.first[i]; if (f===undefined) return; n++; if (f==='good') ok++; else { var k = SKILLS[s.skill] || 'a step'; if (slips.indexOf(k) < 0) slips.push(k); } });
+  if (!n) return '';
+  return '<p class="recapline"><b>'+ok+' of '+n+'</b> decisions right on the first try.'+(slips.length?' You slipped on '+esc(slips.join(', ').toLowerCase())+'.':'')+'</p>';
 }
 function revealHTML(c){
   var r = c.reveal, h = '<div class="reveal"><div class="answer"><b>The answer</b>'+esc(r.headline)+'</div>';
   if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+(r.trap?'<span class="trap"><b>Trap</b>'+esc(r.trap)+'</span>':'')+'</div>';
   h += recapHTML(c);
-  if (r.why && r.why.length) h += '<div><h3>Why it fits</h3><ul>'+r.why.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-  if (r.do && r.do.length) h += '<div><h3>What you do</h3><ul>'+r.do.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></div>';
-  if (r.table && r.table.rows && r.table.rows.length){
-    var t = r.table;
-    h += '<div><h3>Look-alikes to separate</h3><div class="tbl"><table><tr>'+(t.cols||[]).map(function(x){return '<th>'+esc(x)+'</th>';}).join('')+'</tr>';
-    t.rows.forEach(function(row,k){ h += '<tr'+(k===t.me?' class="me"':'')+'>'+row.map(function(x,j){ return '<td>'+(j===0?'<b>'+esc(x)+'</b>':esc(x))+'</td>'; }).join('')+'</tr>'; });
-    h += '</table></div></div>';
-  }
   return h + '</div>';
 }
 var CHIPS = ['Why is my first pick wrong?','Give me a way to remember this','Quiz me with a similar question'];
 function chatHTML(c){
-  var h = '<div class="chat"><h3>Ask your senior</h3>';
+  var h = '<div class="chat"><div class="pagehd">'+IC.pager+'<b>Attending</b><span>on call</span></div>';
   c.chat.forEach(function(m){ h += '<div class="bub '+(m.role==='user'?'me':'ai')+'">'+esc(m.content)+'</div>'; });
   h += '<div class="bub ai" id="chatLive"'+(c.chatBusy?'':' hidden')+'>'+esc(c.chatLive||'')+'</div>';
-  if (!c.chat.length) h += '<div class="chips">'+CHIPS.map(function(t){ return '<button type="button" data-act="chip">'+esc(t)+'</button>'; }).join('')+'</div>';
-  h += '<div class="askrow"><textarea id="chatTxt" rows="1" placeholder="Ask a follow-up"></textarea><button type="button" class="btn" data-act="ask"'+(c.chatBusy?' disabled':'')+'>Ask</button></div></div>';
+  h += '<div class="askrow"><textarea id="chatTxt" rows="1" placeholder="Still have a question? Page the attending"></textarea><button type="button" class="btn" data-act="ask"'+(c.chatBusy?' disabled':'')+'>Page</button></div>'
+    + '<p class="muted sm">For the full explanation, read the one in your question bank.</p></div>';
   return h;
 }
 function paywallHTML(){

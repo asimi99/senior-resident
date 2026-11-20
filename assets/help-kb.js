@@ -8,6 +8,7 @@ window.SR_HELP_KB = [
  'Auto-read is a switch in the footer of the panel. Off means it only reads when you ask.',
  'It only reads the page. It never clicks, answers or changes anything in the question bank.',
  'Cross-outs: if you cross out choices in the question bank, click Re-read my cross-outs at the top of the case and the steps are rebuilt around the choices still open.',
+ 'After the last step it shows only the answer, one pearl and one trap. It does not write a full explanation. For that, read the explanation in your question bank, or page the attending with a specific question.',
  'Page the attending: on any step, type a specific question in the box and press Page. You get a nudge, not the answer.',
  'Levels: Guided, Harder, Hardest. Change it from the level control at the top of a case. It applies to the next question.',
  'Exam mode is in the web app only and needs sign-in. Drop in a PDF with lettered answer choices. Text PDFs work, scanned image PDFs often do not. An answer key at the end of the PDF is picked up. If there is none, the exam start screen has a button that writes answers and short explanations, marked as written by Senior Resident and not an official key. Tutor or timed mode, 90 seconds a question.',

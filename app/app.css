@@ -305,3 +305,6 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 .modal:has(.sheet.help){background:none;backdrop-filter:none;align-items:flex-end;justify-content:flex-end;pointer-events:none;padding:14px}
 .sheet.help{pointer-events:auto;max-width:400px;max-height:calc(100vh - 28px);overflow:auto;border:1px solid var(--line);box-shadow:0 18px 50px rgba(15,31,51,.28)}
 @media(max-width:520px){.modal:has(.sheet.help){padding:0}.sheet.help{max-width:none;border-radius:18px 18px 0 0}}
+
+.recapline{margin:0;color:var(--muted);font-size:14.5px}.recapline b{color:var(--fg)}
+.chat .pagehd{display:flex;align-items:center;gap:8px;font-size:15px}.chat .pagehd svg{width:18px;height:18px;color:var(--brand)}.chat .pagehd span{font-size:12px;font-weight:700;color:var(--good);background:var(--good-soft);border-radius:99px;padding:1px 9px}
