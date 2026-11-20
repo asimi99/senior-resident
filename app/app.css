@@ -292,10 +292,10 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 .hesc{display:flex;flex-direction:column;gap:8px;border:1.5px solid var(--brand);border-radius:12px;padding:12px;background:var(--brand-soft)}.hesc span{font-size:14px;color:var(--muted)}
 .crash{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:35;display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-left:4px solid #b3362b;border-radius:12px;padding:9px 12px;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:calc(100vw - 32px)}
 
-/* ruled-out choices read as struck, not as correct */
-.opt.ruled,.opt.ruled.r-good{border-color:#c8620f;background:color-mix(in srgb,#c8620f 12%,var(--surface))}
-.opt.ruled kbd{background:#c8620f;border-color:transparent;color:#fff}
-.opt.ruled .t{text-decoration-color:#c8620f}
+/* ruled-out choices: struck and greyed, no colour */
+.opt.ruled,.opt.ruled.r-good{border-color:var(--line);background:var(--raised);opacity:.6}
+.opt.ruled kbd,.opt.ruled.r-good.sel kbd{background:var(--surface);border-color:var(--line);color:var(--muted)}
+.opt.ruled .t{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--muted);color:var(--muted)}
 /* exam: question list down the left on wide screens */
 .exlay{display:flex;flex-direction:column-reverse;gap:14px}
 @media(min-width:860px){html:not(.embed) .exlay{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:start}
