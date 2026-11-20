@@ -275,6 +275,10 @@ async function sha256hex(t){ var b = await crypto.subtle.digest('SHA-256', new T
 async function mountGoogle(){
   var box = document.getElementById('gis'); if (!box || !CFG.GOOGLE_CLIENT_ID) return;
   function fallback(){ box.innerHTML = '<button type="button" class="btn ghost wide" data-act="goauth">Continue with Google</button>'; }
+  if (EMBED && window.parent !== window){   // inside the extension, Google's own button cannot run, so the extension opens the Google window itself
+    box.innerHTML = '<button type="button" class="btn ghost wide" data-act="goext"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M22.5 12.2c0-.8-.1-1.5-.2-2.2H12v4.2h5.900a5 5 0 0 1-2.2 3.3v2.7h3.6c2.1-1.900 3.2-4.800 3.2-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.6-2.7c-1 .7-2.300 1.1-3.700 1.1-2.9 0-5.3-1.900-6.2-4.5H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.800 14.2a6.6 6.6 0 0 1 0-4.4V7H2.1a11 11 0 0 0 0 10z"/><path fill="#EA4335" d="M12 5.3c1.6 0 3.1.6 4.2 1.700l3.2-3.2A11 11 0 0 0 2.1 7l3.700 2.8C6.700 7.200 9.100 5.3 12 5.3z"/></svg>Continue with Google</button>';
+    return;
+  }
   try {
     await gsi();
     var raw = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(16)), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
@@ -423,6 +427,11 @@ stage.addEventListener('click', async function(e){
   if (act==='waitlist'){ await joinWaitlist(''); renderStage(); return; }
   if (act==='signout'){ await SR.signOut(); return; }
   if (act==='authsw'){ authMode = authMode==='in' ? 'up' : 'in'; renderStage(); return; }
+  if (act==='goext'){
+    var gr = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(16)), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
+    window.__gRaw = gr; el.disabled = true; var ge = document.getElementById('auerr'); if (ge) ge.textContent = '';
+    window.parent.postMessage({ type:'sr-google', clientId:CFG.GOOGLE_CLIENT_ID, nonce:await sha256hex(gr) }, '*'); return;
+  }
   if (act==='goauth'){ SR.sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: location.href.split('#')[0] } }); return; }
   if (act==='copypearls'){ try { await navigator.clipboard.writeText(pearlsText()); el.textContent = 'Copied'; } catch(x){ el.textContent = 'Copy blocked'; } return; }
   if (act==='exportpearls'){
@@ -482,6 +491,13 @@ function fromExt(o){ return /^chrome-extension:\/\/[a-p]{32}$/.test(o); }
 window.addEventListener('message', async function(e){
   if (!EMBED || !fromExt(e.origin)) return;
   var d = e.data || {};
+  if (d.type==='sr-google-token'){
+    var gb = stage.querySelector('[data-act="goext"]'), ger = document.getElementById('auerr'); if (gb) gb.disabled = false;
+    if (!d.token){ if (ger) ger.textContent = d.cancelled ? '' : 'Google sign in did not go through. Sign in with email for now.' + (d.redirect ? ' Setup: authorize ' + d.redirect + ' as a redirect URI for the Google sign-in client.' : ''); return; }
+    var gr2 = await SR.sb.auth.signInWithIdToken({ provider:'google', token:String(d.token), nonce:window.__gRaw || '' });
+    if (gr2.error && ger) ger.textContent = 'Google sign in did not go through. Sign in with email for now.';
+    return;
+  }
   if (d.type==='sr-status'){ statusMsg = String(d.text||''); if (view==='coach' && cur===-1) renderStage(); return; }
   if (d.type!=='sr-question') return;
   statusMsg = '';

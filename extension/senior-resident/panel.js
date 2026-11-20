@@ -35,5 +35,15 @@
     var d = e.data || {};
     if (d.type === 'sr-ready'){ ready = true; queue.splice(0).forEach(function(x){ coach.contentWindow.postMessage(x, ORIGIN); }); }
     if (d.type === 'sr-grab') doGrab(true, !!d.reread);
+    if (d.type === 'sr-google' && d.clientId && /^[\w.-]+$/.test(d.clientId) && /^[0-9a-f]{64}$/.test(d.nonce || '')){
+      var redirect = chrome.identity.getRedirectURL();
+      var url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' + encodeURIComponent(d.clientId) + '&response_type=id_token&redirect_uri=' + encodeURIComponent(redirect)
+        + '&scope=' + encodeURIComponent('openid email profile') + '&nonce=' + d.nonce + '&prompt=select_account';
+      chrome.identity.launchWebAuthFlow({ url: url, interactive: true }, function(back){
+        var err = chrome.runtime.lastError, m = back && back.match(/[#&]id_token=([^&]+)/);
+        if (m) toCoach({ type: 'sr-google-token', token: decodeURIComponent(m[1]) });
+        else toCoach({ type: 'sr-google-token', token: '', cancelled: !!(err && /cancel|closed|did not approve/i.test(err.message || '')), redirect: redirect });
+      });
+    }
   });
 })();
