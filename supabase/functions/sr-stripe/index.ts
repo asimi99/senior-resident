@@ -32,11 +32,11 @@ Deno.serve(async (req) => {
       current_period_end: null, updated_at: now,
     });
     if (error) return new Response("db", { status: 500 });
-  } else if (ev.type === "customer.subscription.updated" || ev.type === "customer.subscription.deleted") {
+  } else if (ev.type === "customer.subscription.created" || ev.type === "customer.subscription.updated" || ev.type === "customer.subscription.deleted") {
     const active = ev.type !== "customer.subscription.deleted" && ["active", "trialing", "past_due"].includes(o.status);
     const end = o.current_period_end ?? o.items?.data?.[0]?.current_period_end;
     const { error } = await admin.from("sr_profiles").update({
-      plan: active ? "pro" : "free", stripe_sub: o.id,
+      plan: !active ? "free" : (o.status === "trialing" ? "trial" : "pro"), stripe_sub: o.id,
       current_period_end: active && end ? new Date((Number(end) + 3 * 86400) * 1000).toISOString() : null, updated_at: now,
     }).eq("stripe_customer", o.customer);
     if (error) return new Response("db", { status: 500 });

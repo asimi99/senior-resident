@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
   let plan = "free";
   if (userId && LIVE) {
     const { data } = await admin.from("sr_profiles").select("plan,current_period_end").eq("user_id", userId).maybeSingle();
-    if (data?.plan === "pro" && (!data.current_period_end || new Date(data.current_period_end) > new Date())) plan = "pro";
+    if ((data?.plan === "pro" || data?.plan === "trial") && (!data.current_period_end || new Date(data.current_period_end) > new Date())) plan = "pro";
   }
   let who: string;
   if (userId) who = "u:" + userId;

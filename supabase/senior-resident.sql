@@ -23,7 +23,7 @@ grant execute on function public.bump_usage(text) to service_role;
 -- Plans. Only the Stripe webhook (service role) writes here. People can read their own row.
 create table if not exists public.sr_profiles (
   user_id uuid primary key references auth.users(id) on delete cascade,
-  plan text not null default 'free' check (plan in ('free','pro')),
+  plan text not null default 'free' check (plan in ('free','pro','trial')),
   stripe_customer text,
   stripe_sub text,
   current_period_end timestamptz,
@@ -64,3 +64,7 @@ create table if not exists public.sr_feedback (
 alter table public.sr_feedback enable row level security;
 drop policy if exists "sr feedback insert" on public.sr_feedback;
 create policy "sr feedback insert" on public.sr_feedback for insert to anon, authenticated with check (user_id is null or user_id = auth.uid());
+
+-- If sr_profiles already exists from an earlier run, widen the plan check for trials:
+alter table public.sr_profiles drop constraint if exists sr_profiles_plan_check;
+alter table public.sr_profiles add constraint sr_profiles_plan_check check (plan in ('free','pro','trial'));

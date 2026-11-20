@@ -82,11 +82,11 @@ function isPro(){ return !billingLive() || plan.name==='pro'; }
 function canStart(){ return isPro() || plan.used < plan.limit; }
 function bumpLocal(){ plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
 async function loadPlan(){
-  plan.name = 'free'; plan.until = null;
+  plan.name = 'free'; plan.until = null; plan.trial = false;
   if (SR.user && SR.sb && billingLive()){
     try {
       var r = await SR.sb.from('sr_profiles').select('plan,current_period_end').eq('user_id', SR.user.id).maybeSingle();
-      if (r.data && r.data.plan==='pro' && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = 'pro'; plan.until = r.data.current_period_end; }
+      if (r.data && (r.data.plan==='pro' || r.data.plan==='trial') && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = 'pro'; plan.trial = r.data.plan==='trial'; plan.until = r.data.current_period_end; }
     } catch(e){}
   }
   if (window.onPlan) window.onPlan();

@@ -14,7 +14,7 @@ window.SR_HELP_KB = [
  'Second chance is a switch on the exam start screen. With it on, a missed question hides the answer until you retry. The score counts the first answer.',
  'The PDF is read in the browser and stays on the device. Progress, pearls and exams are stored in the browser, so clearing site data removes them.',
  'Sign-in: Google or email and password, from the Account button at the top right.',
- 'Daily limit: the free plan has a few questions a day and resets at midnight. Tiers are PGY1 (free), PGY2 and PGY3. Paid tiers are not open yet. During early access everything is unlocked.',
+ 'Daily limit: the free plan has a few questions a day and resets at midnight. Tiers are PGY1 (free), PGY2 and PGY3. Paid tiers are not open yet. When they open, the PGY3 tier has a 7 day free trial with a card on file: 40 questions a day, and exam mode on the first 10 questions of a PDF. During early access everything is unlocked.',
  'Error "could not be reached": check the connection, wait a minute and press Try again. If it says the sign-in expired, sign in again from Account.',
  'A blank or stuck panel: close the side panel, reload the question bank tab and open it again.',
  'Dark mode follows the system setting.',
