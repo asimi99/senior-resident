@@ -216,6 +216,7 @@ function exRunHTML(e){
   var r = EX.run, q = e.qs[r.i], picked = r.answers[q.n], reveal = r.mode === 'tutor' && r.shown[q.n];
   var h = '<div class="exbar"><b>' + esc(e.title) + '</b><span class="spacer"></span><span class="extime" id="exTimer">' + (r.limit ? exClock(r.limit - (Date.now() - r.start) / 1000) : exClock((Date.now() - r.start) / 1000)) + '</span><button type="button" class="btn ghost sm" data-ex="end">End exam</button></div>';
   var f1 = r.first[q.n];
+  h += '<div class="exlay">' + '<nav class="exnav" aria-label="Questions">' + e.qs.map(function(x, k){ return '<button type="button" class="' + (k === r.i ? 'cur ' : '') + (r.answers[x.n] || r.first[x.n] ? 'ans ' : '') + (r.flags[x.n] ? 'flg' : '') + '" data-ex="goto" data-i="' + k + '">' + (k + 1) + '</button>'; }).join('') + '</nav>';
   h += '<main class="card"><div class="step"><span>Question ' + (r.i + 1) + ' of ' + e.qs.length + '</span><button type="button" class="flagb' + (r.flags[q.n] ? ' on' : '') + '" data-ex="flag">' + XI.flag + (r.flags[q.n] ? 'Flagged' : 'Flag') + '</button></div>' + exQHTML(e, q, picked, reveal, r.cross[q.n], f1);
   if (f1 && !reveal) h += fbHtml('warn', esc(f1) + ' is not it. The answer stays hidden. Go back to the stem, find the clue that rules ' + esc(f1) + ' out, and pick again.', 'Second chance');
   if (reveal){
@@ -225,7 +226,7 @@ function exRunHTML(e){
   h += '<div class="row foot"><button type="button" class="btn ghost" data-ex="prev"' + (r.i === 0 ? ' disabled' : '') + '>Back</button><span class="spacer"></span>';
   if (r.mode === 'tutor' && picked && !reveal) h += '<button type="button" class="btn" data-ex="check">' + (f1 ? 'Check second chance' : 'Check') + '</button>';
   else h += r.i < e.qs.length - 1 ? '<button type="button" class="btn" data-ex="next">Next</button>' : '<button type="button" class="btn" data-ex="end">Finish</button>';
-  h += '</div></main><nav class="exnav" aria-label="Questions">' + e.qs.map(function(x, k){ return '<button type="button" class="' + (k === r.i ? 'cur ' : '') + (r.answers[x.n] || r.first[x.n] ? 'ans ' : '') + (r.flags[x.n] ? 'flg' : '') + '" data-ex="goto" data-i="' + k + '">' + (k + 1) + '</button>'; }).join('') + '</nav>';
+  h += '</div></main></div>';
   return h;
 }
 function exResultsHTML(e){
