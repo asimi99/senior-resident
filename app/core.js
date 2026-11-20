@@ -189,6 +189,8 @@ function proc(c, line){
       o.type = 'single';
       o.opts.forEach(function(x){ x.lab = x.v==='good' ? 'Good elimination' : 'Keep in play'; x.v = x.v==='good' ? 'good' : 'warn'; });
     }
+    var nq = function(t){ return String(t||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim(); }, qn = nq(o.q);
+    if (o.kind2==='single' && qn && c.steps.some(function(x){ return x.kind2==='single' && nq(x.q)===qn; })){ progress(c); return; }   // never show the same question twice
     c.steps.push(o);
   }
   else if (o.kind==='reveal'){ c.reveal=o; }
@@ -199,6 +201,8 @@ function newCase(o){
   return Object.assign({ id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), title:'', qid:'', num:'', struck:[], src:'', files:[], text:'', level:LEVEL, meta:null, steps:[], reveal:null, st:fresh(), chat:[], chatBusy:false, error:null, generating:false, queued:false, ts:Date.now() }, o);
 }
 async function gen(c){
+  if (c.generating) return;                       // one build at a time per question, or two streams interleave and repeat steps
+  var my = c.genId = (c.genId || 0) + 1;
   if (!canStart()){ c.error = { code:'rate_limited' }; c.generating = false; if (cases[cur]===c) renderStage(); done(c); return; }
   c.generating = true; c.error = null; c.stopped = false;
   c.ctl = new AbortController();
@@ -209,10 +213,11 @@ async function gen(c){
     if (attempt){ c.steps = []; c.meta = null; c.reveal = null; c.st = fresh(); if (cases[cur]===c) renderStage(); }
     try {
       var o = { signal:c.ctl.signal, modelTier:'default', kind: counted ? 'retry' : 'coach',
-        onText:function(u){ var ls=u.text.split('\n'); for(; n<ls.length-1; n++) proc(c, ls[n]); } };
+        onText:function(u){ if (c.genId !== my) return; var ls=u.text.split('\n'); for(; n<ls.length-1; n++) proc(c, ls[n]); } };
       if (c.files.length) o.images = c.files.map(function(f){ return f.blob; });
       counted = true;
       var r = await sample(buildPrompt(c), o);
+      if (c.genId !== my) return;
       var ls = r.text.split('\n'); for(; n<ls.length; n++) proc(c, ls[n]);
       if (!c.steps.length && !c.error) c.error = { code:'empty' };
     } catch(e){
