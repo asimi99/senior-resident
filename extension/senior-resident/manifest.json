@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Senior Resident: Qbank Reasoning Coach",
   "short_name": "Senior Resident",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A senior resident beside your question bank. It reads the question you are on and walks you to the answer one decision at a time.",
   "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
   "action": { "default_title": "Senior Resident (Alt+S)" },

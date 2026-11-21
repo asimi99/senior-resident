@@ -1,7 +1,7 @@
 html,body{margin:0;height:100%;font:12.5px/1.4 Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#f3f6fb;color:#0f1f33}
 body{display:flex;flex-direction:column}
 #coach{flex:1;border:0;width:100%;min-height:0}
-.bar{display:flex;align-items:center;gap:8px;padding:5px 10px;background:#fff;border-top:1px solid #d9e2ee;color:#586a80}
+.bar{display:flex;align-items:center;gap:12px;padding:5px 10px;background:#fff;border-top:1px solid #d9e2ee;color:#586a80}
 #msg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .auto{display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;font-weight:600}
 .auto input{accent-color:#1a5fb4;margin:0}

@@ -11,6 +11,9 @@
   chrome.runtime.onMessage.addListener(function(m){ if (m && m.t === 'panel-close') window.close(); });
   chrome.storage.local.get({ auto: true }, function(r){ auto.checked = r.auto !== false; });
   auto.addEventListener('change', function(){ chrome.storage.local.set({ auto: auto.checked }); });
+  var pop = document.getElementById('pop');
+  chrome.storage.local.get({ pop: false }, function(r){ pop.checked = r.pop === true; });
+  pop.addEventListener('change', function(){ chrome.storage.local.set({ pop: pop.checked }); });
   function say(t){ msg.textContent = t || ''; msg.title = t || ''; toCoach({ type: 'sr-status', text: t || '' }); }
   function toCoach(d){ if (ready) coach.contentWindow.postMessage(d, ORIGIN); else queue.push(d); }
   function blob(u){ var p = u.split(','), mime = (p[0].match(/:(.*?);/) || [])[1] || 'image/png', b = atob(p[1]), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return new Blob([a], { type: mime }); }

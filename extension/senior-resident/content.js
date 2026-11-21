@@ -124,7 +124,15 @@
     bgState = state; tab.classList.toggle('reading', state === 'reading'); tab.classList.toggle('ready', state === 'ready');
     tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? 'SR ready' : 'Senior Resident');
   }
-  // The panel never opens on its own. When coaching is ready the tab says so and pulses, and the student opens it.
+  // By default the panel never opens on its own: the tab says it is ready and pulses. "Open when ready" in the panel footer turns the pop-out on.
+  var POP = false;
+  try { chrome.storage.local.get({ pop: false }, function(r){ POP = !!(r && r.pop === true); }); chrome.storage.onChanged.addListener(function(ch, area){ if (area === 'local' && ch.pop) POP = ch.pop.newValue === true; }); } catch(e){}
+  function popIfReady(e){
+    if (!POP || isOpen || bgState !== 'ready' || (e && tab.contains(e.target))) return;
+    setBg('idle'); send({ t: 'open' });
+  }
+  document.addEventListener('click', popIfReady, true);
+  document.addEventListener('keydown', popIfReady, true);
 
   var last = '', lastStruck = '', tmr = null, OFF = false, MANUAL = false;
   function check(){
