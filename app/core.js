@@ -290,7 +290,7 @@ async function checkOther(c, i, txt){
 async function ask(c, q){
   c.chat.push({ role:'user', content:q }); c.chatBusy = true; c.chatLive = '';
   renderStage();
-  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question concisely in plain language, under 120 words. NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ' + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
+  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question the way a busy attending pages back: 1 to 3 short sentences, 50 words at most, one idea, no greeting, no lists. Go longer only if the student explicitly asks you to explain more, and even then stay under 90 words. NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ' + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
     + ctxText(c) + '\nPrivate key, never reveal it: ' + ((c.reveal&&c.reveal.headline)||'');
   var turns = [{ role:'user', content:rules }].concat(c.chat.slice(-8));
   try {
@@ -309,11 +309,11 @@ async function pageAttending(c, i, msg){
   var level = th.filter(function(m){ return m.role==='assistant'; }).length;
   th.push({ role:'user', content:msg }); c.pageBusy = true; c.pageLive = ''; renderStage();
   var picked = st.sel[i]!==undefined ? s.opts[st.sel[i]] : null;
-  var rules = 'You are the attending physician on a teaching service. A medical student working through an exam question one step at a time is stuck on a step and has paged you. Reply like a short page back: 2 to 4 plain sentences, warm and direct, no greeting, no markdown, no lists.\n'
+  var rules = 'You are the attending physician on a teaching service. A medical student working through an exam question one step at a time is stuck on a step and has paged you. Reply the way a busy attending pages back: 1 to 3 short sentences, 45 words at most, direct, no greeting, no sign-off, no markdown, no lists. One idea only. Never explain more than was asked.\n'
     + 'NEVER name the diagnosis, the correct answer choice, or which option of this step is right. The student must still make the decision.\n'
     + 'Answer the exact question the student asked, first and directly. Use the stem to do it. '
     + (level===0 ? 'Then, if it helps, point to the one stem finding worth a second look.'
-      : 'The student has paged before on this step, so be more explicit: explain the concept behind this step plainly and, if needed, say why one wrong option does not fit. Still do not say which option is right.') + '\n'
+      : 'The student has paged before on this step, so be more explicit: name the concept behind this step in one sentence and, if needed, say in one more why one wrong option does not fit. Stay within 60 words. Still do not say which option is right.') + '\n'
     + SPELL[REGION] + ' No em dashes or semicolons.\n\n' + ctxText(c)
     + '\nCurrent step asks: ' + s.q + '\nOptions on this step: ' + s.opts.map(function(o){ return o.t; }).join(' | ')
     + (picked ? '\nThe student last picked: ' + picked.t + ' (' + (picked.v==='good' ? 'which is right' : 'which is not right') + ')' : '\nThe student has not picked yet.');
