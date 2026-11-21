@@ -323,3 +323,9 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 /* who is on call */
 .attpick{display:flex;flex-direction:column;gap:5px}.attpick .seg{display:flex;width:100%}.attpick .seg button{flex:1;font-size:12.5px;padding:6px 4px;white-space:nowrap;text-align:center;justify-content:center}
 .attpick>span{font-size:12.5px;color:var(--muted)}
+
+.ibs.on{background:var(--brand-soft);color:var(--brand)}
+.attpick{animation:narin .22s cubic-bezier(.2,.7,.2,1)}
+.pagehd .ibs{margin-left:-2px}
+
+.pagehd .ibs svg,.chat .pagehd .ibs svg{color:inherit;width:15px;height:15px}
