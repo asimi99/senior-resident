@@ -198,7 +198,7 @@ function exHomeHTML(){
 function exStartHTML(e){
   var a = e.attempts[0], keyed = e.qs.filter(function(q){ return q.ans; }).length;
   var h = '<div class="qhead"><button type="button" class="lnk" data-ex="home">All exams</button></div><section class="panel"><h2>' + esc(e.title) + '</h2>'
-    + (e.locked ? '<div class="fb warn"><b>Free trial</b>This exam has the first ' + e.qs.length + ' of ' + (e.qs.length + e.locked) + ' questions. The other ' + e.locked + ' unlock when your PGY3 tier starts. Add the PDF again then.</div>' : '')
+    + (e.locked ? '<div class="fb warn"><b>Free trial</b>This exam has the first ' + e.qs.length + ' of ' + (e.qs.length + e.locked) + ' questions. The other ' + e.locked + ' unlock on the PGY3 tier after your trial. Add the PDF again then.</div>' : '')
     + '<p class="muted">' + e.qs.length + ' questions' + (e.pages ? ' from ' + e.pages + ' pages' : '') + '. ' + (keyed === e.qs.length ? 'Answer key found.' : keyed ? 'Answer key found for ' + keyed + ' of them.' : 'No answer key in this PDF.') + (e.key === 'ai' ? ' Some answers were keyed by Senior Resident, not the publisher.' : '') + '</p>';
   var noWhy = e.qs.some(function(q){ return !q.why; });
   if (keyed < e.qs.length || noWhy) h += '<div class="row"><button type="button" class="btn ghost sm" data-ex="key"' + (EX.busy ? ' disabled' : '') + '>' + (EX.busy === 'key' ? 'Writing' : (keyed < e.qs.length ? 'Key the rest and write explanations' : 'Write explanations with Senior Resident')) + '</button><span class="muted sm">' + (keyed < e.qs.length ? 'Its best answers and explanations, clearly marked. Not an official key.' : 'A short explanation for every question, shown after you answer.') + '</span></div>';

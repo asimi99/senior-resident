@@ -100,3 +100,6 @@ footer a{color:var(--muted)}
 
 .nav nav a.h.on{color:var(--fg);font-weight:700}
 .page{padding-top:56px}
+
+.trial{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 18px}
+.trial div{min-width:0;flex:1 1 320px}.trial b{display:block;font-size:17px;color:var(--ink)}.trial span{font-size:14.5px;color:var(--muted)}
