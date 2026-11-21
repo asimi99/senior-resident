@@ -28,6 +28,18 @@ var LEVELS = [
  ['harder','Harder','No hints, every wrong option is a real look-alike, fewer basic steps.'],
  ['hardest','Hardest','Exam pace. Three or four steps that start at the hard decision, four close options each, and feedback that never gives the answer away.']
 ];
+/* Which attending answers the page. The style sets the tone and how much they give away. */
+var ATTS = [
+ ['teach','Loves to teach','Warm. Walks you through the why.'],
+ ['busy','Busy on rounds','Direct. A sentence or two.'],
+ ['old','Old school','Blunt. Makes you work for it.']
+];
+var ATT = 'busy'; try{ var av=localStorage.getItem('sr_att'); if(av && ATTS.some(function(x){return x[0]===av})) ATT=av; }catch(e){}
+function attStyle(again){
+  if (ATT==='teach') return 'STYLE: an attending who loves to teach. Warm and encouraging. 3 to 5 sentences, 90 words at most. Answer the question, explain the why behind it in plain words, and point to the stem finding that matters.';
+  if (ATT==='old') return 'STYLE: an old-school attending with no time. Blunt and dry, never insulting and never demeaning. ONE sentence, 20 words at most' + (again ? ', or two short sentences if the student has paged before' : '') + '. Give the smallest pointer that answers the question, or answer with one pointed question that sends the student back to the right line of the stem. No reassurance, no explanation.';
+  return 'STYLE: a busy attending on rounds. Direct and neutral. 1 to 3 short sentences, 45 words at most' + (again ? ', up to 60 if the student has paged before' : '') + '. One idea only. Never explain more than was asked.';
+}
 var LEVEL = 'guided'; try{ var lv=localStorage.getItem('sr_level'); if(lv && LEVELS.some(function(x){return x[0]===lv})) LEVEL=lv; }catch(e){}
 var LEVEL_RULES = {
  guided: '',
@@ -290,7 +302,7 @@ async function checkOther(c, i, txt){
 async function ask(c, q){
   c.chat.push({ role:'user', content:q }); c.chatBusy = true; c.chatLive = '';
   renderStage();
-  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question the way a busy attending pages back: 1 to 3 short sentences, 50 words at most, one idea, no greeting, no lists. Go longer only if the student explicitly asks you to explain more, and even then stay under 90 words. NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ' + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
+  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question as a page back: no greeting, no lists. ' + attStyle(c.chat.length>2) + ' NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ' + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
     + ctxText(c) + '\nPrivate key, never reveal it: ' + ((c.reveal&&c.reveal.headline)||'');
   var turns = [{ role:'user', content:rules }].concat(c.chat.slice(-8));
   try {
@@ -309,11 +321,11 @@ async function pageAttending(c, i, msg){
   var level = th.filter(function(m){ return m.role==='assistant'; }).length;
   th.push({ role:'user', content:msg }); c.pageBusy = true; c.pageLive = ''; renderStage();
   var picked = st.sel[i]!==undefined ? s.opts[st.sel[i]] : null;
-  var rules = 'You are the attending physician on a teaching service. A medical student working through an exam question one step at a time is stuck on a step and has paged you. Reply the way a busy attending pages back: 1 to 3 short sentences, 45 words at most, direct, no greeting, no sign-off, no markdown, no lists. One idea only. Never explain more than was asked.\n'
+  var rules = 'You are the attending physician on a teaching service. A medical student working through an exam question one step at a time is stuck on a step and has paged you. Reply as a page back: no greeting, no sign-off, no markdown, no lists.\n' + attStyle(level>0) + '\n'
     + 'NEVER name the diagnosis, the correct answer choice, or which option of this step is right. The student must still make the decision.\n'
     + 'Answer the exact question the student asked, first and directly. Use the stem to do it. '
     + (level===0 ? 'Then, if it helps, point to the one stem finding worth a second look.'
-      : 'The student has paged before on this step, so be more explicit: name the concept behind this step in one sentence and, if needed, say in one more why one wrong option does not fit. Stay within 60 words. Still do not say which option is right.') + '\n'
+      : 'The student has paged before on this step, so be more explicit: name the concept behind this step and, if needed, say why one wrong option does not fit, within the length your style allows. Still do not say which option is right.') + '\n'
     + SPELL[REGION] + ' No em dashes or semicolons.\n\n' + ctxText(c)
     + '\nCurrent step asks: ' + s.q + '\nOptions on this step: ' + s.opts.map(function(o){ return o.t; }).join(' | ')
     + (picked ? '\nThe student last picked: ' + picked.t + ' (' + (picked.v==='good' ? 'which is right' : 'which is not right') + ')' : '\nThe student has not picked yet.');

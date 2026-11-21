@@ -107,10 +107,14 @@ function otherBlock(c, i){
   }
   return h;
 }
+function attPickHTML(){
+  var cur = ATTS.filter(function(a){ return a[0]===ATT; })[0] || ATTS[1];
+  return '<div class="attpick"><div class="seg" role="radiogroup" aria-label="Who is on call">' + ATTS.map(function(a){ return '<button type="button" role="radio" aria-checked="'+(a[0]===ATT)+'" data-act="att" data-a="'+a[0]+'">'+esc(a[1])+'</button>'; }).join('') + '</div><span>'+esc(cur[2])+'</span></div>';
+}
 function pageHTML(c, i){
   var st = c.st, th = (st.pages && st.pages[i]) || [], open = st.pageOpen && st.pageOpen[i];
   if (!open) return '<button type="button" class="pagebtn" data-act="pageopen">'+IC.pager+'<span><b>Still stuck?</b> Page the attending</span></button>';
-  var h = '<div class="pagebox"><div class="pagehd">'+IC.pager+'<b>Attending</b><span>on call</span><span class="spacer"></span><button type="button" class="lnk" data-act="pageopen">Hide</button></div>';
+  var h = '<div class="pagebox"><div class="pagehd">'+IC.pager+'<b>Attending</b><span>on call</span><span class="spacer"></span><button type="button" class="lnk" data-act="pageopen">Hide</button></div>' + attPickHTML();
   th.forEach(function(m){ h += '<div class="pg '+(m.role==='user'?'me':'att')+'">'+(m.role==='user'?'':'<i>Attending</i>')+'<span>'+esc(m.content)+'</span></div>'; });
   h += '<div class="pg att" id="pageLive"'+(c.pageBusy?'':' hidden')+'><i>Attending</i><span>'+esc(c.pageLive||'')+'</span></div>';
   if (c.pageBusy && !c.pageLive) h += waitHTML('Paging');
@@ -142,7 +146,7 @@ function revealHTML(c){
 }
 var CHIPS = ['Why is my first pick wrong?','Give me a way to remember this','Quiz me with a similar question'];
 function chatHTML(c){
-  var h = '<div class="chat"><div class="pagehd">'+IC.pager+'<b>Attending</b><span>on call</span></div>';
+  var h = '<div class="chat"><div class="pagehd">'+IC.pager+'<b>Attending</b><span>on call</span></div>' + attPickHTML();
   c.chat.forEach(function(m){ h += '<div class="bub '+(m.role==='user'?'me':'ai')+'">'+esc(m.content)+'</div>'; });
   h += '<div class="bub ai" id="chatLive"'+(c.chatBusy?'':' hidden')+'>'+esc(c.chatLive||'')+'</div>';
   h += '<div class="askrow"><textarea id="chatTxt" rows="1" placeholder="Still have a question? Page the attending"></textarea><button type="button" class="btn" data-act="ask"'+(c.chatBusy?' disabled':'')+'>Page</button></div>'
@@ -487,6 +491,7 @@ stage.addEventListener('click', async function(e){
   else if (act==='restart'){ c2.st = fresh(); renderStage(); window.scrollTo({top:0}); }
   else if (act==='stop'){ if (c2.ctl) c2.ctl.abort(); }
   else if (act==='retry'){ c2.steps=[]; c2.reveal=null; c2.meta=null; c2.st=fresh(); c2.error=null; c2.stopped=false; renderStage(); gen(c2); }
+  else if (act==='att'){ ATT = el.dataset.a; try{ localStorage.setItem('sr_att', ATT); }catch(x){} var keep = (document.getElementById('pageTxt')||document.getElementById('chatTxt')||{}).value || ''; renderStage(); var tf = document.getElementById('pageTxt')||document.getElementById('chatTxt'); if (tf){ tf.value = keep; tf.focus(); } }
   else if (act==='pageopen'){ st.pageOpen = st.pageOpen || {}; st.pageOpen[i] = !st.pageOpen[i]; renderStage(); var pf = document.getElementById('pageTxt'); if (pf) pf.focus(); }
   else if (act==='pagesend'){ var pt = (document.getElementById('pageTxt').value||'').trim(); if (pt) pageAttending(c2, i, pt); }
   else if (act==='chip'){ if (!c2.chatBusy && proGate()) ask(c2, el.textContent); }
