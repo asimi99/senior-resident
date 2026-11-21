@@ -122,15 +122,9 @@
   });
   function setBg(state){
     bgState = state; tab.classList.toggle('reading', state === 'reading'); tab.classList.toggle('ready', state === 'ready');
-    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? 'Ready' : 'Senior Resident');
+    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? 'SR ready' : 'Senior Resident');
   }
-  function popIfReady(e){
-    if (isOpen || bgState !== 'ready' || (e && tab.contains(e.target))) return;
-    setBg('idle'); send({ t: 'open' });
-  }
-  document.addEventListener('click', popIfReady, true);
-  document.addEventListener('mouseup', popIfReady, true);
-  document.addEventListener('keydown', popIfReady, true);
+  // The panel never opens on its own. When coaching is ready the tab says so and pulses, and the student opens it.
 
   var last = '', lastStruck = '', tmr = null, OFF = false, MANUAL = false;
   function check(){
