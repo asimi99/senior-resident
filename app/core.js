@@ -335,6 +335,25 @@ function markRuled(c, i, k, toggle){
   var rk = String(o.t||'').trim().toLowerCase(); st.ruled = st.ruled || {};
   st.ruled[rk] = toggle ? !st.ruled[rk] : true; return true;
 }
+/* The last step works on whatever the student has not ruled out, however many that is. */
+function optId(t){ t = String(t||'').trim(); var m = t.match(/^([A-J])[.)]\s/); return m ? m[1] : t.toLowerCase(); }
+function syncFinal(c){
+  var st = c.st, f = c.steps.findIndex(function(x){ return x.type==='final'; }), e = c.steps.find(function(x){ return x.kind2==='elim'; });
+  if (f < 0) return; var F = c.steps[f];
+  if (!F.base) F.base = F.opts.slice();                       // what the model wrote: the look-alike and the keeper
+  if (!e || st.solved || st.sel[f] !== undefined || F.locked) return;
+  var ruled = st.ruled || {}, byId = {}; F.base.forEach(function(o){ byId[optId(o.t)] = o; });
+  var left = e.opts.filter(function(o){ return !ruled[String(o.t||'').trim().toLowerCase()]; }).map(function(o){
+    var b = byId[optId(o.t)]; if (b) return b;
+    var good = o.v === 'good'; return { t:o.t, v:good ? 'good' : 'warn', fb:o.fb || '', lab:good ? 'Ruled out' : 'Keep in play' };
+  });
+  if (left.length < 2 || !left.some(function(o){ return o.v !== 'good'; }) || !left.some(function(o){ return o.v === 'good'; })) left = F.base.slice();
+  F.opts = left;
+  if (finalSolved(c, F)){ st.solved = true; if (typeof saveDone === 'function') saveDone(c); }   // nothing left to rule out
+  var n = left.length, words = ['', '', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight'];
+  F.q = n === 2 ? 'Two choices are left. Which one does the stem rule out?' : (words[n] || n) + ' choices are left. Rule them out one at a time.';
+}
+function finalSolved(c, s){ var r = c.st.ruled || {}; return s.opts.every(function(o){ return o.v !== 'good' || r[String(o.t||'').trim().toLowerCase()]; }); }
 async function moreHelp(c){
   if (c.helpBusy) return;
   var st = c.st, f = c.steps.findIndex(function(x){ return x.type==='final'; }); if (f<0) return;

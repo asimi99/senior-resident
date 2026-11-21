@@ -168,6 +168,7 @@ function cardHTML(c){
       + waitHTML(i===0?'Reading the question':'Preparing the next step', true)
       + (i>0?'<div class="row"><button type="button" class="btn ghost" data-act="back">Back</button></div>':'');
   }
+  if (s.type==='final') syncFinal(c);
   var elimLike = (s.type==='final'||s.kind2==='elim');
   h += '<div class="step"><span>Step '+(i+1)+' of '+progressTotal(c)+'</span><em>'+esc(SKILLS[s.skill]||'')+'</em></div><h2>'+esc(s.q)+'</h2>';
   var sub = s.sub || '';
@@ -423,7 +424,7 @@ function pick(c, k){
   markRuled(c, i, k, false);
   if (s.type==='final'){
     c.tries = (c.tries||0) + 1;
-    st.solved = (s.opts[k].v==='good');
+    st.solved = finalSolved(c, s);
     if (st.solved) saveDone(c);
   }
   renderStage(); persist();
