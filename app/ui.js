@@ -23,23 +23,60 @@ function pillHTML(){
   var left = Math.max(0, plan.limit - plan.used);
   return '<button type="button" class="pill'+(left?'':' out')+'" data-go="plan">'+left+' of '+plan.limit+' left today</button>';
 }
-function renderTop(){
-  var u = SR.user, ini = u ? esc((u.email||'?').charAt(0).toUpperCase()) : '';
-  document.body.classList.toggle('site', !EMBED);
-  var tabs = [['home','Home'],['how','How it works'],['pricing','Pricing'],['schedule','Study plan'],['faq','Questions']];
-  var onCoach = view==='coach' || view==='exam' || view==='review';
-  topEl.innerHTML = '<a class="brand" href="#"'+(EMBED?' data-go="coach"':' data-go="home"')+'>'+IC.logo+'<span>Senior Resident</span></a>'
-    + (!EMBED ? '<nav class="sitetabs" aria-label="Site">' + tabs.map(function(t){ return '<a href="#'+(t[0]==='schedule'?'plan':t[0])+'" data-go="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+'</a>'; }).join('') + '<a href="#coach" data-go="new" class="coach'+(onCoach?' on':'')+'">Coach</a></nav>' : '')
-    + '<span class="spacer"></span>'
-    + pillHTML()
-    + '<nav class="nav" aria-label="Sections">'
-    + (onCoach || EMBED ? '' : '')
-    + (EMBED?'':(onCoach?'<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button><button type="button" class="ib'+(view==='exam'?' on':'')+'" data-go="exam" title="Exam mode" aria-label="Exam mode"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></button>':''))
-    + (EMBED || onCoach ? '<button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Your progress" aria-label="Your progress">'+IC.chart+'</button>' : '')
-    + (EMBED?'<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg></button>':'')
-    + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button>'
-    + '</nav>';
+function userInitials(u){
+  if (!u) return '';
+  var n = String(((u.user_metadata||{}).full_name || (u.user_metadata||{}).name || '')).trim();
+  if (n){ var p = n.split(/\s+/); return esc((p[0].charAt(0) + (p.length > 1 ? p[p.length-1].charAt(0) : '')).toUpperCase()); }
+  return esc((u.email||'?').charAt(0).toUpperCase());
 }
+var EXAM_IC = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+var HELP_IC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg>';
+var acctOpen = false;
+function acctMenuHTML(){
+  var u = SR.user, pl = plan.name==='chief' ? 'Chief' : plan.name==='pro' ? (plan.trial ? 'Resident (free trial)' : 'Resident') : 'Free';
+  if (!u) return '<div class="acmenu" role="menu"><p class="acnm">Not signed in</p><button type="button" data-acct="signin">Sign in</button><button type="button" data-acct="signup">Create account</button><hr><button type="button" data-acct="pricing">Plans and pricing</button></div>';
+  var nm = (u.user_metadata||{}).full_name || '';
+  return '<div class="acmenu" role="menu"><div class="achd"><span class="acav">'+userInitials(u)+'</span><div>'+(nm?'<b>'+esc(nm)+'</b>':'')+'<span>'+esc(u.email||'')+'</span></div></div>'
+    + '<div class="acplan"><span>Plan</span><b>'+esc(pl)+'</b></div>'
+    + (plan.name==='pro'||plan.name==='chief' ? '<button type="button" data-acct="manage">Manage subscription</button>' : '<button type="button" data-acct="pricing">Upgrade</button>')
+    + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
+    + '<button type="button" data-acct="help">Help and feedback</button><hr><button type="button" data-acct="signout">Sign out</button></div>';
+}
+function renderTop(){
+  var u = SR.user, ini = userInitials(u);
+  document.body.classList.toggle('site', !EMBED);
+  var onCoach = view==='coach';
+  if (EMBED){
+    topEl.innerHTML = '<a class="brand" href="#" data-go="coach">'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>' + pillHTML()
+      + '<nav class="nav" aria-label="Sections"><button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Your progress" aria-label="Your progress">'+IC.chart+'</button>'
+      + '<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback">'+HELP_IC+'</button>'
+      + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
+    return;
+  }
+  var site = [['home','Home'],['how','How it works'],['pricing','Pricing'],['schedule','Study plan']];
+  var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['review','Statistics',IC.chart,view==='review']];
+  topEl.innerHTML = '<a class="brand" href="#" data-go="home">'+IC.logo+'<span>Senior Resident</span></a>'
+    + '<nav class="sitetabs" aria-label="Site">' + site.map(function(t){ return '<a href="#'+(t[0]==='schedule'?'plan':t[0]==='home'?'':t[0])+'" data-go="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+'</a>'; }).join('') + '</nav>'
+    + '<span class="spacer"></span>'
+    + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
+    + pillHTML()
+    + '<div class="acwrap"><button type="button" class="ib'+(acctOpen?' on':'')+(u?' av':'')+'" data-acct="toggle" title="Account" aria-label="Account" aria-haspopup="menu" aria-expanded="'+acctOpen+'">'+(u?ini:IC.user)+'</button>'+(acctOpen?acctMenuHTML():'')+'</div>';
+}
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-acct]');
+  if (!b){ if (acctOpen && !e.target.closest('.acmenu')){ acctOpen = false; renderTop(); } return; }
+  var a = b.dataset.acct;
+  if (a === 'toggle'){ acctOpen = !acctOpen; renderTop(); return; }
+  acctOpen = false;
+  if (a === 'signin'){ authMode = 'in'; go('account'); }
+  else if (a === 'signup'){ authMode = 'up'; go('account'); }
+  else if (a === 'pricing'){ go('pricing'); }
+  else if (a === 'manage'){ renderTop(); openPortal(b); }
+  else if (a === 'help'){ renderTop(); var h = document.querySelector('[data-h="open"]'); if (h) h.click(); else if (typeof openHelp === 'function') openHelp(); }
+  else if (a === 'signout'){ SR.signOut(); renderTop(); }
+  else go(a);
+});
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && acctOpen){ acctOpen = false; renderTop(); } });
 window.onPlan = function(){ renderTop(); if (view==='account') renderStage(); };
 function tabLabel(c){ var id = c.qid && !/^h/.test(c.qid) ? esc(c.qid) : ''; if (c.num) return 'Q' + esc(c.num) + (id ? '<em> - QID' + id + '</em>' : ''); if (id) return '<em>QID' + id + '</em>'; return esc(c.title || (c.queued ? 'Queued' : 'Reading')); }
 function renderTabs(){
@@ -394,7 +431,7 @@ function go(v){
   if (v==='new'){ view = 'coach'; cur = -1; }
   else if (v==='plan'){ if (billingLive() && plan.name!=='pro'){ openModal(pricingHTML()); return; } view = 'account'; }
   else view = v;
-  if (!EMBED){ var hv = { home:'', how:'#how', pricing:'#pricing', faq:'#faq', schedule:'#plan', coach:'#coach' }[view]; if (hv !== undefined) history.replaceState(null, '', location.pathname + location.search + hv); }
+  if (!EMBED){ var hv = { home:'', how:'#how', pricing:'#pricing', schedule:'#plan', coach:'#coach', exam:'#exam', review:'#stats' }[view]; if (hv !== undefined) history.replaceState(null, '', location.pathname + location.search + hv); }
   renderAll(); window.scrollTo({ top:0 });
 }
 
