@@ -358,3 +358,17 @@ html.notip [data-tip]::after{display:none}
 .ak-opt{display:flex;gap:8px;align-items:flex-start;font-size:14px;cursor:pointer}
 .ak-opt span{display:flex;flex-direction:column}.ak-opt small{color:var(--muted);font-size:12.5px}
 .anki .ak-box{margin-top:10px}
+.ak-seg{display:flex;gap:4px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.ak-seg button{flex:1;font:inherit;font-size:13px;font-weight:600;border:0;border-radius:8px;padding:6px 8px;background:none;color:var(--muted);cursor:pointer}
+.ak-seg button.on{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ak-drop{display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center;border:2px dashed var(--line);border-radius:12px;padding:22px 14px;cursor:pointer;color:var(--fg)}
+.ak-drop:hover,.ak-drop:focus{border-color:var(--brand);background:var(--brand-soft);outline:none}
+.ak-drop small{color:var(--muted);font-size:12.5px;max-width:34ch}
+.ak-io{position:relative;align-self:center;max-width:100%;cursor:crosshair;user-select:none;touch-action:none;line-height:0}
+.ak-io img{display:block;max-width:100%;height:auto;border-radius:8px;pointer-events:none}
+.ak-b{position:absolute;box-sizing:border-box;background:rgba(255,233,168,.88);border:2px solid #b8860b;border-radius:5px;line-height:1}
+.ak-b.tmp{background:rgba(255,233,168,.5);border-style:dashed}
+.ak-b span{position:absolute;left:3px;top:2px;font:700 11px/1 Inter,sans-serif;color:#7a5c12}
+.ak-b button{position:absolute;right:-9px;top:-9px;width:18px;height:18px;border-radius:50%;border:0;background:#c0392b;color:#fff;font:700 12px/18px Inter,sans-serif;padding:0;cursor:pointer}
+.ak-in{font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--bg);color:var(--fg);min-width:0}
+.ak-msg.ok{color:#1e8e3e;font-weight:600}

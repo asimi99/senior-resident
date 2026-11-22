@@ -1,23 +1,43 @@
 /* ---------- Anki: one card per question, straight into Anki through AnkiConnect, or saved for export ---------- */
-var ANKI = { status:'unknown', queue: lsGet('sr_anki_q', []), sent: lsGet('sr_anki_sent', 0), qid: lsGet('sr_anki_qid', true), type: lsGet('sr_anki_type', 'cloze'), last: '', cfg: false };
+var ANKI = { status:'unknown', queue: lsGet('sr_anki_q', []), sent: lsGet('sr_anki_sent', 0), qid: lsGet('sr_anki_qid', true), type: lsGet('sr_anki_type', 'cloze'), last: '', cfg: false, mode:'q', io:null, synced:{} };
 var ANKI_DECK = 'Senior Resident', ankiSeq = 0, ankiWait = {};
 ANKI.queue = ANKI.queue.map(function(n){ return n.fields ? n : { type:'basic', fields:{ Front:n.front || '', Back:n.back || '', Source:'' }, tags:n.tags || ['SeniorResident'] }; });
 function isChief(){ return !billingLive() || plan.name === 'chief'; }
 function ankiSave(){ lsSet('sr_anki_q', ANKI.queue); lsSet('sr_anki_sent', ANKI.sent); }
 
-/* our own note types, so every card looks the same and anyone can restyle them in Anki (Tools, Manage Note Types, Cards, Styling) */
-var SR_CSS = '.card{font-family:-apple-system,"Segoe UI",Inter,Arial,sans-serif;font-size:20px;line-height:1.5;color:#1b2533;background:linear-gradient(160deg,#f4f8fd 0%,#e9f0f9 100%);text-align:left;padding:0}'
-  + '.sr{max-width:640px;margin:28px auto;padding:22px 26px;background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(20,40,80,.10);border-top:5px solid #2f6fdb}'
-  + '.sr b{color:#173f86}.cloze{font-weight:700;color:#2f6fdb}.sr-x{margin-top:14px;padding-top:12px;border-top:1px solid #e3e9f2;font-size:16px;color:#4a5668}'
-  + '.sr-src{margin-top:16px;font-size:12px;letter-spacing:.04em;color:#8a97a8;text-align:right}'
-  + '.nightMode .card,.night_mode .card{background:linear-gradient(160deg,#151c27 0%,#1b2433 100%);color:#e6ebf2}.nightMode .sr,.night_mode .sr{background:#202a3a;box-shadow:none}.nightMode .sr b,.night_mode .sr b{color:#9cc0ff}.nightMode .cloze,.night_mode .cloze{color:#7fb0ff}.nightMode .sr-x,.night_mode .sr-x{color:#b6c1d1;border-color:#2e3a4e}';
+/* shelf deck look: cream card, bold title, a table of facts with one blank per row, red for the highest yield. Restyle any time in Anki under Tools, Manage Note Types. */
+var SR_CSS = '/*sr-v2*/.card{font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;font-size:23px;line-height:1.55;text-align:left;background:#faf7f0!important;color:#1f2a24!important;padding:6px 8px}'
+  + '.card.nightMode,.nightMode .card{background:#faf7f0!important;color:#1f2a24!important}.wrap{max-width:100%;margin:0 auto}'
+  + '.topic{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#a89264!important;margin-bottom:6px}.topic:empty{display:none}'
+  + '.cloze,.nightMode .cloze{background:#ffe9a8!important;color:#0b5c42!important;font-weight:700;padding:0 7px;border-radius:7px;box-shadow:0 1px 3px rgba(184,134,11,.35)}'
+  + '.red,.nightMode .red{color:#c0392b!important;font-weight:700}.red .cloze,.nightMode .red .cloze{color:#c0392b!important;font-weight:800}'
+  + 'hr.ans{border:none;border-top:3px solid #b8860b;margin:8px 0 6px}'
+  + '.extra{background:#f7edd6;border:1px solid #e5cf9a;border-radius:10px;padding:6px 8px;font-size:.84em;color:#1f2a24!important}'
+  + '.vd{font-weight:800;color:#0f6b4f!important;margin:4px 0 6px}.mist{background:#fff3d6;border-left:4px solid #f59e0b;border-radius:8px;padding:3px 8px;margin:8px 0 2px;font-size:.9em}'
+  + 'table.t{border-collapse:collapse;width:100%;margin:6px 0;font-size:.95em;table-layout:fixed}table.t th{background:#0f6b4f!important;color:#fff!important;padding:4px 8px;text-align:left}'
+  + 'table.t td{border:1px solid #e5cf9a;padding:4px 8px;vertical-align:top;color:#1f2a24!important;overflow-wrap:break-word}table.t tr:nth-child(even) td{background:#fffdf5}'
+  + 'table.t.lab tr:first-child>th:first-child{width:24%}table.t.lab td:first-child{font-weight:600}td::first-letter{text-transform:uppercase}'
+  + '.src{margin-top:11px;padding:6px 7px 1px;background:#fffdf5;border:2px solid #b8860b;border-radius:14px;font-size:13px;color:#6f6140!important}'
+  + '.src::before{content:"From this question";display:block;font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#7a5c12;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #e5cf9a}'
+  + '.src .qm{margin:0 0 9px;padding:5px 8px;background:#eef4fb;border:1px solid #bcd3ea;border-left:5px solid #2c5d8f;border-radius:10px}'
+  + '.src .qh{font-size:11px;font-weight:500;color:#a9bbcf!important;margin-bottom:2px}.src .qpa{font-size:13px;color:#6f6140!important;margin-bottom:6px}.src .qpa b{color:#1f2a24!important}'
+  + '.src .qwhy,.src .qok{font-size:14px;color:#1f2a24!important;margin-bottom:6px}.qt{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;margin:4px 0 1px}.qwhy .qt{color:#8b1a1a!important}.qok .qt,.mist .qt{color:#0f6b4f!important}.mist .qt{color:#9a5b00!important}'
+  + '.iohd{font-weight:700;margin-bottom:6px}.ioc{text-align:center}.io{position:relative;display:inline-block;max-width:100%}.io img{display:block;max-width:100%;height:auto;border-radius:8px}'
+  + '.iob{position:absolute;box-sizing:border-box;background:#ffe9a8;border:2px solid #b8860b;border-radius:5px}.iob.on{background:#c0392b;border-color:#8b1a1a}.iob.rv{background:transparent;border:3px solid #c0392b}';
+var IO_JS = '<span id="iod" hidden>{{Occlusion}}</span><script>(function(){try{var d=document.getElementById("iod").textContent,io=document.getElementById("io"),back=!!document.getElementById("ioback");'
+  + 'var cls=((document.querySelector(".card")||{}).className||"")+" "+document.body.className+" "+document.documentElement.className,m=cls.match(/\\bcard(\\d+)\\b/),cur=m?+m[1]:1;'
+  + 'var re=/\\{\\{c(\\d+)::([\\d.]+),([\\d.]+),([\\d.]+),([\\d.]+)\\}\\}/g,x;while((x=re.exec(d))){var n=+x[1],b=document.createElement("div");b.className="iob"+(n===cur?(back?" rv":" on"):"");'
+  + 'b.style.left=x[2]*100+"%";b.style.top=x[3]*100+"%";b.style.width=x[4]*100+"%";b.style.height=x[5]*100+"%";io.appendChild(b);}}catch(e){}})();</script>';
+var IO_FACE = '<div class="wrap">{{#Header}}<div class="iohd">{{Header}}</div>{{/Header}}<div class="ioc"><div class="io" id="io">{{Image}}</div></div><div hidden>{{cloze:Occlusion}}</div>';
 var SR_MODELS = {
   cloze: { modelName:'Senior Resident Cloze', inOrderFields:['Text','Extra','Source'], isCloze:true, css:SR_CSS,
-    cardTemplates:[{ Name:'Cloze', Front:'<div class="sr">{{cloze:Text}}</div>', Back:'<div class="sr">{{cloze:Text}}{{#Extra}}<div class="sr-x">{{Extra}}</div>{{/Extra}}{{#Source}}<div class="sr-src">{{Source}}</div>{{/Source}}</div>' }] },
+    cardTemplates:[{ Name:'Cloze', Front:'<div class="wrap">{{cloze:Text}}</div>', Back:'<div class="wrap">{{cloze:Text}}<hr class="ans">{{#Extra}}<div class="extra">{{Extra}}</div>{{/Extra}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' }] },
   basic: { modelName:'Senior Resident Basic', inOrderFields:['Front','Back','Source'], css:SR_CSS,
-    cardTemplates:[{ Name:'Card 1', Front:'<div class="sr">{{Front}}</div>', Back:'<div class="sr">{{Front}}<div class="sr-x">{{Back}}</div>{{#Source}}<div class="sr-src">{{Source}}</div>{{/Source}}</div>' }] }
+    cardTemplates:[{ Name:'Card 1', Front:'<div class="wrap">{{Front}}</div>', Back:'<div class="wrap">{{Front}}<hr class="ans">{{Back}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' }] },
+  io: { modelName:'Senior Resident Occlusion', inOrderFields:['Occlusion','Image','Header','Back Extra','Source'], isCloze:true, css:SR_CSS,
+    cardTemplates:[{ Name:'Cloze', Front: IO_FACE + '</div>' + IO_JS, Back: IO_FACE + '<i id="ioback"></i>{{#Back Extra}}<hr class="ans"><div class="extra">{{Back Extra}}</div>{{/Back Extra}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' + IO_JS }] }
 };
-var TYPES = [['cloze','Cloze deletion','Fill in the blank. Best for facts and cutoffs.'], ['basic','Basic','Question on the front, answer on the back.']];
+var TYPES = [['cloze','Fact table','A bold topic, then a table with one blank per row. Red marks the highest yield.'], ['basic','Question and answer','One line on the front. The answer and what to watch for on the back.']];
 
 /* AnkiConnect only answers on this computer (127.0.0.1:8765). Only the Chrome extension can reach it, so the web app asks the side panel to call it. */
 function ankiCall(action, params){
@@ -25,7 +45,8 @@ function ankiCall(action, params){
     if (!EMBED || window.parent === window) return res({ error:'offline' });
     var id = ++ankiSeq; ankiWait[id] = res;
     window.parent.postMessage({ type:'sr-anki', id:id, action:action, params:params || {} }, '*');
-    setTimeout(function(){ if (ankiWait[id]){ delete ankiWait[id]; res({ error: action === 'requestPermission' ? 'timeout' : 'offline' }); } }, action === 'requestPermission' ? 60000 : 4000);
+    var wait = action === 'requestPermission' ? 60000 : action === 'storeMediaFile' ? 20000 : 6000;
+    setTimeout(function(){ if (ankiWait[id]){ delete ankiWait[id]; res({ error: action === 'requestPermission' ? 'timeout' : 'offline' }); } }, wait);
   });
 }
 window.addEventListener('message', function(e){
@@ -45,12 +66,18 @@ async function ankiAllow(){
   ANKI.status = (!r.error && r.result && r.result.permission === 'granted') ? 'on' : (r.error === 'offline' ? 'off' : 'needs');
   renderStage();
 }
+/* make the note type if it is missing, and bring an older copy up to the current look once per visit */
 async function ankiModel(type){
   var m = SR_MODELS[type], names = await ankiCall('modelNames');
   if (names.error) return names.error;
-  if ((names.result || []).indexOf(m.modelName) >= 0) return null;
-  var r = await ankiCall('createModel', m);
-  return r.error || null;
+  if ((names.result || []).indexOf(m.modelName) < 0){ var r = await ankiCall('createModel', m); if (!r.error) ANKI.synced[type] = 1; return r.error || null; }
+  if (!ANKI.synced[type]){
+    var tpl = {}; m.cardTemplates.forEach(function(t){ tpl[t.Name] = { Front:t.Front, Back:t.Back }; });
+    await ankiCall('updateModelStyling', { model:{ name:m.modelName, css:m.css } });
+    await ankiCall('updateModelTemplates', { model:{ name:m.modelName, templates:tpl } });
+    ANKI.synced[type] = 1;
+  }
+  return null;
 }
 
 var IC_ANKI = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="3.5" width="11" height="15" rx="2" transform="rotate(8 12 11)"/><rect x="4" y="5.5" width="11" height="15" rx="2" fill="var(--bg)"/><path d="M7.5 11h4M7.5 14h4"/></svg>';
@@ -62,15 +89,29 @@ function ankiStatusHTML(){
   if (s === 'checking' || s === 'unknown') return '<p class="ak-st"><i></i>Looking for Anki</p>';
   if (s === 'asking') return '<p class="ak-st"><i></i>Click Yes in the Anki window that just opened.</p>';
   if (s === 'needs') return '<p class="ak-st warn"><i></i>Anki is open but has not allowed Senior Resident yet. <button type="button" class="lnk" data-anki="allow">Allow it</button></p>';
-  return '<p class="ak-st off"><i></i>' + (EMBED ? 'Anki is not open on this computer, so cards are saved for export.' : 'Cards are saved here for export. To send them straight to Anki, use the Chrome extension.') + '</p>'
+  var io = ANKI.mode === 'img';
+  return '<p class="ak-st off"><i></i>' + (EMBED ? (io ? 'Image cards go straight into Anki, so open Anki first.' : 'Anki is not open on this computer, so cards are saved for export.') : (io ? 'Image cards need the Chrome extension with Anki open.' : 'Cards are saved here for export. To send them straight to Anki, use the Chrome extension.')) + '</p>'
     + (EMBED ? '<details class="ak-how"><summary>Send cards straight to Anki</summary><ol><li>In desktop Anki, go to Tools, Add-ons, Get Add-ons.</li><li>Paste the code <b>2055492159</b> (AnkiConnect) and restart Anki.</li><li>Keep Anki open while you study, then press <button type="button" class="lnk" data-anki="recheck">Check again</button> and click Yes when Anki asks.</li></ol></details>' : '');
 }
 function ankiCfgHTML(c){
-  var h = '<div class="ak-cfg"><b class="ak-lab">Card type</b>';
+  var h = '<div class="ak-cfg"><b class="ak-lab">Card style</b>';
   TYPES.forEach(function(t){ h += '<label class="ak-opt"><input type="radio" name="aktype" data-anki="type" value="' + t[0] + '"' + (ANKI.type === t[0] ? ' checked' : '') + '><span><b>' + t[1] + '</b><small>' + t[2] + '</small></span></label>'; });
   var can = isChief();
   h += '<label class="ak-chk' + (can ? '' : ' dis') + '"><input type="checkbox" data-anki="qid"' + (ANKI.qid && can ? ' checked' : '') + (can ? '' : ' disabled') + '> Add the question ID to each card' + (can ? '' : ' <span class="muted sm">Chief plan</span>') + '</label>';
   return h + '<p class="muted sm">Cards use the Senior Resident note types. Restyle them any time in Anki under Tools, Manage Note Types.</p></div>';
+}
+function ankiIOHTML(){
+  var io = ANKI.io;
+  if (!io || !io.src) return (io && io.msg ? '<p class="ak-msg ok">' + esc(io.msg) + '</p>' : '') + '<label class="ak-drop" tabindex="0"><input type="file" accept="image/*" data-anki="file" hidden><b>Upload or paste an image</b><small>A screenshot, a diagram, an ECG or an X-ray. Then drag a box over each part to hide. It goes from this computer straight to Anki.</small></label>';
+  var h = '<div class="ak-io" id="akIO"><img src="' + io.src + '" alt="" draggable="false">';
+  io.boxes.forEach(function(b, i){ h += '<div class="ak-b" style="left:' + b.x * 100 + '%;top:' + b.y * 100 + '%;width:' + b.w * 100 + '%;height:' + b.h * 100 + '%"><span>' + (i + 1) + '</span><button type="button" data-anki="rmbox" data-i="' + i + '" aria-label="Remove box ' + (i + 1) + '">×</button></div>'; });
+  h += '</div><p class="muted sm">' + (io.boxes.length ? io.boxes.length + ' box' + (io.boxes.length > 1 ? 'es' : '') + '. Each one becomes its own card. Drag to add more.' : 'Drag across the image to hide a part.') + '</p>';
+  h += '<input class="ak-in" id="akHead" placeholder="Title on the card (optional)" value="' + esc(io.header || '') + '">';
+  h += '<input class="ak-in" id="akExtra" placeholder="Note on the back (optional)" value="' + esc(io.extra || '') + '">';
+  if (io.msg) h += '<p class="ak-msg">' + esc(io.msg) + '</p>';
+  var n = io.boxes.length;
+  h += '<div class="ak-row"><button type="button" class="btn" data-anki="ioadd"' + (io.busy || !n ? ' disabled' : '') + '>' + (io.busy ? 'Adding to Anki' : n ? 'Add ' + n + ' card' + (n > 1 ? 's' : '') + ' to Anki' : 'Add to Anki') + '</button><button type="button" class="lnk" data-anki="ioclear">New image</button></div>';
+  return h;
 }
 function ankiHTML(c){
   var n = ANKI.queue.length, h = '<div class="anki"><div class="ak-row">';
@@ -80,24 +121,37 @@ function ankiHTML(c){
   h += '</div>';
   if (ANKI.cfg) h += ankiCfgHTML(c);
   if (c.ankiOpen){
-    h += '<div class="ak-box"><label class="ak-lab" for="ankiTxt">What should this card cover?</label>'
-      + '<textarea id="ankiTxt" rows="2" placeholder="Leave blank for the pearl, or say what you want: the trap you fell for, a cutoff, how to tell two diagnoses apart">' + esc(c.ankiTxt || '') + '</textarea>';
-    if (c.ankiMsg) h += '<p class="ak-msg">' + esc(c.ankiMsg) + '</p>';
-    h += '<div class="ak-row"><button type="button" class="btn" data-anki="make"' + (c.ankiBusy ? ' disabled' : '') + '>' + (c.ankiBusy ? 'Writing the card' : 'Make ' + (ANKI.type === 'cloze' ? 'cloze' : 'basic') + ' card') + '</button><button type="button" class="lnk" data-anki="close">Cancel</button></div>';
+    h += '<div class="ak-box"><div class="ak-seg" role="tablist"><button type="button" data-anki="mode" data-m="q" class="' + (ANKI.mode === 'q' ? 'on' : '') + '">From this question</button><button type="button" data-anki="mode" data-m="img" class="' + (ANKI.mode === 'img' ? 'on' : '') + '">From an image</button></div>';
+    if (ANKI.mode === 'img') h += ankiIOHTML();
+    else {
+      h += '<label class="ak-lab" for="ankiTxt">What should this card cover?</label>'
+        + '<textarea id="ankiTxt" rows="2" placeholder="Leave blank for the pearl, or say what you want: the trap you fell for, a cutoff, how to tell two diagnoses apart">' + esc(c.ankiTxt || '') + '</textarea>';
+      if (c.ankiMsg) h += '<p class="ak-msg">' + esc(c.ankiMsg) + '</p>';
+      h += '<div class="ak-row"><button type="button" class="btn" data-anki="make"' + (c.ankiBusy ? ' disabled' : '') + '>' + (c.ankiBusy ? 'Writing the card' : 'Make card') + '</button><button type="button" class="lnk" data-anki="close">Cancel</button></div>';
+    }
     h += ankiStatusHTML() + '</div>';
   }
   if (ANKI.last) h += '<p class="muted sm">Exported. In Anki, use File, Import and pick the file. <button type="button" class="lnk" data-anki="again">Download again</button></p>';
   return h + '</div>';
 }
 
-function mdBold(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
+/* **word** marks the highest-yield words, shown in red like a shelf deck */
+function mdRed(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, '<span class="red">$1</span>'); }
+function srcHTML(c, useQid){
+  var r = c.reveal || {}, h = '<div class="qm">';
+  if (useQid) h += '<div class="qh">' + esc((c.src || 'QID') + ' QID# ' + c.qid) + '</div>';
+  if (r.headline) h += '<div class="qpa">The answer is <b>' + esc(r.headline) + '</b>.</div>';
+  if (r.trap) h += '<div class="qwhy"><div class="qt">The trap</div>' + esc(r.trap) + '</div>';
+  if (r.pearl) h += '<div class="qok"><div class="qt">Why the answer is right</div>' + esc(r.pearl) + '</div>';
+  return h === '<div class="qm">' ? '' : h + '</div>';
+}
 async function ankiMake(c){
   var t = document.getElementById('ankiTxt'); c.ankiTxt = t ? t.value : (c.ankiTxt || '');
   c.ankiBusy = true; c.ankiMsg = ''; renderStage();
   var r = c.reveal || {}, ask = (c.ankiTxt || '').trim(), type = ANKI.type;
   var shape = type === 'cloze'
-    ? 'Write ONE cloze deletion note. Hide only the high-yield words with {{c1::...}}. Use 1 to 3 cloze numbers. Two values that belong together share one number. Never put the word "or" inside a cloze. Wrap the most important words in **double asterisks** to bold them, including inside a cloze. The text is 1 to 3 short sentences. Extra is one short line on why or what to watch for.\nOutput only JSON: {"text":"...","extra":"...","topic":"one or two words"}'
-    : 'Write ONE basic flashcard. The front is ONE short line, a question about the rule, trap or cutoff. The back starts with the answer in one short line, then at most 2 short lines on why. Wrap the most important words in **double asterisks** to bold them.\nOutput only JSON: {"front":"...","back":"...","topic":"one or two words"}';
+    ? 'Write ONE fact-table cloze note like a shelf exam deck. A short topic title, then 3 to 6 table rows. Each row is a short label (Cause, Presentation, Key finding, Next step, Treatment, Look-alike, Cutoff) and a detail. In every detail hide the high-yield words with a cloze. Each row gets its own cloze number in order (row 1 uses {{c1::...}}, row 2 uses {{c2::...}}). Two values that belong together share one number. For a list, number the items (1), (2) and give every item the same cloze number. Never put "or" inside a cloze. Wrap the one or two highest-yield clozes in **double asterisks** like **{{c2::...}}**. Keep each detail under 20 words. Extra is one short line: the pearl or the trap.\nOutput only JSON: {"title":"...","rows":[["label","detail"]],"extra":"...","topic":"one or two words"}'
+    : 'Write ONE question-and-answer card. The front is ONE short line naming the decision, ending in a question. The verdict is one short line with the rule or cutoff. Watch is one short line: the trap, the look-alike, or the clue that flips it. Wrap the most important words in **double asterisks**.\nOutput only JSON: {"front":"...","verdict":"...","watch":"...","topic":"one or two words"}';
   var prompt = 'Write an Anki card for a medical student who just did this exam question.\n'
     + ctxText(c) + '\nCorrect answer and diagnosis: ' + (r.headline || '') + '\nPearl: ' + (r.pearl || '') + (r.trap ? '\nTrap: ' + r.trap : '')
     + '\n\nThe student wants the card to cover: ' + (ask || 'the pearl')
@@ -106,16 +160,16 @@ async function ankiMake(c){
   try {
     var out = await sample(prompt, { modelTier:'quick' }), m = out.text.match(/\{[\s\S]*\}/);
     card = JSON.parse(m ? m[0] : out.text);
-    if (type === 'cloze' ? !/\{\{c\d+::/.test(card.text || '') : !(card.front && card.back)) throw 0;
+    if (type === 'cloze' ? !(card.rows && card.rows.length && /\{\{c\d+::/.test(JSON.stringify(card.rows))) : !(card.front && card.verdict)) throw 0;
   } catch(e){ c.ankiBusy = false; c.ankiMsg = 'Could not write the card. Try again.'; renderStage(); return; }
   var useQid = c.qid && !/^h/.test(c.qid) && ANKI.qid && isChief();
-  var source = useQid ? (c.src || 'QID') + ' QID# ' + c.qid : '';
   var tags = ['SeniorResident'];
   if (card.topic) tags.push('SR::' + String(card.topic).replace(/[^\w-]+/g, '_'));
   if (useQid) tags.push('QID::' + String(c.qid).replace(/\W+/g, ''));
   var fields = type === 'cloze'
-    ? { Text: mdBold(card.text).replace(/\{\{c(\d+)::/g, '{{c$1::'), Extra: mdBold(card.extra || ''), Source: esc(source) }
-    : { Front: mdBold(card.front), Back: String(card.back).split(/\n+/).filter(Boolean).map(mdBold).join('<br>'), Source: esc(source) };
+    ? { Text: '<b>' + esc(card.title || card.topic || '') + '</b><table class="t lab"><tr><th>Feature</th><th>Detail</th></tr>' + card.rows.map(function(row){ return '<tr><td>' + esc(row[0] || '') + '</td><td>' + mdRed(row[1] || '') + '</td></tr>'; }).join('') + '</table>',
+        Extra: mdRed(card.extra || ''), Source: srcHTML(c, useQid) }
+    : { Front: '<b>' + mdRed(card.front) + '</b>', Back: '<div class="vd">' + mdRed(card.verdict) + '</div>' + (card.watch ? '<div class="mist"><div class="qt">Watch out</div>' + mdRed(card.watch) + '</div>' : ''), Source: srcHTML(c, useQid) };
   var note = { type: type, fields: fields, tags: tags };
   if (ANKI.status !== 'on') await ankiCheck();
   if (ANKI.status === 'on'){
@@ -132,6 +186,72 @@ async function ankiMake(c){
   c.ankiBusy = false; c.ankiOpen = !!c.ankiMsg; c.ankiDone = true; c.ankiTxt = '';
   renderStage();
 }
+
+/* image occlusion: the picture stays on this computer and goes straight into Anki. Each box is one cloze, stored as fractions of the picture size. */
+function ioLoad(file){
+  if (!file || !/^image\//.test(file.type)) return;
+  var fr = new FileReader();
+  fr.onload = function(){
+    var im = new Image();
+    im.onload = function(){
+      var k = Math.min(1, 1600 / Math.max(im.width, im.height)), cv = document.createElement('canvas');
+      cv.width = Math.round(im.width * k); cv.height = Math.round(im.height * k);
+      var g = cv.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, cv.width, cv.height); g.drawImage(im, 0, 0, cv.width, cv.height);
+      ANKI.io = { src: cv.toDataURL('image/jpeg', 0.9), boxes: [], header: '', extra: '' };
+      renderStage();
+    };
+    im.src = fr.result;
+  };
+  fr.readAsDataURL(file);
+}
+function ioKeep(){ var io = ANKI.io; if (!io) return; var a = document.getElementById('akHead'), b = document.getElementById('akExtra'); if (a) io.header = a.value; if (b) io.extra = b.value; }
+async function ioAdd(c){
+  var io = ANKI.io; if (!io || !io.boxes.length || io.busy) return;
+  ioKeep(); io.busy = true; io.msg = ''; renderStage();
+  function done(msg){ io.busy = false; io.msg = msg || ''; renderStage(); }
+  if (ANKI.status !== 'on') await ankiCheck();
+  if (ANKI.status !== 'on') return done('Open Anki on this computer, then try again.');
+  var me = await ankiModel('io'); if (me) return done(me === 'offline' ? 'Lost Anki. Check it is still open.' : 'Anki said: ' + me);
+  var fn = 'sr_io_' + Date.now() + '.jpg';
+  var s = await ankiCall('storeMediaFile', { filename: fn, data: io.src.split(',')[1] });
+  if (s.error) return done('Anki could not save the image: ' + s.error);
+  function f(v){ return Math.max(0, Math.min(1, v)).toFixed(4); }
+  var useQid = c && c.qid && !/^h/.test(c.qid) && ANKI.qid && isChief();
+  var tags = ['SeniorResident', 'SR::ImageOcclusion']; if (useQid) tags.push('QID::' + String(c.qid).replace(/\W+/g, ''));
+  await ankiCall('createDeck', { deck: ANKI_DECK });
+  var a = await ankiCall('addNote', { note: { deckName: ANKI_DECK, modelName: SR_MODELS.io.modelName, tags: tags, options: { allowDuplicate: true },
+    fields: { Occlusion: io.boxes.map(function(b, i){ return '{{c' + (i + 1) + '::' + f(b.x) + ',' + f(b.y) + ',' + f(b.w) + ',' + f(b.h) + '}}'; }).join(' '),
+      Image: '<img src="' + fn + '">', Header: esc(io.header || ''), 'Back Extra': esc(io.extra || ''), Source: useQid ? '<div class="qm"><div class="qh">' + esc((c.src || 'QID') + ' QID# ' + c.qid) + '</div></div>' : '' } } });
+  if (a.error) return done('Anki said: ' + a.error);
+  ANKI.sent++; ankiSave();
+  var n = io.boxes.length; ANKI.io = null; if (c) c.ankiDone = true;
+  ANKI.io = { msg: n + ' card' + (n > 1 ? 's' : '') + ' added to Anki. Upload or paste another image any time.' };
+  renderStage();
+}
+var ioDrag = null;
+stage.addEventListener('pointerdown', function(e){
+  var box = e.target.closest('#akIO'); if (!box || e.target.closest('button') || !ANKI.io) return;
+  e.preventDefault();
+  var r = box.getBoundingClientRect(), t = document.createElement('div'); t.className = 'ak-b tmp'; box.appendChild(t);
+  ioDrag = { r: r, x: (e.clientX - r.left) / r.width, y: (e.clientY - r.top) / r.height, el: t, box: box };
+  try { box.setPointerCapture(e.pointerId); } catch(x){}
+});
+stage.addEventListener('pointermove', function(e){
+  if (!ioDrag) return;
+  var d = ioDrag, x = Math.max(0, Math.min(1, (e.clientX - d.r.left) / d.r.width)), y = Math.max(0, Math.min(1, (e.clientY - d.r.top) / d.r.height));
+  d.b = { x: Math.min(d.x, x), y: Math.min(d.y, y), w: Math.abs(x - d.x), h: Math.abs(y - d.y) };
+  d.el.style.cssText = 'left:' + d.b.x * 100 + '%;top:' + d.b.y * 100 + '%;width:' + d.b.w * 100 + '%;height:' + d.b.h * 100 + '%';
+});
+function ioEnd(){ if (!ioDrag) return; var d = ioDrag; ioDrag = null; if (d.b && d.b.w > 0.012 && d.b.h > 0.012 && ANKI.io){ ioKeep(); ANKI.io.boxes.push(d.b); ANKI.io.msg = ''; renderStage(); } else d.el.remove(); }
+stage.addEventListener('pointerup', ioEnd); stage.addEventListener('pointercancel', ioEnd);
+stage.addEventListener('change', function(e){ if (e.target && e.target.dataset && e.target.dataset.anki === 'file') ioLoad(e.target.files && e.target.files[0]); });
+document.addEventListener('paste', function(e){
+  var c = cases[cur]; if (!c || !c.ankiOpen || ANKI.mode !== 'img') return;
+  var it = [].slice.call((e.clipboardData || {}).items || []).find(function(i){ return /^image\//.test(i.type); });
+  if (it){ e.preventDefault(); ioLoad(it.getAsFile()); }
+});
+stage.addEventListener('dragover', function(e){ if (e.target.closest && e.target.closest('.ak-drop')) e.preventDefault(); });
+stage.addEventListener('drop', function(e){ if (e.target.closest && e.target.closest('.ak-drop')){ e.preventDefault(); ioLoad(e.dataTransfer.files[0]); } });
 /* export: Anki's own Cloze and Basic note types, so the file imports anywhere. The question ID goes in the extra field, small. */
 function ankiFile(cards){
   function cell(s){ return String(s || '').replace(/[\t\r\n]+/g, ' '); }
@@ -162,6 +282,10 @@ stage.addEventListener('click', function(e){
   if (k === 'open'){ if (!proGate()) return; c.ankiOpen = true; c.ankiMsg = ''; renderStage(); var t = document.getElementById('ankiTxt'); if (t) t.focus({ preventScroll:true }); if (ANKI.status !== 'on') ankiCheck().then(function(){ if (c.ankiOpen) renderStage(); }); return; }
   if (k === 'close'){ var tx = document.getElementById('ankiTxt'); c.ankiTxt = tx ? tx.value : ''; c.ankiOpen = false; renderStage(); return; }
   if (k === 'make'){ if (!c.ankiBusy) ankiMake(c); return; }
+  if (k === 'mode'){ var tx2 = document.getElementById('ankiTxt'); if (tx2) c.ankiTxt = tx2.value; ioKeep(); ANKI.mode = el.dataset.m; renderStage(); return; }
+  if (k === 'rmbox'){ ioKeep(); if (ANKI.io && ANKI.io.boxes) ANKI.io.boxes.splice(+el.dataset.i, 1); renderStage(); return; }
+  if (k === 'ioclear'){ ANKI.io = null; renderStage(); return; }
+  if (k === 'ioadd'){ ioAdd(c); return; }
 });
 stage.addEventListener('input', function(e){ if (e.target && e.target.id === 'ankiTxt' && cases[cur]) cases[cur].ankiTxt = e.target.value; });
 /* a hover label should not hang around while the page scrolls under a still cursor */
