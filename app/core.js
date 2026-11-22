@@ -92,14 +92,15 @@ var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||5, until:null };
 (function(){ var u = lsGet('sr_used', null); if (u && u.day===today()) plan.used = u.n||0; })();
 (function(){ var m = location.search.match(/[?&]billing=(test|off)/); if (m) lsSet('sr_billing_test', m[1] === 'test'); })();
 var BILLING_TEST = !CFG.BILLING_LIVE && !!lsGet('sr_billing_test', false);
-if (BILLING_TEST){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
+/* until the live Stripe links are pasted into config.js, checkout uses the test links */
+if (BILLING_TEST || !CFG.STRIPE_LINK){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
 function billingLive(){ return !!CFG.BILLING_LIVE || BILLING_TEST; }
 function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
 function canStart(){ return isPro() || plan.used < plan.limit; }
 function bumpLocal(){ plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
 async function loadPlan(){
   plan.name = 'free'; plan.until = null; plan.trial = false;
-  if (SR.user && SR.sb && billingLive()){
+  if (SR.user && SR.sb){
     try {
       var r = await SR.sb.from('sr_profiles').select('plan,current_period_end').eq('user_id', SR.user.id).maybeSingle();
       if (r.data && ['pro','chief','trial'].indexOf(r.data.plan) >= 0 && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = r.data.plan==='chief' ? 'chief' : 'pro'; plan.trial = r.data.plan==='trial'; plan.until = r.data.current_period_end; }

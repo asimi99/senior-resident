@@ -261,10 +261,10 @@ function pearlsCSV(){
 var authMode = 'in', waitlisted = lsGet('sr_waitlist', false);
 function planCardHTML(){
   var h = '<section class="panel plan"><h2>Plan</h2>';
-  if (!billingLive()){
+  if (!billingLive() && plan.name==='free'){
     h += '<p><b>Early access.</b> Everything is unlocked while Senior Resident is in early access.</p>'
-      + '<p class="muted sm">Pro will be '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month. Early users get first access to launch pricing.</p>'
-      + (waitlisted?'<p class="okline">'+IC.check+' You are on the Pro list.</p>':'<div class="row"><button type="button" class="btn" data-act="waitlist">Tell me when Pro opens</button></div>');
+      + '<p class="muted sm">Resident is '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month with a 7-day free trial.</p>'
+      + '<div class="row"><button type="button" class="btn" data-act="upgrade">See plans</button></div>';
   } else if (plan.name==='pro' || plan.name==='chief'){
     var nm = plan.name==='chief' ? 'Chief' : plan.trial ? 'Resident, free trial' : 'Resident';
     h += (BILLING_TEST?'<p class="muted sm">Stripe test mode</p>':'')+'<p><b>'+nm+'.</b> '+(plan.until?(plan.trial?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
@@ -317,14 +317,14 @@ async function mountGoogle(){
 }
 function pricingHTML(){
   var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
-  var live = billingLive() && CFG.STRIPE_LINK;
+  var live = !!CFG.STRIPE_LINK;
   return '<div class="sheet" role="dialog" aria-label="Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
     + '<div class="ph2">'+IC.logo+'<h2>Senior Resident: Resident plan</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
     + '<div class="prices one"><div class="price"><b>'+money(CFG.PRICE_MONTH)+'</b><span>a month</span><em>Cancel anytime</em></div></div>'
     + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
-    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+(live?'Start the 7-day free trial':'Tell me when paid plans open')+'</button>'
-    + (live && CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
-    + '<p class="muted sm c" id="buymsg">'+(live?'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe. Have a code? Enter it at checkout.':'Paid plans are not open yet. You will be first to hear. Prices cover the AI and server costs of running it.')+'</p></div>';
+    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+'Start the 7-day free trial'+'</button>'
+    + (CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
+    + '<p class="muted sm c" id="buymsg">'+'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe. Have a code? Enter it at checkout.'+'</p></div>';
 }
 function openModal(html){ modalEl.innerHTML = html; modalEl.hidden = false; }
 function closeModal(){ modalEl.hidden = true; modalEl.innerHTML = ''; }
@@ -349,7 +349,7 @@ async function openPortal(btn){
 }
 async function buy(period){
   var link = period === 'chief' ? (CFG.STRIPE_LINK_CHIEF || CFG.STRIPE_LINK) : CFG.STRIPE_LINK, msg = document.getElementById('buymsg');
-  if (!billingLive() || !link){ await joinWaitlist(period); if (msg) msg.innerHTML = '<span class="okline">'+IC.check+' You are on the list. You will hear the day Pro opens.</span>'; return; }
+  if (!link){ if (msg) msg.textContent = 'Checkout is not available right now. Try again soon.'; return; }
   if (!SR.user){ closeModal(); view = 'account'; renderAll(); return; }
   window.open(link + (link.indexOf('?')<0?'?':'&') + 'client_reference_id=' + encodeURIComponent(SR.user.id) + '&prefilled_email=' + encodeURIComponent(SR.user.email||''), '_blank', 'noopener');
   if (msg) msg.textContent = 'Checkout opened in a new tab. Come back here when you are done.';
