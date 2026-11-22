@@ -211,7 +211,7 @@ function cardHTML(c){
     if (!st.solved) h += c.helpBusy ? '' : '<button type="button" class="btn" data-act="morehelp">Need more help'+(isPro()?'':' '+IC.bolt)+'</button>';
     else h += '<button type="button" class="btn ghost" data-act="restart">Redo</button>'+(EMBED?'':'<button type="button" class="btn" data-go="new">Next question</button>');
   } else {
-    var can = st.sel[i]!==undefined || (st.other[i]&&st.other[i].saved);
+    var can = st.sel[i]!==undefined || (st.other[i]&&st.other[i].saved) || (s.kind2==='elim' && st.cross && st.cross[i] && Object.keys(st.cross[i]).some(function(x){ return st.cross[i][x]; }));
     h += '<button type="button" class="btn" data-act="next"'+(can?'':' disabled')+'>Continue</button>';
   }
   return h + '</div>';
@@ -445,6 +445,7 @@ stage.addEventListener('submit', async function(e){
 });
 function crossToggle(c, i, k){
   var st = c.st; if (st.sel[i]===k) return;
+  var sk = c.steps[i]; if (sk && sk.kind2==='elim' && st.sel[i]===undefined && !(st.cross && st.cross[i] && st.cross[i][k])){ pick(c, k); return; }   // on the elimination step, crossing out IS the answer
   if (markRuled(c, i, k, true)){ renderStage(); return; }
   st.cross = st.cross || {}; st.cross[i] = st.cross[i] || {}; st.cross[i][k] = !st.cross[i][k]; renderStage();
 }
