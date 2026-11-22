@@ -26,7 +26,7 @@ function pillHTML(){
 function renderTop(){
   var u = SR.user, ini = u ? esc((u.email||'?').charAt(0).toUpperCase()) : '';
   topEl.innerHTML = '<a class="brand" href="#"'+(EMBED?' data-go="coach"':(u?' data-go="new"':' data-hm="top"'))+'>'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>'
-    + (!EMBED && !u ? '<nav class="tlinks"><a href="#how" data-hm="how">How it works</a><a href="#plans" data-hm="plans">Pricing</a><a href="#faq" data-hm="faq">Questions</a></nav>' : '')
+    + (!EMBED ? '<nav class="tlinks"><a href="#how" data-hm="how">How it works</a><a href="#plans" data-hm="plans">Pricing</a><a href="#faq" data-hm="faq">Questions</a></nav>' : '')
     + pillHTML()
     + '<nav class="nav" aria-label="Sections">'
     + (EMBED ? '' : '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>')
