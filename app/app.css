@@ -345,3 +345,6 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 .ak-how{font-size:13px;color:var(--muted)}
 .ak-how summary{cursor:pointer;font-weight:600;color:var(--fg)}
 .ak-how ol{margin:6px 0 0 18px;padding:0;display:flex;flex-direction:column;gap:4px}
+
+[data-tip]{position:relative}
+[data-tip]:hover::after,[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:0;z-index:30;white-space:nowrap;background:var(--fg);color:var(--bg);font:600 12px/1.2 Inter,system-ui,sans-serif;padding:5px 8px;border-radius:7px;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.18)}
