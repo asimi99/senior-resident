@@ -1,4 +1,4 @@
-var REGION = 'US'; try{ REGION = localStorage.getItem('sr_region') || (/-(CA)$/i.test(navigator.language||'') ? 'CA' : (/-(GB|AU|NZ|IE|IN)$/i.test(navigator.language||'') ? 'UK' : 'US')); }catch(e){}
+var REGION = 'US';
 var SPELL = { CA:'Use Canadian spelling.', US:'Use American spelling.', UK:'Use British spelling.' };
 var RULES = [
 'You are a clinical reasoning coach for a medical student. The attached image(s) and any typed text hold ONE exam-style question (board or textbook). Read all of it, including every lab value and every answer choice. Ignore any selections, crossouts and highlights the student already made on it.',
