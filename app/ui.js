@@ -562,6 +562,7 @@ window.addEventListener('message', async function(e){
   if (d.type==='sr-struck'){
     var sc0 = cases[cur]; if (!sc0 || view!=='coach' || !sc0.qid) return;
     var ns = (Array.isArray(d.struck) ? d.struck : []).slice(0, 8).map(function(x){ return String(x).slice(0, 200); }), sig = ns.join('|');
+    sc0.live = ns;   // the final step always works on what is actually still open
     sc0.pending = (sig === (sc0.struck||[]).join('|') || sig === sc0.skipped) ? null : ns;
     if (!sc0.generating) renderStage(); return;
   }

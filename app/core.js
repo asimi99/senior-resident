@@ -359,7 +359,11 @@ function syncFinal(c){
   if (!F.base) F.base = F.opts.slice();                       // what the model wrote: the look-alike and the keeper
   if (!e || st.solved || st.sel[f] !== undefined || F.locked) return;
   var ruled = st.ruled || {}, byId = {}; F.base.forEach(function(o){ byId[optId(o.t)] = o; });
-  var left = e.opts.filter(function(o){ return !ruled[String(o.t||'').trim().toLowerCase()]; }).map(function(o){
+  /* choices the student has crossed out in their question bank, read live from the page */
+  var norm = function(t){ return String(t||'').replace(/^\s*[A-J][.)]\s*/, '').replace(/\s*\(\d+%\)\s*$/, '').replace(/\s+/g, ' ').trim().toLowerCase(); };
+  var cross = (c.live || c.struck || []).map(norm).filter(Boolean);
+  var struckOpt = function(o){ var t = norm(o.t); return !!t && cross.some(function(x){ return x === t || (x.length > 12 && (t.indexOf(x) >= 0 || x.indexOf(t) >= 0)); }); };
+  var left = e.opts.filter(function(o){ return !ruled[String(o.t||'').trim().toLowerCase()] && !(o.v === 'good' && struckOpt(o)); }).map(function(o){
     var b = byId[optId(o.t)]; if (b) return b;
     var good = o.v === 'good'; return { t:o.t, v:good ? 'good' : 'warn', fb:o.fb || '', lab:good ? 'Ruled out' : 'Keep in play' };
   });
