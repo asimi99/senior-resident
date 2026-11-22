@@ -16,7 +16,11 @@ window.SR_CONFIG = {
   PRICE_FELLOW: 25,
   TRIAL_DAYS: 7,        // one free trial of the Resident plan, one per card (card needed at Stripe checkout)
   TRIAL_EXAM_QS: 10,    // during a trial, only this many questions of a PDF become an exam
-  STRIPE_LINK: '',        // Resident plan Payment Link (7-day trial, promo codes allowed)
-  STRIPE_LINK_CHIEF: '',  // Chief plan Payment Link (promo codes allowed)
+  STRIPE_LINK: '',        // LIVE Resident plan Payment Link (7-day trial, promo codes allowed)
+  STRIPE_LINK_CHIEF: '',  // LIVE Chief plan Payment Link (promo codes allowed)
+  /* Stripe test mode. Open the app with ?billing=test to turn billing on in this browser only
+     (pay with Stripe's test card 4242 4242 4242 4242). ?billing=off turns it back off. */
+  STRIPE_TEST_LINK: 'https://buy.stripe.com/test_fZu8wIcYicSSeul1arfAc00',
+  STRIPE_TEST_LINK_CHIEF: 'https://buy.stripe.com/test_8x228k9M66uu0Dvf1hfAc01',
   STRIPE_PORTAL: ''
 };

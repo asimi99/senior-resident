@@ -90,7 +90,10 @@ SR.signOut = function(){ return SR.sb.auth.signOut(); };
 /* ---------- plan and allowance ---------- */
 var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||5, until:null };
 (function(){ var u = lsGet('sr_used', null); if (u && u.day===today()) plan.used = u.n||0; })();
-function billingLive(){ return !!CFG.BILLING_LIVE; }
+(function(){ var m = location.search.match(/[?&]billing=(test|off)/); if (m) lsSet('sr_billing_test', m[1] === 'test'); })();
+var BILLING_TEST = !CFG.BILLING_LIVE && !!lsGet('sr_billing_test', false);
+if (BILLING_TEST){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
+function billingLive(){ return !!CFG.BILLING_LIVE || BILLING_TEST; }
 function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
 function canStart(){ return isPro() || plan.used < plan.limit; }
 function bumpLocal(){ plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }

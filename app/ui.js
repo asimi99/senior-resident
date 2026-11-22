@@ -265,9 +265,9 @@ function planCardHTML(){
     h += '<p><b>Early access.</b> Everything is unlocked while Senior Resident is in early access.</p>'
       + '<p class="muted sm">Pro will be '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month. Early users get first access to launch pricing.</p>'
       + (waitlisted?'<p class="okline">'+IC.check+' You are on the Pro list.</p>':'<div class="row"><button type="button" class="btn" data-act="waitlist">Tell me when Pro opens</button></div>');
-  } else if (plan.name==='pro' || plan.name==='chief' || plan.name==='trial'){
-    var nm = plan.name==='chief' ? 'Chief' : plan.name==='trial' ? 'Resident, free trial' : 'Resident';
-    h += '<p><b>'+nm+'.</b> '+(plan.until?(plan.name==='trial'?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
+  } else if (plan.name==='pro' || plan.name==='chief'){
+    var nm = plan.name==='chief' ? 'Chief' : plan.trial ? 'Resident, free trial' : 'Resident';
+    h += (BILLING_TEST?'<p class="muted sm">Stripe test mode</p>':'')+'<p><b>'+nm+'.</b> '+(plan.until?(plan.trial?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
       + '<p class="muted sm">Cancel, switch plans, change your card or download receipts.</p>'
       + '<div class="row"><button type="button" class="btn ghost" data-act="portal">Manage subscription</button></div><p class="er" id="portalerr"></p>';
   } else {
@@ -585,4 +585,9 @@ restore();
 SR.onAuth(function(){ loadPlan(); renderAll(); });
 renderAll();
 if (EMBED && window.parent !== window) window.parent.postMessage({ type:'sr-ready' }, '*');
+if (/[?&]paid=1/.test(location.search)){
+  history.replaceState(null, '', location.pathname + location.search.replace(/[?&]paid=1/, '').replace(/^&/, '?'));
+  view = 'account';
+  (function poll(n){ setTimeout(async function(){ await loadPlan(); renderAll(); if (plan.name==='free' && n < 15) poll(n + 1); }, 2000); })(0);
+}
 if (location.hash==='#pro'){ history.replaceState(null, '', location.pathname + location.search); openModal(pricingHTML()); }
