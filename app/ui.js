@@ -10,7 +10,7 @@ var IC = {
   x:'<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   pager:'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="14" height="11" rx="2.5"/><path d="M6.5 13h7M6.5 16.5h4"/><path d="M16 5.5a5 5 0 0 1 4.5 4.5M16 2a8.5 8.5 0 0 1 8 8" transform="translate(-1.5 .5)"/></svg>',
   bolt:'<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>',
-  logo:'<svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b8cf0"/><stop offset="1" stop-color="#0f3a80"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg)"/><path d="M25 11h14a3 3 0 0 1 3 3v8h8a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3h-8v8a3 3 0 0 1-3 3H25a3 3 0 0 1-3-3v-8h-8a3 3 0 0 1-3-3V25a3 3 0 0 1 3-3h8v-8a3 3 0 0 1 3-3z" fill="#fff"/><path d="M24 31l8-7 8 7M24 40l8-7 8 7" fill="none" stroke="#1a5fb4" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  logo:'<svg viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2f36"/><stop offset="1" stop-color="#0b0d10"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#lg)"/><path d="M25 11h14a3 3 0 0 1 3 3v8h8a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3h-8v8a3 3 0 0 1-3 3H25a3 3 0 0 1-3-3v-8h-8a3 3 0 0 1-3-3V25a3 3 0 0 1 3-3h8v-8a3 3 0 0 1 3-3z" fill="#fff"/><path d="M24 31l8-7 8 7M24 40l8-7 8 7" fill="none" stroke="#14171c" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
 };
 function fbHtml(cls, text, lab){ return '<div class="fb '+cls+'"><b>'+esc(lab||LABEL[cls])+'</b>'+text+'</div>'; }
 function waitHTML(t, stop){ return '<div class="wait"><span class="dots"><i></i><i></i><i></i></span><span>'+esc(t)+'</span>'+(stop?'<span class="spacer"></span><button type="button" class="btn ghost sm" data-act="stop">Stop</button>':'')+'</div>'; }
@@ -325,7 +325,7 @@ function pricingHTML(){
     + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+'Start the 7-day free trial'+'</button>'
     + (CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
-    + '<p class="muted sm c" id="buymsg">'+esc(TRIAL_NOTE)+' Prices in '+esc(CFG.CURRENCY)+'. Have a code? Enter it at checkout.'+'</p></div>';
+    + '<p class="muted sm c" id="buymsg">'+esc(TRIAL_NOTE)+' Prices in '+esc(CFG.CURRENCY)+'.'+'</p></div>';
 }
 function openModal(html){ modalEl.innerHTML = html; modalEl.hidden = false; }
 function closeModal(){ modalEl.hidden = true; modalEl.innerHTML = ''; }
