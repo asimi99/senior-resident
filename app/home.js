@@ -6,8 +6,9 @@ SR.onAuth(function(){ SR_CHECKED = true; var id = location.hash.slice(1); if (['
 if (!SR.ready) SR_CHECKED = true;
 
 function showHome(){
-  return !EMBED && !SR.user && view === 'coach' && cur === -1 && !cases.length && !lsGet('sr_try', false);
+  return !EMBED && view === 'coach' && cur === -1;
 }
+function homeTool(){ return !!SR.user || !!lsGet('sr_try', false); }
 function homeHTML(){
   if (!SR_CHECKED) return '';
   var C = CFG, ck = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12.5l4 4L18 8"/></svg>';
@@ -16,15 +17,18 @@ function homeHTML(){
   h += '<section class="hm-hero"><div><p class="hm-eye">Reasoning coach for board-style questions</p>'
     + '<h1>Stop guessing answers. <em>Learn to read the stem.</em></h1>'
     + '<p class="hm-lede">Senior Resident sits beside your question bank and walks you to the answer one decision at a time, the way a good senior does on the wards.</p>'
-    + '<div class="hm-cta"><button type="button" class="btn" data-hm="try">Try a question free</button><button type="button" class="btn ghost" data-hm="signin">Sign in</button></div>'
+    + (homeTool()
+      ? '<div class="hm-cta"><button type="button" class="btn ghost" data-go="exam">Exam mode from a PDF</button><button type="button" class="btn ghost" data-go="review">Your progress</button>'+(SR.user?'':'<button type="button" class="btn ghost" data-hm="signin">Sign in</button>')+'</div>'
+      : '<div class="hm-cta"><button type="button" class="btn" data-hm="try">Try a question free</button><button type="button" class="btn ghost" data-hm="signin">Sign in</button></div>')
     + '<p class="hm-fine">Free to start. A Chrome side panel and this web app. Works with any question bank, PDF, screenshot or pasted question.</p></div>'
-    + '<div class="hm-mock" aria-hidden="true"><div class="q"><span class="bar2">Question 14 of 20</span>'
+    + (homeTool() ? '<div class="hm-tool">' + uploadHTML() + '</div>' : '<div class="hm-mock" aria-hidden="true"><div class="q"><span class="bar2">Question 14 of 20</span>'
     + '<p>A 19-year-old man has 18 hours of abdominal pain that <mark>began near the umbilicus and moved to the right lower quadrant</mark>. Temperature is 38.6&deg;C. There is <mark>guarding and rebound</mark> at McBurney point.</p>'
     + '<p>Which of the following is the most likely diagnosis?</p><ol><li>Mesenteric adenitis</li><li>Acute appendicitis</li><li class="out">Gastroenteritis</li><li class="out">Kidney stone</li></ol></div>'
     + '<div class="p"><div class="ph">' + IC.logo + 'Senior Resident<span>Step 1 of 4</span></div><div class="pb"><div class="prog"><i class="n"></i><i></i><i></i><i></i></div>'
     + '<div class="cd"><div class="st">Step 1 <b>Key finding</b></div><h4>The pain began at the umbilicus, then moved to the right lower quadrant. What does the move mean?</h4>'
     + '<div class="o"><kbd>A</kbd>It is spreading across the abdomen</div><div class="o g"><kbd>B</kbd>The lining over one spot is now irritated</div><div class="o"><kbd>C</kbd>It is referred from the ureter</div>'
-    + '<div class="fbk"><b>Correct</b>Vague midline pain is visceral. Sharp pain in one spot means the lining there is inflamed.</div></div></div></div></div></section>';
+    + '<div class="fbk"><b>Correct</b>Vague midline pain is visceral. Sharp pain in one spot means the lining there is inflamed.</div></div></div></div></div>')
+    + '</section>';
 
   h += '<section class="hm-sec" id="how"><h2>You answer the question. It makes sure you know why.</h2><p class="hm-sub">Sometimes a miss is a knowledge gap. Sometimes it is a clue you read past. Senior Resident trains both.</p>'
     + '<div class="hm-steps"><div><h3>It reads your question</h3><p>Open a question in your bank and it picks up the stem, the choices and the images. Or drop in a screenshot.</p></div>'
@@ -62,9 +66,9 @@ function homeHTML(){
   return h + '</div>';
 }
 function homeGo(where){
-  if (where === 'try'){ lsSet('sr_try', true); view = 'coach'; cur = -1; renderAll(); window.scrollTo(0, 0); return; }
+  if (where === 'try'){ lsSet('sr_try', true); view = 'coach'; cur = -1; renderAll(); window.scrollTo(0, 0); var t = document.getElementById('qtext'); if (t) t.focus({ preventScroll:true }); return; }
   if (where === 'signin'){ view = 'account'; renderAll(); window.scrollTo(0, 0); return; }
-  if (!showHome()){ lsSet('sr_try', false); view = 'coach'; cur = -1; if (SR.user){ renderAll(); return; } renderAll(); }
+  if (!showHome()){ view = 'coach'; cur = -1; renderAll(); }
   var el = document.getElementById(where); if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 document.addEventListener('click', function(e){

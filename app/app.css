@@ -447,3 +447,6 @@ body.home .wrap{max-width:1120px}
 .hm-mock .o.g{border-color:#1b7f4d;background:#e2f4ea}.hm-mock .o.g kbd{background:#1b7f4d;color:#fff;border-color:transparent}
 .hm-mock .fbk{background:#e2f4ea;border-left:3px solid #1b7f4d;border-radius:8px;padding:8px 10px}.hm-mock .fbk b{display:block;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:#1b7f4d}
 @media (max-width:560px){.hm-mock{grid-template-columns:1fr}.hm-mock .q{border-right:0;border-bottom:1px solid #dbe3ef}}
+.hm-tool{min-width:0}
+.hm-tool .panel{box-shadow:0 24px 60px rgba(12,42,87,.14)}
+.hm .hm-tool h2{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}

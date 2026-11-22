@@ -480,6 +480,7 @@ stage.addEventListener('click', async function(e){
   if (act==='waitlist'){ await joinWaitlist(''); renderStage(); return; }
   if (act==='signout'){ await SR.signOut(); return; }
   if (act==='portal'){ openPortal(el); return; }
+  if (act==='buy'){ buy(el.dataset.p); return; }
   if (act==='authsw'){ authMode = authMode==='in' ? 'up' : 'in'; renderStage(); return; }
   if (act==='goext'){
     var gr = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(16)), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
