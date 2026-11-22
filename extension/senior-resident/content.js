@@ -122,7 +122,7 @@
   });
   function setBg(state){
     bgState = state; tab.classList.toggle('reading', state === 'reading'); tab.classList.toggle('ready', state === 'ready');
-    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? 'SR ready' : 'Senior Resident');
+    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? "Let's review" : 'Senior Resident');
   }
   // By default the panel never opens on its own: the tab says it is ready and pulses. "Open when ready" in the panel footer turns the pop-out on.
   var POP = false;
