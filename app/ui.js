@@ -28,7 +28,7 @@ function renderTop(){
   topEl.innerHTML = '<a class="brand" href="'+(EMBED?'#':'../')+'"'+(EMBED?' data-go="coach"':'')+'>'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>'
     + pillHTML()
     + '<nav class="nav" aria-label="Sections">'
-    + '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>'
+    + (EMBED ? '' : '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>')
     + (EMBED?'':'<button type="button" class="ib'+(view==='exam'?' on':'')+'" data-go="exam" title="Exam mode" aria-label="Exam mode"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></button>')
     + '<button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Review" aria-label="Review">'+IC.chart+'</button>'
     + (EMBED?'<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg></button>':'')
@@ -286,7 +286,6 @@ function accountHTML(){
   h += planCardHTML();
   var R = [['US','American'],['CA','Canadian'],['UK','British']];
   h += '<section class="panel"><h2>Preferences</h2><div class="pref"><span>Default difficulty</span>'+'<div class="seg">'+LEVELS.map(function(l){ return '<button type="button" role="radio" aria-checked="'+(l[0]===LEVEL)+'" data-act="lvl" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('')+'</div></div>'
-    + '<div class="pref"><span>Spelling and guidelines</span><div class="seg">'+R.map(function(r){ return '<button type="button" role="radio" aria-checked="'+(r[0]===REGION)+'" data-act="region" data-r="'+r[0]+'">'+r[1]+'</button>'; }).join('')+'</div></div>'
     + '<p class="muted sm">Keys: press an option letter to pick it, Enter continues, Backspace goes back. Right-click an option to cross it out.</p></section>'
     + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank.</span></p>';
   return h;
