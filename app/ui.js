@@ -30,6 +30,7 @@ function userInitials(u){
   return esc((u.email||'?').charAt(0).toUpperCase());
 }
 var EXAM_IC = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+var PLAN_IC = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 15l2 2 4-4"/></svg>';
 var HELP_IC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg>';
 var acctOpen = false;
 function acctMenuHTML(){
@@ -53,8 +54,8 @@ function renderTop(){
       + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
     return;
   }
-  var site = [['home','Home'],['how','How it works'],['pricing','Pricing'],['schedule','Study plan']];
-  var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['review','Statistics',IC.chart,view==='review']];
+  var site = [['home','Home'],['how','How it works'],['pricing','Pricing']];
+  var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
   topEl.innerHTML = '<a class="brand" href="#" data-go="home">'+IC.logo+'<span>Senior Resident</span></a>'
     + '<nav class="sitetabs" aria-label="Site">' + site.map(function(t){ return '<a href="#'+(t[0]==='schedule'?'plan':t[0]==='home'?'':t[0])+'" data-go="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+'</a>'; }).join('') + '</nav>'
     + '<span class="spacer"></span>'

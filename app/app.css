@@ -569,3 +569,4 @@ body.site:has(.sp) .wrap{max-width:900px}
 .sppreview{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;margin:12px 0;opacity:.9;pointer-events:none}
 .sppreview .sptbl table{min-width:0}
 @media (max-width:560px){body.site .top .pill{display:none}.acmenu{position:fixed;left:12px;right:12px;top:58px;width:auto}.tooltabs{gap:4px;margin-right:4px}}
+.tt[data-go="schedule"]{background:#f1e9fb;color:#5b2d91}.tt[data-go="schedule"].on,.tt[data-go="schedule"]:hover{border-color:#5b2d91}
