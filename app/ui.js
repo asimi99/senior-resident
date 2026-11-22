@@ -280,11 +280,11 @@ function accountHTML(){
   var u = SR.user, h = '';
   if (!SR.ready) h += '<section class="panel"><h2>Accounts are not switched on</h2><p class="muted">Everything still works without one.</p></section>';
   else if (u){
-    h += '<section class="panel"><h2>Account</h2><p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
+    h += '<section class="panel"><h2>Account</h2>'+((u.user_metadata||{}).full_name?'<p><b>'+esc(u.user_metadata.full_name)+'</b></p>':'')+'<p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
   } else {
     h += '<section class="panel auth"><h2>'+(authMode==='in'?'Sign in':'Create your account')+'</h2><p class="muted">'+(authMode==='in'?'Your plan and history follow you to any device.':'Takes a few seconds.')+'</p>'
       + '<div id="gis"></div><div class="or"><span>or</span></div>'
-      + '<form id="authform"><input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required><p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
+      + '<form id="authform">'+(authMode==='in'?'':'<input class="inp" id="aun" type="text" placeholder="Full name" autocomplete="name" required minlength="3" maxlength="80">')+'<input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required><p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
       + '<button type="button" class="lnk" data-act="authsw">'+(authMode==='in'?'New here? Create an account':'Already have an account? Sign in')+'</button></section>';
   }
   h += planCardHTML();
@@ -430,8 +430,10 @@ stage.addEventListener('submit', async function(e){
   if (e.target.id!=='authform') return;
   e.preventDefault();
   var em = document.getElementById('aue').value.trim(), pw = document.getElementById('aup').value, er = document.getElementById('auerr'), btn = e.target.querySelector('button');
+  var nmEl = document.getElementById('aun'), nm = nmEl ? nmEl.value.trim().replace(/\s+/g, ' ') : '';
+  if (authMode!=='in' && nm.split(' ').length < 2){ er.textContent = 'Please enter your first and last name.'; if (nmEl) nmEl.focus(); return; }
   btn.disabled = true; er.textContent = '';
-  var r = await (authMode==='in' ? SR.signIn(em, pw) : SR.signUp(em, pw));
+  var r = await (authMode==='in' ? SR.signIn(em, pw) : SR.signUp(em, pw, nm));
   btn.disabled = false;
   if (r.error) er.textContent = /invalid login/i.test(r.error.message) ? 'That email and password do not match.' : (/registered/i.test(r.error.message) ? 'That email already has an account. Sign in instead.' : r.error.message);
 });
