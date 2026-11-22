@@ -44,7 +44,9 @@ function renderTabs(){
     var state = c.st.solved ? 'done' : (c.generating || c.queued ? 'busy' : '');
     return '<button type="button" class="tab '+state+'" role="tab" aria-selected="'+(k===cur)+'" data-case="'+k+'"><i></i><span>'+tabLabel(c)+'</span></button>';
   }).join('');
-  var a = tabsEl.querySelector('[aria-selected="true"]'); if (a && a.scrollIntoView) a.scrollIntoView({ block:'nearest', inline:'nearest' });
+  var a = tabsEl.querySelector('[aria-selected="true"]');
+  /* scroll only the tab strip sideways, never the page */
+  if (a){ var l = a.offsetLeft - tabsEl.offsetLeft, r = l + a.offsetWidth; if (l < tabsEl.scrollLeft) tabsEl.scrollLeft = l; else if (r > tabsEl.scrollLeft + tabsEl.clientWidth) tabsEl.scrollLeft = r - tabsEl.clientWidth; }
 }
 
 /* ---------- new question ---------- */
@@ -210,9 +212,8 @@ function cardHTML(c){
   return h + '</div>';
 }
 function caseHTML(c){
-  var src = [c.src, c.title].filter(Boolean).join(' · ');
-  var nar = (c.struck && c.struck.length) ? '<span class="lv nar">'+c.struck.length+' crossed out</span>' : '';
-  return '<div class="qhead">'+(src?'<span class="src">'+esc(src)+'</span>':'')+nar+'<span class="lv">'+esc((LEVELS.filter(function(l){return l[0]===(c.level||LEVEL)})[0]||LEVELS[0])[1])+'</span><span class="spacer"></span>'+(EMBED&&c.qid?'<button type="button" class="ibs" data-act="reread" title="Check my cross-outs again" aria-label="Check my cross-outs again"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></button>':'')+'<button type="button" class="ibs" data-act="closecase" title="Close this question" aria-label="Close this question"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>'
+  var head = EMBED ? '' : '<div class="qhead"><span class="spacer"></span><button type="button" class="ibs" data-act="closecase" title="Close this question" aria-label="Close this question"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
+  return head
     + narbarHTML(c)
     + stemHTML(c) + '<div class="bar" id="bar" aria-hidden="true">'+barHTML(c)+'</div><main class="card" id="card">'+cardHTML(c)+'</main>';
 }
@@ -352,8 +353,15 @@ function renderStage(){
   /* a question that has nothing yet and is not being built gets built, quietly, instead of showing an error */
   if (!c.steps.length && !c.generating && !c.queued && !c.error && !c.stopped && (c.auto||0) < 2 && (c.text || c.files.length)){ c.auto = (c.auto||0) + 1; gen(c); return; }
   var keep = document.getElementById('chatTxt'), val = keep ? keep.value : '';
+  /* hold the page where it is: re-rendering swaps the images, and for a moment the page is too short to keep its scroll */
+  var y = window.scrollY, hgt = stage.offsetHeight; stage.style.minHeight = hgt + 'px';
   stage.innerHTML = caseHTML(c);
   if (val){ var t = document.getElementById('chatTxt'); if (t) t.value = val; }
+  if (y) window.scrollTo(0, y);
+  var imgs = Array.prototype.slice.call(stage.querySelectorAll('img')).filter(function(im){ return !im.complete; });
+  var release = function(){ stage.style.minHeight = ''; };
+  if (!imgs.length) requestAnimationFrame(function(){ requestAnimationFrame(release); });
+  else Promise.all(imgs.map(function(im){ return new Promise(function(r){ im.addEventListener('load', r, { once:true }); im.addEventListener('error', r, { once:true }); }); })).then(release);
 }
 function renderAll(){ renderTop(); renderStage(); }
 function go(v){
