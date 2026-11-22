@@ -25,13 +25,17 @@ function pillHTML(){
 }
 function renderTop(){
   var u = SR.user, ini = u ? esc((u.email||'?').charAt(0).toUpperCase()) : '';
-  topEl.innerHTML = '<a class="brand" href="#"'+(EMBED?' data-go="coach"':(u?' data-go="new"':' data-hm="top"'))+'>'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>'
-    + (!EMBED ? '<nav class="tlinks"><a href="#how" data-hm="how">How it works</a><a href="#plans" data-hm="plans">Pricing</a><a href="#faq" data-hm="faq">Questions</a></nav>' : '')
+  document.body.classList.toggle('site', !EMBED);
+  var tabs = [['home','Home'],['how','How it works'],['pricing','Pricing'],['schedule','Study plan'],['faq','Questions']];
+  var onCoach = view==='coach' || view==='exam' || view==='review';
+  topEl.innerHTML = '<a class="brand" href="#"'+(EMBED?' data-go="coach"':' data-go="home"')+'>'+IC.logo+'<span>Senior Resident</span></a>'
+    + (!EMBED ? '<nav class="sitetabs" aria-label="Site">' + tabs.map(function(t){ return '<a href="#'+(t[0]==='schedule'?'plan':t[0])+'" data-go="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+'</a>'; }).join('') + '<a href="#coach" data-go="new" class="coach'+(onCoach?' on':'')+'">Coach</a></nav>' : '')
+    + '<span class="spacer"></span>'
     + pillHTML()
     + '<nav class="nav" aria-label="Sections">'
-    + (EMBED ? '' : '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>')
-    + (EMBED?'':'<button type="button" class="ib'+(view==='exam'?' on':'')+'" data-go="exam" title="Exam mode" aria-label="Exam mode"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></button>')
-    + '<button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Review" aria-label="Review">'+IC.chart+'</button>'
+    + (onCoach || EMBED ? '' : '')
+    + (EMBED?'':(onCoach?'<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button><button type="button" class="ib'+(view==='exam'?' on':'')+'" data-go="exam" title="Exam mode" aria-label="Exam mode"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></button>':''))
+    + (EMBED || onCoach ? '<button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Your progress" aria-label="Your progress">'+IC.chart+'</button>' : '')
     + (EMBED?'<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg></button>':'')
     + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button>'
     + '</nav>';
@@ -366,6 +370,7 @@ function renderStage(){
   renderTabs();
   var hm = typeof showHome === 'function' && showHome(); document.body.classList.toggle('home', !!hm);
   if (hm){ stage.innerHTML = homeHTML(); return; }
+  if (view==='schedule' && !EMBED){ stage.innerHTML = scheduleHTML(); return; }
   if (view==='review'){ stage.innerHTML = reviewHTML(); return; }
   if (view==='exam'){ stage.innerHTML = examHTML(); return; }
   if (view==='account'){ stage.innerHTML = accountHTML(); mountGoogle(); return; }
@@ -389,6 +394,7 @@ function go(v){
   if (v==='new'){ view = 'coach'; cur = -1; }
   else if (v==='plan'){ if (billingLive() && plan.name!=='pro'){ openModal(pricingHTML()); return; } view = 'account'; }
   else view = v;
+  if (!EMBED){ var hv = { home:'', how:'#how', pricing:'#pricing', faq:'#faq', schedule:'#plan', coach:'#coach' }[view]; if (hv !== undefined) history.replaceState(null, '', location.pathname + location.search + hv); }
   renderAll(); window.scrollTo({ top:0 });
 }
 
