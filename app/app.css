@@ -348,3 +348,5 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 
 [data-tip]{position:relative}
 [data-tip]:hover::after,[data-tip]:focus-visible::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:0;z-index:30;white-space:nowrap;background:var(--fg);color:var(--bg);font:600 12px/1.2 Inter,system-ui,sans-serif;padding:5px 8px;border-radius:7px;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+html.notip [data-tip]::after{display:none}
+.card + .anki{margin-top:14px}

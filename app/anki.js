@@ -119,3 +119,6 @@ stage.addEventListener('click', function(e){
   if (k === 'make'){ if (!c.ankiBusy) ankiMake(c); return; }
 });
 stage.addEventListener('input', function(e){ if (e.target && e.target.id === 'ankiTxt' && cases[cur]) cases[cur].ankiTxt = e.target.value; });
+/* a hover label should not hang around while the page scrolls under a still cursor */
+window.addEventListener('scroll', function(){ document.documentElement.classList.add('notip'); }, { passive:true });
+window.addEventListener('mousemove', function(){ document.documentElement.classList.remove('notip'); }, { passive:true });

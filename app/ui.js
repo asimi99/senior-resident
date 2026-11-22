@@ -147,7 +147,6 @@ function revealHTML(c){
   var r = c.reveal, h = '<div class="reveal"><p class="stood">One choice is left standing. You ruled out the rest yourself.</p>';
   if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+'</div>';
   h += recapHTML(c);
-  if (typeof ankiHTML === 'function') h += ankiHTML(c);
   return h + '</div>';
 }
 var CHIPS = ['Why is my first pick wrong?','Give me a way to remember this','Quiz me with a similar question'];
@@ -216,7 +215,7 @@ function caseHTML(c){
   var head = EMBED ? '' : '<div class="qhead"><span class="spacer"></span><button type="button" class="ibs" data-act="closecase" title="Close this question" aria-label="Close this question"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>';
   return head
     + narbarHTML(c)
-    + stemHTML(c) + '<div class="bar" id="bar" aria-hidden="true">'+barHTML(c)+'</div><main class="card" id="card">'+cardHTML(c)+'</main>';
+    + stemHTML(c) + '<div class="bar" id="bar" aria-hidden="true">'+barHTML(c)+'</div><main class="card" id="card">'+cardHTML(c)+'</main>' + (c.steps.length && typeof ankiHTML === 'function' ? ankiHTML(c) : '');
 }
 
 /* ---------- review ---------- */
