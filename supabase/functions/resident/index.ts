@@ -9,9 +9,11 @@ const CORS = {
   "Access-Control-Expose-Headers": "x-sr-used, x-sr-limit, x-sr-plan",
 };
 const LIVE = (Deno.env.get("BILLING_LIVE") ?? "") === "true";
-const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 3);
+const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 5);
 const PRO_DAILY = Number(Deno.env.get("PRO_DAILY") ?? 40);
 const PRO_MONTHLY = Number(Deno.env.get("PRO_MONTHLY") ?? 600);
+const CHIEF_DAILY = Number(Deno.env.get("CHIEF_DAILY") ?? 150);   // "unlimited" for one person; fair-use ceiling
+const CHIEF_MONTHLY = Number(Deno.env.get("CHIEF_MONTHLY") ?? 1800);
 const EARLY_DAILY = Number(Deno.env.get("EARLY_DAILY") ?? 150);
 const MODELS: Record<string, string> = {
   quick: Deno.env.get("MODEL_QUICK") ?? "claude-haiku-5-5",
@@ -41,7 +43,7 @@ Deno.serve(async (req) => {
   let plan = "free";
   if (userId && LIVE) {
     const { data } = await admin.from("sr_profiles").select("plan,current_period_end").eq("user_id", userId).maybeSingle();
-    if ((data?.plan === "pro" || data?.plan === "trial") && (!data.current_period_end || new Date(data.current_period_end) > new Date())) plan = "pro";
+    if (["pro", "chief", "trial"].includes(data?.plan) && (!data.current_period_end || new Date(data.current_period_end) > new Date())) plan = data.plan === "chief" ? "chief" : "pro";
   }
   let who: string;
   if (userId) who = "u:" + userId;
@@ -75,18 +77,18 @@ Deno.serve(async (req) => {
 
   // allowance: a new question counts once. Follow-ups, checks and retries share a generous side bucket.
   const isQuestion = body.kind === "coach";
-  const qLimit = !LIVE ? EARLY_DAILY : (plan === "pro" ? PRO_DAILY : FREE_DAILY);
+  const qLimit = !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
   const limit = isQuestion ? qLimit : qLimit * 12;
   const { data: n, error } = await admin.rpc("bump_usage", { k: (isQuestion ? "srq:" : "sra:") + who });
   if (error) return fail(500, "usage");
   const meter = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro" };
   if ((n as number) > limit) return fail(429, "limit", meter);
-  if (isQuestion && LIVE && plan === "pro") {
+  if (isQuestion && LIVE && (plan === "pro" || plan === "chief")) {
     // monthly fair-use ceiling so one account cannot cost more than it pays
     const first = new Date(); first.setUTCDate(1);
     const { data: rows } = await admin.from("usage").select("n").eq("key", "srq:" + who).gte("day", first.toISOString().slice(0, 10));
     const month = (rows ?? []).reduce((a: number, r: any) => a + (r.n ?? 0), 0);
-    if (month > PRO_MONTHLY) return fail(429, "limit", meter);
+    if (month > (plan === "chief" ? CHIEF_MONTHLY : PRO_MONTHLY)) return fail(429, "limit", meter);
   }
 
   const up = await fetch("https://api.anthropic.com/v1/messages", {

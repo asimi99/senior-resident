@@ -2,7 +2,7 @@
 var ANKI = { status:'unknown', queue: lsGet('sr_anki_q', []), sent: lsGet('sr_anki_sent', 0), qid: lsGet('sr_anki_qid', true), type: lsGet('sr_anki_type', 'cloze'), last: '', cfg: false };
 var ANKI_DECK = 'Senior Resident', ankiSeq = 0, ankiWait = {};
 ANKI.queue = ANKI.queue.map(function(n){ return n.fields ? n : { type:'basic', fields:{ Front:n.front || '', Back:n.back || '', Source:'' }, tags:n.tags || ['SeniorResident'] }; });
-function isPGY3(){ return !billingLive() || plan.tier === 'pgy3'; }
+function isChief(){ return !billingLive() || plan.name === 'chief'; }
 function ankiSave(){ lsSet('sr_anki_q', ANKI.queue); lsSet('sr_anki_sent', ANKI.sent); }
 
 /* our own note types, so every card looks the same and anyone can restyle them in Anki (Tools, Manage Note Types, Cards, Styling) */
@@ -68,7 +68,8 @@ function ankiStatusHTML(){
 function ankiCfgHTML(c){
   var h = '<div class="ak-cfg"><b class="ak-lab">Card type</b>';
   TYPES.forEach(function(t){ h += '<label class="ak-opt"><input type="radio" name="aktype" data-anki="type" value="' + t[0] + '"' + (ANKI.type === t[0] ? ' checked' : '') + '><span><b>' + t[1] + '</b><small>' + t[2] + '</small></span></label>'; });
-  h += '<label class="ak-chk"><input type="checkbox" data-anki="qid"' + (ANKI.qid ? ' checked' : '') + '> Add the question ID to each card</label>';
+  var can = isChief();
+  h += '<label class="ak-chk' + (can ? '' : ' dis') + '"><input type="checkbox" data-anki="qid"' + (ANKI.qid && can ? ' checked' : '') + (can ? '' : ' disabled') + '> Add the question ID to each card' + (can ? '' : ' <span class="muted sm">Chief plan</span>') + '</label>';
   return h + '<p class="muted sm">Cards use the Senior Resident note types. Restyle them any time in Anki under Tools, Manage Note Types.</p></div>';
 }
 function ankiHTML(c){
@@ -107,7 +108,7 @@ async function ankiMake(c){
     card = JSON.parse(m ? m[0] : out.text);
     if (type === 'cloze' ? !/\{\{c\d+::/.test(card.text || '') : !(card.front && card.back)) throw 0;
   } catch(e){ c.ankiBusy = false; c.ankiMsg = 'Could not write the card. Try again.'; renderStage(); return; }
-  var useQid = c.qid && !/^h/.test(c.qid) && ANKI.qid;
+  var useQid = c.qid && !/^h/.test(c.qid) && ANKI.qid && isChief();
   var source = useQid ? (c.src || 'QID') + ' QID# ' + c.qid : '';
   var tags = ['SeniorResident'];
   if (card.topic) tags.push('SR::' + String(card.topic).replace(/[^\w-]+/g, '_'));
@@ -158,7 +159,7 @@ stage.addEventListener('click', function(e){
   if (k === 'allow'){ ankiAllow(); return; }
   if (k === 'recheck'){ ankiCheck().then(renderStage); renderStage(); return; }
   if (!c) return;
-  if (k === 'open'){ if (!isPGY3()){ openModal(pricingHTML()); return; } c.ankiOpen = true; c.ankiMsg = ''; renderStage(); var t = document.getElementById('ankiTxt'); if (t) t.focus({ preventScroll:true }); if (ANKI.status !== 'on') ankiCheck().then(function(){ if (c.ankiOpen) renderStage(); }); return; }
+  if (k === 'open'){ if (!proGate()) return; c.ankiOpen = true; c.ankiMsg = ''; renderStage(); var t = document.getElementById('ankiTxt'); if (t) t.focus({ preventScroll:true }); if (ANKI.status !== 'on') ankiCheck().then(function(){ if (c.ankiOpen) renderStage(); }); return; }
   if (k === 'close'){ var tx = document.getElementById('ankiTxt'); c.ankiTxt = tx ? tx.value : ''; c.ankiOpen = false; renderStage(); return; }
   if (k === 'make'){ if (!c.ankiBusy) ankiMake(c); return; }
 });

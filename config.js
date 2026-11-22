@@ -9,13 +9,14 @@ window.SR_CONFIG = {
      To start charging: deploy supabase/functions, run supabase/senior-resident.sql, paste the
      Stripe Payment Link below, then set BILLING_LIVE to true. */
   BILLING_LIVE: false,
-  FREE_DAILY: 3,
+  FREE_DAILY: 5,
   PRO_DAILY: 40,
   CURRENCY: 'CAD',
   PRICE_MONTH: 15,
   PRICE_FELLOW: 25,
-  TRIAL_DAYS: 7,        // one free trial, either paid tier (card needed at Stripe checkout)
+  TRIAL_DAYS: 7,        // one free trial of the Resident plan, one per card (card needed at Stripe checkout)
   TRIAL_EXAM_QS: 10,    // during a trial, only this many questions of a PDF become an exam
-  STRIPE_LINK: '',
+  STRIPE_LINK: '',        // Resident plan Payment Link (7-day trial, promo codes allowed)
+  STRIPE_LINK_CHIEF: '',  // Chief plan Payment Link (promo codes allowed)
   STRIPE_PORTAL: ''
 };

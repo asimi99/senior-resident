@@ -91,7 +91,7 @@ SR.signOut = function(){ return SR.sb.auth.signOut(); };
 var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||5, until:null };
 (function(){ var u = lsGet('sr_used', null); if (u && u.day===today()) plan.used = u.n||0; })();
 function billingLive(){ return !!CFG.BILLING_LIVE; }
-function isPro(){ return !billingLive() || plan.name==='pro'; }
+function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
 function canStart(){ return isPro() || plan.used < plan.limit; }
 function bumpLocal(){ plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
 async function loadPlan(){
@@ -99,7 +99,7 @@ async function loadPlan(){
   if (SR.user && SR.sb && billingLive()){
     try {
       var r = await SR.sb.from('sr_profiles').select('plan,current_period_end').eq('user_id', SR.user.id).maybeSingle();
-      if (r.data && (r.data.plan==='pro' || r.data.plan==='trial') && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = 'pro'; plan.trial = r.data.plan==='trial'; plan.until = r.data.current_period_end; }
+      if (r.data && ['pro','chief','trial'].indexOf(r.data.plan) >= 0 && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = r.data.plan==='chief' ? 'chief' : 'pro'; plan.trial = r.data.plan==='trial'; plan.until = r.data.current_period_end; }
     } catch(e){}
   }
   if (window.onPlan) window.onPlan();

@@ -225,7 +225,8 @@ function reviewHTML(){
   var h = '<section class="tiles"><div><b>'+streak()+'</b><span>day streak</span></div><div><b>'+stats.done+'</b><span>questions coached</span></div><div><b>'+(stats.done?rate+'%':'—')+'</b><span>clean first pass</span></div></section>';
   var keys = Object.keys(SKILLS).filter(function(k){ return stats.skills[k] && stats.skills[k].n; });
   h += '<section class="panel"><h2>Reasoning profile</h2>';
-  if (!keys.length) h += '<p class="muted">Finish a question and this shows which kind of decision costs you the most marks.</p>';
+  if (!isPro()) h += '<p class="muted">See which kind of decision costs you the most marks, weakest first. Part of the Resident and Chief plans.</p><button type="button" class="btn" data-act="upgrade">See plans</button>';
+  else if (!keys.length) h += '<p class="muted">Finish a question and this shows which kind of decision costs you the most marks.</p>';
   else {
     keys.sort(function(a,b){ return stats.skills[a].ok/stats.skills[a].n - stats.skills[b].ok/stats.skills[b].n; });
     h += '<p class="muted sm">First-try accuracy by type of decision, weakest first.</p><div class="prof">'+keys.map(function(k){ var b = stats.skills[k], p = Math.round(100*b.ok/b.n);
@@ -313,14 +314,15 @@ async function mountGoogle(){
   } catch(e){ fallback(); }
 }
 function pricingHTML(){
-  var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points'];
+  var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
   var live = billingLive() && CFG.STRIPE_LINK;
   return '<div class="sheet" role="dialog" aria-label="Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
-    + '<div class="ph2">'+IC.logo+'<h2>Senior Resident PGY2 tier</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
+    + '<div class="ph2">'+IC.logo+'<h2>Senior Resident: Resident plan</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
     + '<div class="prices one"><div class="price"><b>'+money(CFG.PRICE_MONTH)+'</b><span>a month</span><em>Cancel anytime</em></div></div>'
-    + '<p class="muted sm c">The PGY3 tier, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, one tap Anki cards and exam mode from your PDFs.</p>'
-    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+(live?'Get PGY2':'Tell me when paid plans open')+'</button>'
-    + '<p class="muted sm c" id="buymsg">'+(live?'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe.':'Paid plans are not open yet. You will be first to hear. Prices cover the AI and server costs of running it.')+'</p></div>';
+    + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
+    + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+(live?'Start the 7-day free trial':'Tell me when paid plans open')+'</button>'
+    + (live && CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
+    + '<p class="muted sm c" id="buymsg">'+(live?'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe. Have a code? Enter it at checkout.':'Paid plans are not open yet. You will be first to hear. Prices cover the AI and server costs of running it.')+'</p></div>';
 }
 function openModal(html){ modalEl.innerHTML = html; modalEl.hidden = false; }
 function closeModal(){ modalEl.hidden = true; modalEl.innerHTML = ''; }
@@ -329,7 +331,7 @@ async function joinWaitlist(period){
   if (SR.user && SR.sb){ try { await SR.sb.from('sr_waitlist').insert({ email:SR.user.email, period:period||'' }); } catch(e){} }
 }
 async function buy(period){
-  var link = CFG.STRIPE_LINK, msg = document.getElementById('buymsg');
+  var link = period === 'chief' ? (CFG.STRIPE_LINK_CHIEF || CFG.STRIPE_LINK) : CFG.STRIPE_LINK, msg = document.getElementById('buymsg');
   if (!billingLive() || !link){ await joinWaitlist(period); if (msg) msg.innerHTML = '<span class="okline">'+IC.check+' You are on the list. You will hear the day Pro opens.</span>'; return; }
   if (!SR.user){ closeModal(); view = 'account'; renderAll(); return; }
   window.open(link + (link.indexOf('?')<0?'?':'&') + 'client_reference_id=' + encodeURIComponent(SR.user.id) + '&prefilled_email=' + encodeURIComponent(SR.user.email||''), '_blank', 'noopener');

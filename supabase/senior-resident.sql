@@ -23,7 +23,7 @@ grant execute on function public.bump_usage(text) to service_role;
 -- Plans. Only the Stripe webhook (service role) writes here. People can read their own row.
 create table if not exists public.sr_profiles (
   user_id uuid primary key references auth.users(id) on delete cascade,
-  plan text not null default 'free' check (plan in ('free','pro','trial')),
+  plan text not null default 'free' check (plan in ('free','pro','chief','trial')),
   stripe_customer text,
   stripe_sub text,
   current_period_end timestamptz,
@@ -67,4 +67,14 @@ create policy "sr feedback insert" on public.sr_feedback for insert to anon, aut
 
 -- If sr_profiles already exists from an earlier run, widen the plan check for trials:
 alter table public.sr_profiles drop constraint if exists sr_profiles_plan_check;
-alter table public.sr_profiles add constraint sr_profiles_plan_check check (plan in ('free','pro','trial'));
+alter table public.sr_profiles add constraint sr_profiles_plan_check check (plan in ('free','pro','chief','trial'));
+
+-- One free trial per card. The Stripe webhook records each trial card's fingerprint here
+-- and ends the trial at once if the same card already had one on another account.
+create table if not exists public.sr_trial_cards (
+  fingerprint text primary key,
+  user_id uuid references auth.users(id) on delete set null,
+  stripe_customer text,
+  created_at timestamptz not null default now()
+);
+alter table public.sr_trial_cards enable row level security;
