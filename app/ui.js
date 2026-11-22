@@ -265,11 +265,13 @@ function planCardHTML(){
     h += '<p><b>Early access.</b> Everything is unlocked while Senior Resident is in early access.</p>'
       + '<p class="muted sm">Pro will be '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month. Early users get first access to launch pricing.</p>'
       + (waitlisted?'<p class="okline">'+IC.check+' You are on the Pro list.</p>':'<div class="row"><button type="button" class="btn" data-act="waitlist">Tell me when Pro opens</button></div>');
-  } else if (plan.name==='pro'){
-    h += '<p><b>Pro.</b> '+(CFG.PRO_DAILY||40)+' questions a day and every feature.'+(plan.until?' Renews '+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
-      + (CFG.STRIPE_PORTAL?'<div class="row"><a class="btn ghost" target="_blank" rel="noopener" href="'+esc(CFG.STRIPE_PORTAL)+'">Manage billing</a></div>':'');
+  } else if (plan.name==='pro' || plan.name==='chief' || plan.name==='trial'){
+    var nm = plan.name==='chief' ? 'Chief' : plan.name==='trial' ? 'Resident, free trial' : 'Resident';
+    h += '<p><b>'+nm+'.</b> '+(plan.until?(plan.name==='trial'?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
+      + '<p class="muted sm">Cancel, switch plans, change your card or download receipts.</p>'
+      + '<div class="row"><button type="button" class="btn ghost" data-act="portal">Manage subscription</button></div><p class="er" id="portalerr"></p>';
   } else {
-    h += '<p><b>Free.</b> '+plan.limit+' questions a day. '+Math.max(0,plan.limit-plan.used)+' left today.</p><div class="row"><button type="button" class="btn" data-act="upgrade">Upgrade to Pro</button></div>';
+    h += '<p><b>Free.</b> '+plan.limit+' questions a day. '+Math.max(0,plan.limit-plan.used)+' left today.</p><div class="row"><button type="button" class="btn" data-act="upgrade">See plans</button></div>';
   }
   return h + '</section>';
 }
@@ -329,6 +331,21 @@ function closeModal(){ modalEl.hidden = true; modalEl.innerHTML = ''; }
 async function joinWaitlist(period){
   waitlisted = true; lsSet('sr_waitlist', true);
   if (SR.user && SR.sb){ try { await SR.sb.from('sr_waitlist').insert({ email:SR.user.email, period:period||'' }); } catch(e){} }
+}
+async function openPortal(btn){
+  var er = document.getElementById('portalerr'), tok = await SR.token();
+  if (!tok){ view = 'account'; renderAll(); return; }
+  var w = window.open('', '_blank'); if (btn){ btn.disabled = true; btn.textContent = 'Opening'; }
+  try {
+    var r = await fetch(CFG.SUPABASE_URL + '/functions/v1/sr-portal', { method:'POST', headers:{ 'apikey':CFG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+tok } });
+    var j = await r.json();
+    if (!j.url) throw j.error || 'x';
+    if (w) w.location = j.url; else location.href = j.url;
+  } catch(e){
+    if (w) w.close();
+    if (er) er.textContent = e === 'nosub' ? 'No subscription found on this account. If you paid with another email, sign in with that one.' : 'Could not open billing right now. Try again in a minute.';
+  }
+  if (btn){ btn.disabled = false; btn.textContent = 'Manage subscription'; }
 }
 async function buy(period){
   var link = period === 'chief' ? (CFG.STRIPE_LINK_CHIEF || CFG.STRIPE_LINK) : CFG.STRIPE_LINK, msg = document.getElementById('buymsg');
@@ -459,6 +476,7 @@ stage.addEventListener('click', async function(e){
   if (act==='upgrade'){ openModal(pricingHTML()); return; }
   if (act==='waitlist'){ await joinWaitlist(''); renderStage(); return; }
   if (act==='signout'){ await SR.signOut(); return; }
+  if (act==='portal'){ openPortal(el); return; }
   if (act==='authsw'){ authMode = authMode==='in' ? 'up' : 'in'; renderStage(); return; }
   if (act==='goext'){
     var gr = Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(16)), function(x){ return ('0'+x.toString(16)).slice(-2); }).join('');
