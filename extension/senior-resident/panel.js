@@ -2,7 +2,7 @@
   var ORIGIN = 'https://asimi99.github.io', APP = ORIGIN + '/senior-resident/app/?embed=1';
   var coach = document.getElementById('coach'), msg = document.getElementById('msg'), auto = document.getElementById('auto');
   var ready = false, queue = [], port;
-  var ANKI_OK = ['version', 'requestPermission', 'createDeck', 'addNote'];
+  var ANKI_OK = ['version', 'requestPermission', 'createDeck', 'addNote', 'modelNames', 'createModel'];
   coach.src = APP + '&t=' + Date.now();
   function connect(){
     port = chrome.runtime.connect({ name: 'sr-panel' });
