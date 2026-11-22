@@ -19,13 +19,14 @@ function money(n){ return '$' + n; }
 /* ---------- top bar ---------- */
 function pillHTML(){
   if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
-  if (plan.name==='pro') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+'Pro</button>';
+  if (plan.name==='pro' || plan.name==='chief') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+(plan.name==='chief'?'Chief':'Resident')+'</button>';
   var left = Math.max(0, plan.limit - plan.used);
   return '<button type="button" class="pill'+(left?'':' out')+'" data-go="plan">'+left+' of '+plan.limit+' left today</button>';
 }
 function renderTop(){
   var u = SR.user, ini = u ? esc((u.email||'?').charAt(0).toUpperCase()) : '';
-  topEl.innerHTML = '<a class="brand" href="'+(EMBED?'#':'../')+'"'+(EMBED?' data-go="coach"':'')+'>'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>'
+  topEl.innerHTML = '<a class="brand" href="#"'+(EMBED?' data-go="coach"':(u?' data-go="new"':' data-hm="top"'))+'>'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>'
+    + (!EMBED && !u ? '<nav class="tlinks"><a href="#how" data-hm="how">How it works</a><a href="#plans" data-hm="plans">Pricing</a><a href="#faq" data-hm="faq">Questions</a></nav>' : '')
     + pillHTML()
     + '<nav class="nav" aria-label="Sections">'
     + (EMBED ? '' : '<button type="button" class="ib'+(view==='coach'?' on':'')+'" data-go="new" title="New question" aria-label="New question">'+IC.plus+'</button>')
@@ -324,7 +325,7 @@ function pricingHTML(){
     + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+'Start the 7-day free trial'+'</button>'
     + (CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
-    + '<p class="muted sm c" id="buymsg">'+'Prices in '+esc(CFG.CURRENCY)+'. Secure checkout by Stripe. Have a code? Enter it at checkout.'+'</p></div>';
+    + '<p class="muted sm c" id="buymsg">'+esc(TRIAL_NOTE)+' Prices in '+esc(CFG.CURRENCY)+'. Have a code? Enter it at checkout.'+'</p></div>';
 }
 function openModal(html){ modalEl.innerHTML = html; modalEl.hidden = false; }
 function closeModal(){ modalEl.hidden = true; modalEl.innerHTML = ''; }
@@ -363,6 +364,8 @@ function progress(c){
 }
 function renderStage(){
   renderTabs();
+  var hm = typeof showHome === 'function' && showHome(); document.body.classList.toggle('home', !!hm);
+  if (hm){ stage.innerHTML = homeHTML(); return; }
   if (view==='review'){ stage.innerHTML = reviewHTML(); return; }
   if (view==='exam'){ stage.innerHTML = examHTML(); return; }
   if (view==='account'){ stage.innerHTML = accountHTML(); mountGoogle(); return; }
@@ -582,7 +585,8 @@ window.addEventListener('message', async function(e){
 /* ---------- start ---------- */
 if (EMBED) document.documentElement.classList.add('embed');
 restore();
-SR.onAuth(function(){ loadPlan(); renderAll(); });
+var wasUser = null;
+SR.onAuth(function(){ if (SR.user && !wasUser && view==='account') view = 'coach'; wasUser = SR.user; loadPlan(); renderAll(); });
 renderAll();
 if (EMBED && window.parent !== window) window.parent.postMessage({ type:'sr-ready' }, '*');
 if (/[?&]paid=1/.test(location.search)){
