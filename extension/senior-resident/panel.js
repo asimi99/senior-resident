@@ -2,6 +2,7 @@
   var ORIGIN = 'https://asimi99.github.io', APP = ORIGIN + '/senior-resident/app/?embed=1';
   var coach = document.getElementById('coach'), msg = document.getElementById('msg'), auto = document.getElementById('auto');
   var ready = false, queue = [], port;
+  var ANKI_OK = ['version', 'requestPermission', 'createDeck', 'addNote'];
   coach.src = APP + '&t=' + Date.now();
   function connect(){
     port = chrome.runtime.connect({ name: 'sr-panel' });
@@ -39,6 +40,12 @@
     var d = e.data || {};
     if (d.type === 'sr-ready'){ ready = true; queue.splice(0).forEach(function(x){ coach.contentWindow.postMessage(x, ORIGIN); }); }
     if (d.type === 'sr-grab') doGrab(true, !!d.reread);
+    if (d.type === 'sr-anki' && ANKI_OK.indexOf(d.action) >= 0){
+      fetch('http://127.0.0.1:8765', { method: 'POST', body: JSON.stringify({ action: d.action, version: 6, params: d.params || {} }) })
+        .then(function(r){ return r.ok ? r.json() : { error: 'http ' + r.status }; })
+        .then(function(j){ toCoach({ type: 'sr-anki-res', id: d.id, result: j.result, error: j.error || null }); })
+        .catch(function(){ toCoach({ type: 'sr-anki-res', id: d.id, error: 'offline' }); });
+    }
     if (d.type === 'sr-google' && d.clientId && /^[\w.-]+$/.test(d.clientId) && /^[0-9a-f]{64}$/.test(d.nonce || '')){
       var redirect = chrome.identity.getRedirectURL();
       var url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' + encodeURIComponent(d.clientId) + '&response_type=id_token&redirect_uri=' + encodeURIComponent(redirect)

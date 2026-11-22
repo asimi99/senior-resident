@@ -147,6 +147,7 @@ function revealHTML(c){
   var r = c.reveal, h = '<div class="reveal"><p class="stood">One choice is left standing. You ruled out the rest yourself.</p>';
   if (r.pearl) h += '<div class="pearl"><b>Pearl</b>'+esc(r.pearl)+'</div>';
   h += recapHTML(c);
+  if (typeof ankiHTML === 'function') h += ankiHTML(c);
   return h + '</div>';
 }
 var CHIPS = ['Why is my first pick wrong?','Give me a way to remember this','Quiz me with a similar question'];

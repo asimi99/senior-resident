@@ -329,3 +329,19 @@ html.embed .helpfab{padding:8px}html.embed .helpfab span{display:none}
 .pagehd .ibs{margin-left:-2px}
 
 .pagehd .ibs svg,.chat .pagehd .ibs svg{color:inherit;width:15px;height:15px}
+
+.anki{border-top:1px solid var(--line);padding-top:12px}
+.ak-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ak-box{display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--raised)}
+.ak-lab{font-weight:600;font-size:14px}
+.ak-box textarea{width:100%;box-sizing:border-box;font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;resize:vertical;background:var(--bg);color:var(--fg)}
+.ak-chk{display:flex;align-items:center;gap:8px;font-size:14px}
+.ak-chk.dis{opacity:.6}
+.ak-msg{margin:0;font-size:14px;color:var(--muted)}
+.ak-st{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.ak-st i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--line);margin-right:7px;vertical-align:1px}
+.ak-st.on i{background:#1e8e3e}
+.ak-st.warn i{background:#e0a800}
+.ak-how{font-size:13px;color:var(--muted)}
+.ak-how summary{cursor:pointer;font-weight:600;color:var(--fg)}
+.ak-how ol{margin:6px 0 0 18px;padding:0;display:flex;flex-direction:column;gap:4px}
