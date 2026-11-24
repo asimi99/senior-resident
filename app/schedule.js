@@ -104,12 +104,12 @@ function spStep2HTML(){
   var o = SPW.o, recs = SPW.recs, why = spWhy(o, recs), tot = recs.filter(function(r){ return r.ok; }).reduce(function(a, r){ return a + (+r.n || 0); }, 0);
   var h = spStepsHTML(2) + '<section class="panel sp"><h2>Here is what I would do</h2><p class="muted">' + esc(o.subject && o.subject !== 'All systems' && o.subject !== 'All subjects' ? o.subject + ', ' + o.ex : o.ex) + '</p>';
   h += '<ul class="spwhy">' + why.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
-  h += '<div class="sprecs"><div class="sprh"><span>Order</span><span>Topic</span><span>Share of exam</span><span>Questions in your bank</span><span>Keep</span></div>';
+  h += '<div class="sprecs"><div class="sprh"><span>Order</span><span>Topic</span><span>Share of exam</span><span>Questions in your bank</span><span>Accept recommendation</span></div>';
   recs.forEach(function(r, i){
     h += '<div class="sprr' + (r.ok ? '' : ' off') + '"><span class="spmv"><button type="button" data-spmv="' + i + '" data-d="-1" aria-label="Move up"' + (i ? '' : ' disabled') + '>▲</button><button type="button" data-spmv="' + i + '" data-d="1" aria-label="Move down"' + (i < recs.length - 1 ? '' : ' disabled') + '>▼</button></span>'
       + '<span class="spt">' + esc(r.t) + '</span><span class="sppct">' + (r.pct ? esc(r.pct) : '') + '</span>'
       + '<span><input class="inp spn" type="number" min="0" step="1" data-spn="' + i + '" value="' + esc(r.n) + '" placeholder="Number"' + (r.ok ? '' : ' disabled') + '></span>'
-      + '<span class="spok"><button type="button" class="' + (r.ok ? 'on y' : '') + '" data-spok="' + i + '" data-v="1" aria-label="Keep">✓</button><button type="button" class="' + (r.ok ? '' : 'on n') + '" data-spok="' + i + '" data-v="0" aria-label="Leave out">✕</button></span></div>';
+      + '<span class="spok"><button type="button" class="' + (r.ok ? 'on y' : '') + '" data-spok="' + i + '" data-v="1" aria-label="Accept recommendation">✓</button><button type="button" class="' + (r.ok ? '' : 'on n') + '" data-spok="' + i + '" data-v="0" aria-label="Leave out">✕</button></span></div>';
   });
   h += '</div><p class="sptot">Total: <b id="spTot">' + tot + '</b> questions</p>';
   h += '<label class="spfree">Want it different? Say it in your own words<textarea id="spNote" rows="3" placeholder="For example: start with cardio, put renal last, skip ethics">' + esc(SPW.note || '') + '</textarea></label>';
