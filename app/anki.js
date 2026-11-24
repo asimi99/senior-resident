@@ -106,6 +106,7 @@ function ankiIOHTML(){
   var h = '<div class="ak-io" id="akIO"><img src="' + io.src + '" alt="" draggable="false">';
   io.boxes.forEach(function(b, i){ h += '<div class="ak-b" style="left:' + b.x * 100 + '%;top:' + b.y * 100 + '%;width:' + b.w * 100 + '%;height:' + b.h * 100 + '%"><span>' + (i + 1) + '</span><button type="button" data-anki="rmbox" data-i="' + i + '" aria-label="Remove box ' + (i + 1) + '">×</button></div>'; });
   h += '</div><p class="muted sm">' + (io.boxes.length ? io.boxes.length + ' box' + (io.boxes.length > 1 ? 'es' : '') + '. Each one becomes its own card. Drag to add more.' : 'Drag across the image to hide a part.') + '</p>';
+  h += '<div class="ak-row ak-hide"><input class="ak-in" id="akHide" placeholder="What should be hidden? eg, every label, the drug names" value="' + esc(io.hide || '') + '"><button type="button" class="btn ghost sm" data-anki="ioauto"' + (io.auto ? ' disabled' : '') + '>' + (io.auto ? 'Boxing' : 'Box it for me') + '</button></div>';
   h += '<input class="ak-in" id="akHead" placeholder="Title on the card (optional)" value="' + esc(io.header || '') + '">';
   h += '<input class="ak-in" id="akExtra" placeholder="Note on the back (optional)" value="' + esc(io.extra || '') + '">';
   if (io.msg) h += '<p class="ak-msg">' + esc(io.msg) + '</p>';
@@ -204,7 +205,28 @@ function ioLoad(file){
   };
   fr.readAsDataURL(file);
 }
-function ioKeep(){ var io = ANKI.io; if (!io) return; var a = document.getElementById('akHead'), b = document.getElementById('akExtra'); if (a) io.header = a.value; if (b) io.extra = b.value; }
+function ioKeep(){ var io = ANKI.io; if (!io) return; var a = document.getElementById('akHead'), b = document.getElementById('akExtra'), d = document.getElementById('akHide'); if (a) io.header = a.value; if (b) io.extra = b.value; if (d) io.hide = d.value; }
+/* Describe what to hide and the model places the boxes. They land as normal boxes, so any can be removed or redrawn. */
+async function ioAuto(){
+  var io = ANKI.io; if (!io || !io.src || io.auto) return;
+  ioKeep(); var want = String(io.hide || '').trim();
+  if (!want){ io.msg = 'Write what should be hidden first, for example every label.'; renderStage(); return; }
+  io.auto = true; io.msg = ''; renderStage();
+  try {
+    var blob = await (await fetch(io.src)).blob();
+    var r = await sample('You place image occlusion boxes for an Anki card. Look at the image and find every region that matches this request: "' + want.replace(/"/g, "'") + '".\n'
+      + 'Return ONLY a JSON array, no other text. One object per region: {"x":left,"y":top,"w":width,"h":height}, each a fraction of the full image width or height between 0 and 1. '
+      + 'Each box covers one item (one label, one word group, one structure) tightly with a small margin, in reading order top to bottom, left to right. At most 40 boxes. If nothing matches, return [].',
+      { images:[blob], modelTier:'default' });
+    var m = r.text.match(/\[[\s\S]*\]/), arr = m ? JSON.parse(m[0]) : [];
+    var cl = function(v){ v = +v; return isFinite(v) ? Math.max(0, Math.min(1, v)) : 0; };
+    var add = (Array.isArray(arr) ? arr : []).map(function(b){ var x = cl(b.x), y = cl(b.y); return { x:x, y:y, w:Math.min(cl(b.w), 1 - x), h:Math.min(cl(b.h), 1 - y) }; })
+      .filter(function(b){ return b.w > 0.008 && b.h > 0.008; }).slice(0, 40);
+    io.boxes = io.boxes.concat(add);
+    io.msg = add.length ? add.length + ' box' + (add.length > 1 ? 'es' : '') + ' placed. Check them, remove any that are off, drag to add missing ones.' : 'Nothing matched. Try describing it another way, or drag the boxes yourself.';
+  } catch(e){ io.msg = e && e.code === 'pro_only' ? 'Box it for me is part of the paid plans.' : 'Could not place boxes right now. Drag them yourself or try again.'; }
+  io.auto = false; renderStage();
+}
 async function ioAdd(c){
   var io = ANKI.io; if (!io || !io.boxes.length || io.busy) return;
   ioKeep(); io.busy = true; io.msg = ''; renderStage();
@@ -286,6 +308,7 @@ stage.addEventListener('click', function(e){
   if (k === 'rmbox'){ ioKeep(); if (ANKI.io && ANKI.io.boxes) ANKI.io.boxes.splice(+el.dataset.i, 1); renderStage(); return; }
   if (k === 'ioclear'){ ANKI.io = null; renderStage(); return; }
   if (k === 'ioadd'){ ioAdd(c); return; }
+  if (k === 'ioauto'){ ioAuto(); return; }
 });
 stage.addEventListener('input', function(e){ if (e.target && e.target.id === 'ankiTxt' && cases[cur]) cases[cur].ankiTxt = e.target.value; });
 /* a hover label should not hang around while the page scrolls under a still cursor */
