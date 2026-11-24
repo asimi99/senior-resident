@@ -570,3 +570,33 @@ body.site:has(.sp) .wrap{max-width:900px}
 .sppreview .sptbl table{min-width:0}
 @media (max-width:560px){body.site .top .pill{display:none}.acmenu{position:fixed;left:12px;right:12px;top:58px;width:auto}.tooltabs{gap:4px;margin-right:4px}}
 .tt[data-go="schedule"]{background:#f1e9fb;color:#5b2d91}.tt[data-go="schedule"].on,.tt[data-go="schedule"]:hover{border-color:#5b2d91}
+
+/* Extension colour themes. Two-tone: a dark top bar over a lightly tinted page. Navy is the default. The website keeps its own look. */
+html.embed{
+  --top-bg:#1b3a5c; --top-fg:#ffffff; --top-muted:rgba(255,255,255,.74); --top-line:rgba(255,255,255,.16);
+  --bg:#f3f6f9; --raised:#eef2f6; --line:#dde3ea;
+  --brand:#2a6ebb; --brand-2:#1b3a5c; --brand-soft:#e6effa; --brand-fg:#ffffff;
+}
+html.embed[data-sr="rose"]{--top-bg:#7a1f45;--bg:#fcf5f8;--raised:#f8ecf1;--line:#efd9e3;--brand:#c2366f;--brand-2:#7a1f45;--brand-soft:#fbe8f0}
+html.embed[data-sr="forest"]{--top-bg:#1d4a37;--bg:#f3f8f5;--raised:#e9f2ed;--line:#d6e6dc;--brand:#2f8a5f;--brand-2:#1d4a37;--brand-soft:#e3f3ea}
+html.embed[data-sr="mono"]{--top-bg:#111111;--bg:#ffffff;--raised:#f5f5f5;--line:#e3e3e3;--brand:#111111;--brand-2:#3a3a3a;--brand-soft:#efefef}
+html.embed[data-sr="plum"]{--top-bg:#3b2a5e;--bg:#f7f5fb;--raised:#efebf7;--line:#e0d9ee;--brand:#6d4bb0;--brand-2:#3b2a5e;--brand-soft:#eee8fa}
+html.embed[data-sr="teal"]{--top-bg:#0e4a55;--bg:#f2f8f9;--raised:#e8f2f4;--line:#d4e6e9;--brand:#138a9c;--brand-2:#0e4a55;--brand-soft:#e1f3f5}
+
+html.embed .top{background:var(--top-bg);border-bottom-color:var(--top-bg);color:var(--top-fg);backdrop-filter:none}
+html.embed .top .brand{color:var(--top-fg)}
+html.embed .top .brand svg{border-radius:7px;box-shadow:0 0 0 1.5px rgba(255,255,255,.35)}
+html.embed .top .sitetabs a{color:var(--top-muted)}
+html.embed .top .sitetabs a:hover,html.embed .top .sitetabs a.on{color:var(--top-fg)} html.embed .top .sitetabs a.on{border-bottom-color:var(--top-fg)}
+html.embed .top .ib{color:var(--top-muted)} html.embed .top .ib:hover{background:rgba(255,255,255,.1);color:var(--top-fg)} html.embed .top .ib.on{background:rgba(255,255,255,.16);color:var(--top-fg)}
+html.embed .top .ib.av{background:var(--top-fg);color:var(--top-bg)}
+html.embed .top .tooltabs{border-left-color:var(--top-line)}
+html.embed .top .tt.on{box-shadow:0 0 0 2px var(--top-fg)}
+html.embed .top .pill:not(.pro):not(.out):not(.beta){background:transparent;color:var(--top-fg);border-color:rgba(255,255,255,.3)}
+html.embed .top .acmenu{color:var(--fg)}
+@media (max-width:900px){html.embed .top .sitetabs{border-top-color:var(--top-line)}}
+
+.themes{display:flex;flex-wrap:wrap;gap:8px}
+.themes button{display:flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 11px 4px 4px;cursor:pointer;font-size:13px;font-weight:600;color:var(--fg)}
+.themes button[aria-checked="true"]{border-color:var(--brand)}
+.themes i{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}

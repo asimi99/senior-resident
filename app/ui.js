@@ -43,6 +43,15 @@ function acctMenuHTML(){
     + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
     + '<button type="button" data-acct="help">Help and feedback</button><hr><button type="button" data-acct="signout">Sign out</button></div>';
 }
+var THEMES = [['navy','Navy','#1b3a5c','#2a6ebb'],['rose','Rose','#7a1f45','#c2366f'],['forest','Forest','#1d4a37','#2f8a5f'],['mono','Black and white','#111111','#ffffff'],['plum','Plum','#3b2a5e','#6d4bb0'],['teal','Teal','#0e4a55','#138a9c']];
+function curTheme(){ return document.documentElement.dataset.sr || 'navy'; }
+function themesHTML(){ var c = curTheme(); return '<div class="themes" role="radiogroup" aria-label="Colour">' + THEMES.map(function(t){ return '<button type="button" role="radio" aria-checked="'+(t[0]===c)+'" data-theme-pick="'+t[0]+'" title="'+t[1]+'"><i style="background:linear-gradient(135deg,'+t[2]+' 50%,'+t[3]+' 50%)"></i><span>'+t[1]+'</span></button>'; }).join('') + '</div>'; }
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-theme-pick]'); if (!b) return;
+  var t = b.dataset.themePick; document.documentElement.dataset.sr = t;
+  try { localStorage.setItem('sr_theme', t); } catch(_){}
+  document.querySelectorAll('[data-theme-pick]').forEach(function(x){ x.setAttribute('aria-checked', String(x.dataset.themePick===t)); });
+});
 function renderTop(){
   var u = SR.user, ini = userInitials(u);
   document.body.classList.toggle('site', !EMBED);
@@ -332,6 +341,7 @@ function accountHTML(){
   h += planCardHTML();
   var R = [['US','American'],['CA','Canadian'],['UK','British']];
   h += '<section class="panel"><h2>Preferences</h2><div class="pref"><span>Default difficulty</span>'+'<div class="seg">'+LEVELS.map(function(l){ return '<button type="button" role="radio" aria-checked="'+(l[0]===LEVEL)+'" data-act="lvl" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('')+'</div></div>'
+    + (EMBED ? '<div class="pref"><span>Colour</span>'+themesHTML()+'</div>' : '')
     + '<p class="muted sm">Keys: press an option letter to pick it, Enter continues, Backspace goes back. Right-click an option to cross it out.</p></section>'
     + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank.</span></p>';
   return h;
