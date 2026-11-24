@@ -388,7 +388,7 @@ async function moreHelp(c){
     + '\nSteps already asked (do not repeat them or ask the same thing in other words): ' + (asked.join(' | ') || 'none')
     + '\n\nWrite 2 new reasoning steps that help the student separate ONLY these remaining choices, each built on a different clue from the stem (a discriminating finding, timing, a lab value, a contraindication or what each choice would predict). NEVER name the diagnosis or say which choice is correct.'
     + '\nOutput JSON Lines only, one object per line, no other text: {"kind":"step","type":"single","q":"question","sub":"one short hint","opts":[{"t":"option","v":"good","fb":"feedback"},{"t":"option","v":"warn","fb":"feedback"},{"t":"option","v":"bad","fb":"feedback"}]}'
-    + '\nExactly 3 options per step, one good. Write all 3 options at about the same length and level of detail, so the good one is never the longest or the most specific. Feedback is 1 or 2 sentences pointing to a specific stem clue. ' + SPELL[REGION] + ' No em dashes or semicolons.';
+    + '\nExactly 3 options per step, one good. Keep every step as short as the earlier steps: the question is ONE plain sentence of 18 words or fewer, "sub" is 12 words or fewer, each option is one idea of 12 words or fewer with no "so" or "because" clause, and all 3 options are about the same length so the good one is never the longest. Feedback is ONE sentence of 25 words or fewer pointing to a specific stem clue. ' + SPELL[REGION] + ' No em dashes or semicolons.';
   var add = [];
   try {
     var r = await sample(prompt, { modelTier:'default' });
@@ -396,6 +396,8 @@ async function moreHelp(c){
       l = l.trim(); if (l.charAt(0)!=='{') return;
       var o; try { o = JSON.parse(l); } catch(e){ return; }
       if (o.kind!=='step' || !o.q || !o.opts || o.opts.length < 2) return;
+      var wc = function(t){ return String(t||'').trim().split(/\s+/).length; };
+      if (wc(o.q) > 26 || o.opts.some(function(x){ return wc(x.t) > 16; })) return;
       o.opts.forEach(function(x){ if (x.v!=='good' && x.v!=='warn' && x.v!=='bad') x.v = 'bad'; if (!x.fb) x.fb = ''; });
       o.type = 'single'; o.kind2 = 'help'; o.skill = 'discriminate'; shuffleOpts(o.opts); add.push(o);
     });
