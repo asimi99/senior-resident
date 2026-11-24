@@ -11,6 +11,7 @@ var RULES = [
 'LAST LINE: {"kind":"reveal","headline":"the correct choice and the diagnosis in one sentence. This is never shown to the student. It is only a private key.","pearl":"ONE short sentence, 18 words or fewer: the rule the student can carry to the next question on this topic. It teaches the pattern. It must NOT say which choice is correct, must not use the words answer or correct, and must not quote the wording of the correct choice.","topic":"body system, for example Cardiovascular"} and nothing else. Do not write a trap, an explanation, a list of reasons, management steps or a comparison table. The question bank already has the explanation.',
 'STEP RULES:',
 '1. 5 steps at most in total, counting the elimination and final steps (so at most 3 reasoning steps). Pick the 3 most useful of: how sick or how urgent, where the problem is or the mechanism, the finding that discriminates, how much weight a planted distractor deserves. Then eliminate, then the final rule-out.',
+'1a. In each reasoning step write all options at about the same length and level of detail. The good option must never be the longest, the most hedged or the only specific one.',
 '1b. Every step must test a different decision built on a different stem clue. Never ask the same thing twice in other words: if two candidate steps hinge on the same finding or lead to the same conclusion, keep one and drop the other.',
 '2. Every step is a decision the student makes from the stem, never recall trivia. Do not name the diagnosis, the disease or the answer in any step question or any feedback. It appears only in the reveal.',
 '3. Single steps have exactly 3 options, one good and two plausible wrong ones (bad or warn). Vary where the good option sits. Do not let the longest option be the right one.',
@@ -187,6 +188,8 @@ async function sample(input, o){
 
 /* ---------- building a session ---------- */
 var SKILLS = { triage:'Triage', localize:'Localizing', mechanism:'Mechanism', discriminate:'Key finding', distractor:'Distractors', management:'Management', eliminate:'Elimination', final:'Final rule-out' };
+/* The model tends to write the good option first and longest. Shuffle so position gives nothing away. */
+function shuffleOpts(a){ for (var i = a.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 function proc(c, line){
   line = line.trim(); if (line.charAt(0)!=='{') return;
   var o; try { o = JSON.parse(line); } catch(e){ return; }
@@ -198,7 +201,7 @@ function proc(c, line){
     var nSingle = c.steps.filter(function(x){ return x.kind2==='single'; }).length, nElim = c.steps.filter(function(x){ return x.kind2==='elim'; }).length;
     if (o.type==='final'){ if (c.steps.some(function(x){ return x.type==='final'; })) { progress(c); return; } o.opts = o.opts.slice(0, 3); o.opts.forEach(function(x){ x.lab = x.v==='good' ? 'Ruled out' : 'Keep in play'; x.v = x.v==='good' ? 'good' : 'warn'; }); o.kind2 = 'final'; o.skill = 'final'; }
     else if (o.type==='elim'){ if (nElim>=1) { progress(c); return; } o.kind2 = 'elim'; o.skill = 'eliminate'; }
-    else { if (nSingle>=3) { progress(c); return; } o.kind2 = 'single'; if (!SKILLS[o.skill]) o.skill = 'discriminate'; }
+    else { if (nSingle>=3) { progress(c); return; } o.kind2 = 'single'; if (!SKILLS[o.skill]) o.skill = 'discriminate'; shuffleOpts(o.opts); }
     if (o.type==='elim'){
       o.q = 'Which answer choice can you eliminate first?';
       o.sub = 'Pick the one you are most sure the stem rules out.';
@@ -385,7 +388,7 @@ async function moreHelp(c){
     + '\nSteps already asked (do not repeat them or ask the same thing in other words): ' + (asked.join(' | ') || 'none')
     + '\n\nWrite 2 new reasoning steps that help the student separate ONLY these remaining choices, each built on a different clue from the stem (a discriminating finding, timing, a lab value, a contraindication or what each choice would predict). NEVER name the diagnosis or say which choice is correct.'
     + '\nOutput JSON Lines only, one object per line, no other text: {"kind":"step","type":"single","q":"question","sub":"one short hint","opts":[{"t":"option","v":"good","fb":"feedback"},{"t":"option","v":"warn","fb":"feedback"},{"t":"option","v":"bad","fb":"feedback"}]}'
-    + '\nExactly 3 options per step, one good. Feedback is 1 or 2 sentences pointing to a specific stem clue. ' + SPELL[REGION] + ' No em dashes or semicolons.';
+    + '\nExactly 3 options per step, one good. Write all 3 options at about the same length and level of detail, so the good one is never the longest or the most specific. Feedback is 1 or 2 sentences pointing to a specific stem clue. ' + SPELL[REGION] + ' No em dashes or semicolons.';
   var add = [];
   try {
     var r = await sample(prompt, { modelTier:'default' });
@@ -394,7 +397,7 @@ async function moreHelp(c){
       var o; try { o = JSON.parse(l); } catch(e){ return; }
       if (o.kind!=='step' || !o.q || !o.opts || o.opts.length < 2) return;
       o.opts.forEach(function(x){ if (x.v!=='good' && x.v!=='warn' && x.v!=='bad') x.v = 'bad'; if (!x.fb) x.fb = ''; });
-      o.type = 'single'; o.kind2 = 'help'; o.skill = 'discriminate'; add.push(o);
+      o.type = 'single'; o.kind2 = 'help'; o.skill = 'discriminate'; shuffleOpts(o.opts); add.push(o);
     });
   } catch(e){}
   c.helpBusy = false;
