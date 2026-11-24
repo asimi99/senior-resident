@@ -79,9 +79,12 @@ function spRead1(){
 }
 
 /* ---------- step 2: recommendations ---------- */
+/* A topic picked as both a strength and a weakness counts as neither. */
+function spSplit(o){ var w = o.weak || [], st = o.strong || []; o.weak = w.filter(function(x){ return st.indexOf(x) < 0; }); o.strong = st.filter(function(x){ return w.indexOf(x) < 0; }); }
 function spRecommend(o){
   var t = spTopics(o).map(function(x, i){ return { t:x[0], pct:x[1], mid:x[2], i:i, n:'', ok:true }; });
   if (!t.length) t = [{ t:o.subject || 'All topics', pct:'', mid:0, i:0, n:'', ok:true }];
+  spSplit(o);
   t.forEach(function(x){ x.score = x.mid + ((o.weak || []).indexOf(x.t) >= 0 ? 6 : 0) - ((o.strong || []).indexOf(x.t) >= 0 ? 6 : 0); });
   t.sort(function(a, b){ return b.score - a.score || a.i - b.i; });
   var prev = SPW.recs || (SP && SP.recs) || [];
@@ -89,7 +92,7 @@ function spRecommend(o){
   return t;
 }
 function spWhy(o, recs){
-  var have = recs.filter(function(r){ return r.pct; }), out = [];
+  var have = recs.filter(function(r){ return r.pct; }).sort(function(a, b){ return (b.score || 0) - (a.score || 0) || a.i - b.i; }), out = [];
   if (!have.length) return o.ex === 'MCCQE Part I' ? ['The MCC does not publish percentages by system, so this keeps the order you see. Reorder it with the arrows.'] : ['There are no published percentages for this exam, so reorder the list with the arrows to match how you want to work.'];
   var a = have[0], z = have[have.length - 1];
   out.push('Start with <b>' + esc(a.t) + '</b>. It is ' + esc(a.pct) + ' of the exam' + (SP_SRC[o.ex] ? ' per the ' + SP_SRC[o.ex] : '') + '.');
@@ -104,9 +107,11 @@ function spStep2HTML(){
   var o = SPW.o, recs = SPW.recs, why = spWhy(o, recs), tot = recs.filter(function(r){ return r.ok; }).reduce(function(a, r){ return a + (+r.n || 0); }, 0);
   var h = spStepsHTML(2) + '<section class="panel sp"><h2>Here is what I would do</h2><p class="muted">' + esc(o.subject && o.subject !== 'All systems' && o.subject !== 'All subjects' ? o.subject + ', ' + o.ex : o.ex) + '</p>';
   h += '<ul class="spwhy">' + why.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>';
-  h += '<div class="sprecs"><div class="sprh"><span>Order</span><span>Topic</span><span>Share of exam</span><span>Questions in your bank</span><span>Accept recommendation</span></div>';
+  var sk = SPW.sort || 'rec', sorts = [['rec','Recommended'],['pct','Share of exam'],['t','Topic A to Z'],['n','Questions'],['ok','Accepted first']];
+  h += '<div class="spsort" role="group" aria-label="Sort topics"><span class="muted sm">Sort by</span>' + sorts.map(function(x){ return '<button type="button" class="pill' + (sk === x[0] ? ' on' : '') + '" data-spsort="' + x[0] + '" aria-pressed="' + (sk === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
+  h += '<div class="sprecs"><div class="sprh"><span>Drag</span><span>Topic</span><span>Share of exam</span><span>Questions in your bank</span><span>Accept recommendation</span></div>';
   recs.forEach(function(r, i){
-    h += '<div class="sprr' + (r.ok ? '' : ' off') + '"><span class="spmv"><button type="button" data-spmv="' + i + '" data-d="-1" aria-label="Move up"' + (i ? '' : ' disabled') + '>▲</button><button type="button" data-spmv="' + i + '" data-d="1" aria-label="Move down"' + (i < recs.length - 1 ? '' : ' disabled') + '>▼</button></span>'
+    h += '<div class="sprr' + (r.ok ? '' : ' off') + '" data-ri="' + i + '"><span class="spmv"><span class="spdrag" data-spdrag="' + i + '" title="Drag to reorder" aria-label="Drag to reorder"><i></i><i></i><i></i><i></i><i></i><i></i></span><b>' + (i + 1) + '</b></span>'
       + '<span class="spt">' + esc(r.t) + '</span><span class="sppct">' + (r.pct ? esc(r.pct) : '') + '</span>'
       + '<span><input class="inp spn" type="number" min="0" step="1" data-spn="' + i + '" value="' + esc(r.n) + '" placeholder="Number"' + (r.ok ? '' : ' disabled') + '></span>'
       + '<span class="spok"><button type="button" class="' + (r.ok ? 'on y' : '') + '" data-spok="' + i + '" data-v="1" aria-label="Accept recommendation">✓</button><button type="button" class="' + (r.ok ? '' : 'on n') + '" data-spok="' + i + '" data-v="0" aria-label="Leave out">✕</button></span></div>';
@@ -233,8 +238,13 @@ function scheduleHTML(){
 document.addEventListener('click', function(e){
   var c = e.target.closest('[data-spd]');
   if (c && SP){ var d = c.dataset.spd, s = c.dataset.sps; SP.log[d] = SP.log[d] === s ? '' : s; spSave(); renderStage(); return; }
+  var so = e.target.closest('[data-spsort]');
+  if (so && SPW){ spSync2(); var k = so.dataset.spsort, r0 = SPW.recs, mid = function(x){ return +x.mid || 0; };
+    var f = { rec:function(a, b){ return (b.score || 0) - (a.score || 0) || a.i - b.i; }, pct:function(a, b){ return mid(b) - mid(a) || a.i - b.i; },
+      t:function(a, b){ return a.t.localeCompare(b.t); }, n:function(a, b){ return (+b.n || 0) - (+a.n || 0) || mid(b) - mid(a); }, ok:function(a, b){ return (b.ok ? 1 : 0) - (a.ok ? 1 : 0) || (b.score || 0) - (a.score || 0); } }[k];
+    if (f){ r0.sort(f); SPW.sort = k; renderStage(); } return; }
   var mv = e.target.closest('[data-spmv]');
-  if (mv && SPW){ spSync2(); var i = +mv.dataset.spmv, j = i + (+mv.dataset.d), r = SPW.recs; if (j < 0 || j >= r.length) return; var t = r[i]; r[i] = r[j]; r[j] = t; renderStage(); return; }
+  if (mv && SPW){ spSync2(); var i = +mv.dataset.spmv, j = i + (+mv.dataset.d), r = SPW.recs; if (j < 0 || j >= r.length) return; var t = r[i]; r[i] = r[j]; r[j] = t; SPW.sort = ''; renderStage(); return; }
   var ok = e.target.closest('[data-spok]');
   if (ok && SPW){ spSync2(); SPW.recs[+ok.dataset.spok].ok = ok.dataset.v === '1'; renderStage(); return; }
   var b = e.target.closest('[data-sp]'); if (!b) return;
@@ -302,3 +312,26 @@ document.addEventListener('submit', function(e){
   SPW.o = o;
   spCook(['Reading the ' + (SP_SRC[o.ex] || 'exam') + (SP_SRC[o.ex] ? '' : ' outline'), (o.weak || []).length || (o.strong || []).length ? 'Weighing your strengths and weak spots' : 'Ranking topics by share of the exam', 'Lining up high yield first, low yield last'], function(){ SPW.recs = spRecommend(o); SPW.step = 2; });
 });
+
+/* Drag a topic by its handle to reorder. Works with mouse and touch. */
+var spDrag = null;
+document.addEventListener('pointerdown', function(e){
+  var hd = e.target.closest && e.target.closest('[data-spdrag]'); if (!hd || !SPW || !SPW.recs) return;
+  e.preventDefault(); spSync2();
+  var row = hd.closest('.sprr'); spDrag = { row:row, box:row.parentNode, id:e.pointerId };
+  row.classList.add('dragging'); try { hd.setPointerCapture(e.pointerId); } catch(_){}
+});
+document.addEventListener('pointermove', function(e){
+  if (!spDrag || e.pointerId !== spDrag.id) return; e.preventDefault();
+  var rows = [].slice.call(spDrag.box.querySelectorAll('.sprr')).filter(function(r){ return r !== spDrag.row; });
+  var after = rows.find(function(r){ var b = r.getBoundingClientRect(); return e.clientY < b.top + b.height / 2; });
+  if (after) spDrag.box.insertBefore(spDrag.row, after); else spDrag.box.appendChild(spDrag.row);
+  var b = spDrag.box.getBoundingClientRect(); if (e.clientY < 60) window.scrollBy(0, -12); else if (e.clientY > window.innerHeight - 60) window.scrollBy(0, 12);
+}, { passive:false });
+function spDrop(e){
+  if (!spDrag || (e && e.pointerId !== spDrag.id)) return;
+  var ord = [].slice.call(spDrag.box.querySelectorAll('.sprr')).map(function(r){ return +r.dataset.ri; });
+  spDrag.row.classList.remove('dragging'); spDrag = null;
+  var r = SPW.recs; SPW.recs = ord.map(function(i){ return r[i]; }); SPW.sort = ''; renderStage();
+}
+document.addEventListener('pointerup', spDrop); document.addEventListener('pointercancel', spDrop);
