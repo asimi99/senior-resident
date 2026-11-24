@@ -43,7 +43,7 @@ function acctMenuHTML(){
     + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
     + '<button type="button" data-acct="help">Help and feedback</button><hr><button type="button" data-acct="signout">Sign out</button></div>';
 }
-var THEMES = [['navy','Navy','#1b3a5c','#2a6ebb'],['rose','Rose','#7a1f45','#c2366f'],['forest','Forest','#1d4a37','#2f8a5f'],['mono','Black and white','#111111','#ffffff'],['plum','Plum','#3b2a5e','#6d4bb0'],['teal','Teal','#0e4a55','#138a9c']];
+var THEMES = [['navy','Navy','#1c4872','#e3e6f0'],['rose','Rose','#7a1f45','#c2366f'],['forest','Forest','#1d4a37','#2f8a5f'],['mono','Black and white','#111111','#ffffff'],['plum','Plum','#3b2a5e','#6d4bb0'],['teal','Teal','#0e4a55','#138a9c']];
 function curTheme(){ return document.documentElement.dataset.sr || 'navy'; }
 function themesHTML(){ var c = curTheme(); return '<div class="themes" role="radiogroup" aria-label="Colour">' + THEMES.map(function(t){ return '<button type="button" role="radio" aria-checked="'+(t[0]===c)+'" data-theme-pick="'+t[0]+'" title="'+t[1]+'"><i style="background:linear-gradient(135deg,'+t[2]+' 50%,'+t[3]+' 50%)"></i><span>'+t[1]+'</span></button>'; }).join('') + '</div>'; }
 document.addEventListener('click', function(e){

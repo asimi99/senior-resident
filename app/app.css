@@ -573,10 +573,11 @@ body.site:has(.sp) .wrap{max-width:900px}
 
 /* Extension colour themes. Two-tone: a dark top bar over a lightly tinted page. Navy is the default. The website keeps its own look. */
 html.embed{
-  --top-bg:#1b3a5c; --top-fg:#ffffff; --top-muted:rgba(255,255,255,.74); --top-line:rgba(255,255,255,.16);
-  --bg:#f3f6f9; --raised:#eef2f6; --line:#dde3ea;
-  --brand:#2a6ebb; --brand-2:#1b3a5c; --brand-soft:#e6effa; --brand-fg:#ffffff;
+  --top-bg:#1c4872; --top-fg:#ffffff; --top-muted:rgba(255,255,255,.76); --top-line:rgba(255,255,255,.16);
+  --bg:#e8ebf3; --raised:#e3e6f0; --line:#d4d9e6;
+  --brand:#235a9a; --brand-2:#1c4872; --brand-soft:#e2eaf6; --brand-fg:#ffffff;
 }
+html.embed:not([data-sr]) body,html.embed[data-sr="navy"] body{background:linear-gradient(180deg,#f8f9fa 0%,#e9ecf4 45%,#dfe2ef 100%) fixed}
 html.embed[data-sr="rose"]{--top-bg:#7a1f45;--bg:#fcf5f8;--raised:#f8ecf1;--line:#efd9e3;--brand:#c2366f;--brand-2:#7a1f45;--brand-soft:#fbe8f0}
 html.embed[data-sr="forest"]{--top-bg:#1d4a37;--bg:#f3f8f5;--raised:#e9f2ed;--line:#d6e6dc;--brand:#2f8a5f;--brand-2:#1d4a37;--brand-soft:#e3f3ea}
 html.embed[data-sr="mono"]{--top-bg:#111111;--bg:#ffffff;--raised:#f5f5f5;--line:#e3e3e3;--brand:#111111;--brand-2:#3a3a3a;--brand-soft:#efefef}
