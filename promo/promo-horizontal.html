@@ -147,6 +147,47 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#081226;font-fam
 .dropz{position:absolute;left:90px;top:70px;width:680px;height:480px;border:5px dashed #6fb1ff88;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:16px;padding-bottom:44px;color:#dbe8fb;font-size:32px;font-weight:700;opacity:0}.dropz small{font-size:23px;font-weight:500;color:#9db8de}.upb{width:420px;height:12px;border-radius:6px;background:#ffffff22;overflow:hidden;opacity:0}.upb u{display:block;height:100%;width:0;background:#6fb1ff;border-radius:6px}
 #hring{position:absolute;width:90px;height:90px;border-radius:50%;border:5px solid #6fb1ff;left:0;top:0;opacity:0;z-index:8}
 .h[data-a*="mask"],.sub[data-a*="mask"]{padding-bottom:.16em}
+
+/* Anki scenes */
+.an-r{position:relative;width:900px;height:800px}
+.an-sp{position:absolute;left:0;top:40px;width:600px;background:#fff;border-radius:22px;box-shadow:0 30px 80px #0008;color:#14202f;padding:26px;display:flex;flex-direction:column;gap:16px}
+.an-hd{display:flex;align-items:center;gap:12px;font-weight:800;font-size:24px}.an-hd svg{width:36px;height:36px}
+.an-row{display:flex;align-items:center;gap:14px}
+.an-ic{width:60px;height:60px;border-radius:50%;border:2px solid #d9e2ee;display:grid;place-items:center;color:#1a5fb4;position:relative;background:#fff}
+.an-ic svg{width:30px;height:30px}.an-ic.on{border-color:#1a5fb4;background:#e7f0fc}
+.an-ic em{position:absolute;right:-5px;bottom:-5px;width:26px;height:26px;border-radius:50%;background:#1b7f4d;color:#fff;font:700 15px/26px Inter;font-style:normal;text-align:center}
+.an-seg{display:flex;gap:8px}.an-seg span{border:2px solid #d9e2ee;border-radius:10px;padding:8px 14px;font-size:19px;font-weight:700;color:#4a5b70}.an-seg span.on{background:#1a5fb4;border-color:#1a5fb4;color:#fff}
+.an-lb{font-weight:700;font-size:21px}
+.an-ta{border:2px solid #d9e2ee;border-radius:12px;padding:12px 14px;font-size:22px;min-height:56px;color:#22344b}
+.an-ta u{display:inline-block;width:2px;height:24px;background:#1a5fb4;vertical-align:middle}
+.an-bt{align-self:flex-start;background:#1a5fb4;color:#fff;font-weight:800;font-size:21px;border-radius:12px;padding:13px 20px}
+.an-aw{position:absolute;right:0;top:0;width:760px;height:620px;border-radius:16px;background:#ececec;box-shadow:0 40px 110px #000c;overflow:hidden;color:#1b2533}
+.an-awt{height:46px;background:#d8d8d8;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:17px;font-weight:700;color:#444}
+.an-awt i{width:13px;height:13px;border-radius:50%}.an-awt span{margin:0 auto;transform:translateX(-30px)}
+.an-tool{display:flex;gap:26px;justify-content:center;padding:10px 0;font-size:17px;color:#2a4a8a;font-weight:600;background:#f4f4f4;border-bottom:1px solid #ddd}
+.an-dk{background:#fff;margin:16px;border-radius:10px;padding:6px 0;font-size:20px}
+.an-dk div{display:flex;justify-content:space-between;padding:9px 20px}.an-dk div.hi{background:#e7f0fc;font-weight:800}.an-dk b{color:#1a5fb4;font-variant-numeric:tabular-nums}
+.an-pv{margin:0 16px;height:300px;border-radius:12px;background:linear-gradient(160deg,#f4f8fd,#e9f0f9);display:flex;align-items:center;justify-content:center}
+.an-src{width:640px;background:#fff;border-radius:16px;box-shadow:0 6px 24px rgba(20,40,80,.10);border-top:5px solid #2f6fdb;padding:22px 26px;font-size:25px;line-height:1.5}
+.an-src .cz{font-weight:800;color:#2f6fdb}.an-src .bl{display:inline-block;background:#dbe6f7;border-radius:6px;color:#2f6fdb;padding:0 10px}
+.an-src .x{margin-top:12px;padding-top:10px;border-top:1px solid #e3e9f2;font-size:19px;color:#4a5668}
+/* flowchart */
+.fc{position:relative;width:820px;height:470px;background:#fff;border-radius:14px;color:#14202f;font-family:Inter}
+.fc h6{position:absolute;left:0;right:0;top:14px;text-align:center;font-size:24px;font-weight:800}
+.fn{position:absolute;border:2px solid #9fb3cc;border-radius:10px;background:#f4f8fd;font-size:17px;font-weight:600;line-height:1.3;padding:8px 10px;text-align:center;display:flex;align-items:center;justify-content:center}
+.fn.t{background:#e7f0fc;border-color:#1a5fb4}
+.fc svg.ar{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ob{position:absolute;border-radius:8px;background:#f5a524;border:2px solid #c97f0a;box-shadow:0 2px 6px #0003}
+.ob.act{background:#e5484d;border-color:#a8262a}
+.ob.act:after{content:"?";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:800 30px Inter}
+.ob.drw{background:#f5a52499;border:3px dashed #c97f0a}
+.an-io{position:absolute;left:0;top:30px;width:880px;background:#fff;border-radius:22px;box-shadow:0 30px 80px #0008;color:#14202f;padding:24px 30px 26px;display:flex;flex-direction:column;gap:14px}
+.an-hide{display:flex;gap:12px;align-items:center}.an-hide .an-ta{flex:1;min-height:0;padding:10px 14px;font-size:20px}
+.an-big{position:absolute;left:0;top:0;width:900px;height:800px;border-radius:16px;background:#ececec;box-shadow:0 40px 110px #000c;overflow:hidden;color:#1b2533}
+.an-stage{display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px 0}
+.an-ans{display:flex;gap:12px;justify-content:center}.an-ans span{border-radius:10px;padding:12px 22px;font-size:19px;font-weight:700;background:#fff;border:1px solid #c9c9c9;color:#333}
+.an-ans span.g{color:#1b7f4d}.an-ans span.a{color:#b3362b}.an-ans span.pr{background:#dbe6f7;border-color:#1a5fb4}
+#cur2{position:absolute;left:0;top:0;width:44px;height:44px;z-index:30;pointer-events:none}
 </style></head><body>
 <div class="bg"></div><div class="grid"></div>
 
@@ -232,6 +273,54 @@ html,body{width:1920px;height:1080px;overflow:hidden;background:#081226;font-fam
       <div class="exo"><kbd>A</kbd><i style="width:46%;height:14px;border-radius:7px;background:#dfe7f2;display:block"></i></div><div class="exo" id="scB"><kbd>B</kbd><i style="width:58%;height:14px;border-radius:7px;background:#dfe7f2;display:block"></i></div><div class="exo" id="scC"><kbd>C</kbd><i style="width:40%;height:14px;border-radius:7px;background:#dfe7f2;display:block"></i></div><div class="exo"><kbd>D</kbd><i style="width:52%;height:14px;border-radius:7px;background:#dfe7f2;display:block"></i></div></div>
     <div id="scfb" style="border-radius:14px;padding:16px 20px;font-size:25px;font-weight:700;border-left:6px solid #d97706;background:#fbecd3;color:#7a4a05">Second chance. B was not it. Pick again.</div></div>
 </div></div>
+
+<div class="scene" data-s="80,90"><div class="two" style="grid-template-columns:1fr 900px">
+  <div class="col" style="align-items:flex-start;gap:22px"><div class="lab" data-a="80.15,track">Anki, built in</div>
+    <div class="h" style="text-align:left;font-size:92px" data-a="80.35,slam,.09">One tap.</div>
+    <div class="h blue" style="text-align:left;font-size:92px;line-height:1.1" data-a="81.2,mask">A real card in your deck.</div>
+    <div class="sub" style="text-align:left" data-a="82.2,mask">Cloze or question and answer. No copy and paste.</div></div>
+  <div class="an-r">
+    <div class="an-sp" id="ansp"><div class="an-hd"><svg viewBox="0 0 120 120"><defs><linearGradient id="lgx9" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b8cf0"/><stop offset="1" stop-color="#103a80"/></linearGradient></defs><rect width="120" height="120" rx="28" fill="url(#lgx9)"/><path d="M47 21h26a5 5 0 0 1 5 5v15h15a5 5 0 0 1 5 5v26a5 5 0 0 1-5 5H78v15a5 5 0 0 1-5 5H47a5 5 0 0 1-5-5V77H27a5 5 0 0 1-5-5V46a5 5 0 0 1 5-5h15V26a5 5 0 0 1 5-5z" fill="#fff"/></svg>Senior Resident</div>
+      <div class="an-row"><div class="an-ic" id="anic"><svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="3.5" width="11" height="15" rx="2" transform="rotate(8 12 11)"/><rect x="4" y="5.5" width="11" height="15" rx="2" fill="#fff"/><path d="M7.5 11h4M7.5 14h4"/></g></svg><em id="anok">✓</em></div><div class="an-seg"><span class="on">Cloze</span><span>Question and answer</span><span>Image occlusion</span></div></div>
+      <div class="an-lb">What should this card cover?</div><div class="an-ta"><span id="antyp"></span><u id="ancar"></u></div><div class="an-bt" id="anmk">Make cloze card</div></div>
+    <div class="an-aw" id="anaw" style="top:250px"><div class="an-awt"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>Anki</span></div><div class="an-tool"><span>Decks</span><span>Add</span><span>Browse</span><span>Stats</span><span>Sync</span></div>
+      <div class="an-dk"><div><span>Peds shelf</span><b>214</b></div><div class="hi"><span>Senior Resident</span><b id="ancnt">12</b></div></div>
+      <div class="an-pv"><div class="an-src" id="ansrc">Pain that starts at the umbilicus and moves to the right lower quadrant means <span class="cz" id="ancz"><span class="bl">[...]</span></span>.<div class="x" id="anx">Visceral pain first, then parietal pain once the peritoneum is irritated.</div></div></div></div>
+  </div>
+</div></div>
+<div class="scene" data-s="90,104"><div class="two" style="grid-template-columns:1fr 900px">
+  <div class="col" style="align-items:flex-start;gap:22px"><div class="lab" data-a="90.15,track">Image occlusion</div>
+    <div class="h" style="text-align:left;font-size:92px" data-a="90.35,slam,.09">Box any diagram.</div>
+    <div class="h blue" style="text-align:left;font-size:92px;line-height:1.1" data-a="91.3,mask">Every box is a card.</div>
+    <div class="sub" style="text-align:left" data-a="92.3,mask">The image goes from your computer straight into Anki.</div></div>
+  <div class="an-r">
+    <div class="an-io" id="anio"><div class="an-hd"><svg viewBox="0 0 120 120"><defs><linearGradient id="lgx9" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3b8cf0"/><stop offset="1" stop-color="#103a80"/></linearGradient></defs><rect width="120" height="120" rx="28" fill="url(#lgx9)"/><path d="M47 21h26a5 5 0 0 1 5 5v15h15a5 5 0 0 1 5 5v26a5 5 0 0 1-5 5H78v15a5 5 0 0 1-5 5H47a5 5 0 0 1-5-5V77H27a5 5 0 0 1-5-5V46a5 5 0 0 1 5-5h15V26a5 5 0 0 1 5-5z" fill="#fff"/></svg>Image occlusion</div>
+      <div class="an-hide"><div class="an-ta"><span id="anhide"></span></div><div class="an-bt" id="anbox" style="font-size:18px;padding:11px 16px">Box it for me</div></div>
+      <div class="fc" id="efc"><h6>Approach to suspected appendicitis</h6>
+<div class="fn t" style="left:265px;top:60px;width:290px;height:56px">RLQ pain, fever, pain that migrated</div>
+<div class="fn" style="left:265px;top:146px;width:290px;height:56px">Risk score (Alvarado or Pediatric Appendicitis Score)</div>
+<div class="fn" style="left:20px;top:240px;width:230px;height:40px">Low risk</div><div class="fn" style="left:295px;top:240px;width:230px;height:40px">Intermediate risk</div><div class="fn" style="left:570px;top:240px;width:230px;height:40px">High risk</div>
+<div class="fn" id="en1" style="left:20px;top:306px;width:230px;height:70px">Discharge with clear return advice</div>
+<div class="fn" id="en2" style="left:295px;top:306px;width:230px;height:70px">Ultrasound first in children and pregnancy, CT in adults</div>
+<div class="fn" id="en3" style="left:570px;top:306px;width:230px;height:70px">Surgical consult, appendectomy</div>
+<div class="fn" id="en4" style="left:200px;top:400px;width:420px;height:52px">Perforated with abscess: IV antibiotics, percutaneous drain</div>
+<svg class="ar" viewBox="0 0 820 470"><g stroke="#7f95b3" stroke-width="2.5" fill="none" marker-end="url(#ahe)"><path d="M410 116v26"/><path d="M410 202v14H135v20"/><path d="M410 216v20"/><path d="M410 216h275v20"/><path d="M135 280v22"/><path d="M410 280v22"/><path d="M685 280v22"/><path d="M685 376v14H520v6"/></g><defs><marker id="ahe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7f95b3"/></marker></defs></svg>
+<div class="ob" id="eb1" style="left:16px;top:302px;width:238px;height:78px"></div><div class="ob" id="eb2" style="left:291px;top:302px;width:238px;height:78px"></div><div class="ob" id="eb3" style="left:566px;top:302px;width:238px;height:78px"></div><div class="ob" id="eb4" style="left:196px;top:396px;width:428px;height:60px"></div></div>
+      <div class="an-bt" id="anadd">Add 4 cards to Anki</div></div>
+    <div class="an-big" id="anbig"><div class="an-awt"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i><span>Anki</span></div><div class="an-tool"><span>Decks</span><span>Add</span><span>Browse</span><span>Stats</span><span>Sync</span></div>
+      <div class="an-stage"><div class="fc" id="kfc"><h6>Approach to suspected appendicitis</h6>
+<div class="fn t" style="left:265px;top:60px;width:290px;height:56px">RLQ pain, fever, pain that migrated</div>
+<div class="fn" style="left:265px;top:146px;width:290px;height:56px">Risk score (Alvarado or Pediatric Appendicitis Score)</div>
+<div class="fn" style="left:20px;top:240px;width:230px;height:40px">Low risk</div><div class="fn" style="left:295px;top:240px;width:230px;height:40px">Intermediate risk</div><div class="fn" style="left:570px;top:240px;width:230px;height:40px">High risk</div>
+<div class="fn" id="kn1" style="left:20px;top:306px;width:230px;height:70px">Discharge with clear return advice</div>
+<div class="fn" id="kn2" style="left:295px;top:306px;width:230px;height:70px">Ultrasound first in children and pregnancy, CT in adults</div>
+<div class="fn" id="kn3" style="left:570px;top:306px;width:230px;height:70px">Surgical consult, appendectomy</div>
+<div class="fn" id="kn4" style="left:200px;top:400px;width:420px;height:52px">Perforated with abscess: IV antibiotics, percutaneous drain</div>
+<svg class="ar" viewBox="0 0 820 470"><g stroke="#7f95b3" stroke-width="2.5" fill="none" marker-end="url(#ahk)"><path d="M410 116v26"/><path d="M410 202v14H135v20"/><path d="M410 216v20"/><path d="M410 216h275v20"/><path d="M135 280v22"/><path d="M410 280v22"/><path d="M685 280v22"/><path d="M685 376v14H520v6"/></g><defs><marker id="ahk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7f95b3"/></marker></defs></svg>
+<div class="ob" id="kb1" style="left:16px;top:302px;width:238px;height:78px"></div><div class="ob" id="kb2" style="left:291px;top:302px;width:238px;height:78px"></div><div class="ob" id="kb3" style="left:566px;top:302px;width:238px;height:78px"></div><div class="ob" id="kb4" style="left:196px;top:396px;width:428px;height:60px"></div></div><div class="an-ans" id="anfront"><span class="pr" id="anshow">Show Answer</span></div><div class="an-ans" id="anback"><span class="a">Again</span><span>Hard</span><span class="g" id="angood">Good</span><span>Easy</span></div></div></div>
+    <svg id="cur2" viewBox="0 0 24 24"><path d="M4 2l15 9-6.500 1.800L16 20l-3.200 1.500-3.400-7.300L4 18z" fill="#fff" stroke="#0f1f33" stroke-width="1.400" stroke-linejoin="round"/></svg>
+  </div>
+</div></div>
 <div class="scene" data-s="58.971,62.871"><div class="col" style="gap:40px;align-items:flex-start;width:980px">
   <div class="lab" data-a="59.071,track">After every question</div>
   <div style="display:flex;flex-direction:column;gap:44px;width:980px">
@@ -278,7 +367,7 @@ const ELIM=[[29.4,'Keep it in play','He is young, with right lower quadrant pain
 const CUR=[[15.6,P0],[19.2,P0],[19.9,'#c1a'],[21.3,'#c1a'],[21.9,'#c1b'],[25.2,'#c1b'],[26.0,'#c2b'],[28.6,'#c2b'],[29.2,'#e1'],[30.2,'#e1'],[30.55,'#e3'],[31.3,'#e3'],[31.75,'#e4'],[33.6,'#e4'],[34.3,'#g1'],[34.9,'#g1'],[35.15,'#g2'],[35.7,'#g2'],[35.9,'#g1'],[36.15,'#g1'],[36.45,'#pgbtn'],[36.6,'#pgbtn'],[37.1,[1590,770]],[40.6,[1590,770]],[41.1,'#g1'],[43.5,'#g1']];
 
 function pt(p){ if(Array.isArray(p)) return p; const r=$(p).getBoundingClientRect(); return [r.left+r.width*.62, r.top+r.height*.55]; }
-const HOOK=9, SEG=[[6.6,12.6,1.35],[12.6,15.5,1.2],[15.5,43.5,1.3],[43.5,47.4,1.15],[47.4,55.1,1.15],[55.1,58.971,1.35],[58.971,62.871,0],[62.871,66.771,1.2],[66.771,71.771,1.1]];
+const HOOK=9, SEG=[[6.6,12.6,1.45],[12.6,15.5,1.3],[15.5,43.5,1.4],[43.5,47.4,1.25],[47.4,55.1,1.25],[55.1,58.971,1.45],[80,90,1.1],[90,104,1.1],[58.971,62.871,0],[62.871,66.771,1.3],[66.771,71.771,1.2]];
 function remap(T){if(T<HOOK)return 6.6-(HOOK-T);let x=T-HOOK;for(const [a,b,f] of SEG){if(!f)continue;const d=(b-a)*f;if(x<d)return a+x/f;x-=d}return 71.771+x}
 const CYC=(()=>{let g=Array.from({length:19},(_,i)=>Math.max(.1,.62*Math.pow(.86,i)));const sm=g.reduce((a,b)=>a+b,0);g=g.map(x=>x*4.5/sm);const d=[3.9].concat(g),o=[1,2,0,3,1,2,3,0,2,1,3,0];let t=.25;return d.map((x,i)=>{const c={a:t,d:x,r:(i===1||i===4)?1:0,o:o[i%12],n:1+i};t+=x;return c})})();
 $('#tally').innerHTML=CYC.map(c=>`<i class="${c.r?'v':'x'}">${c.r?'✓':'✕'}</i>`).join('');
@@ -363,8 +452,32 @@ function seek(T){const t=remap(T);
    const B=$('#scB'),C=$('#scC'),fb=$('#scfb');B.style.borderColor='#dc2626';B.style.background='#fdecec';B.style.opacity=.6;
    const pk=t>=57.2,ok=t>=57.8;C.style.borderColor=ok?'#16a34a':pk?'#1a5fb4':'';C.style.background=ok?'#dcf5e4':pk?'#e7f0fc':'';C.querySelector('kbd').style.background=ok?'#16a34a':pk?'#1a5fb4':'';C.querySelector('kbd').style.color=pk?'#fff':'';C.style.transform=`scale(${1+.05*Math.sin(Math.PI*pr(t,57.8,.35))})`;
    fb.textContent=ok?'Got it on the second try.':'Second chance. B was not it. Pick again.';fb.style.borderLeftColor=ok?'#16a34a':'#d97706';fb.style.background=ok?'#dcf5e4':'#fbecd3';fb.style.color=ok?'#14532d':'#7a4a05';}
+
+  // anki scenes
+  {const sp=$('#ansp'),a=eo(pr(t,80.5,.6));sp.style.opacity=a;sp.style.transform=`translateY(${(1-a)*40}px)`;
+   const ic=$('#anic');ic.className='an-ic'+(t>=81.6&&t<85.4?' on':'');$('#anok').style.opacity=cl(pr(t,85.8,.3));
+   const TX='the migrating pain';$('#antyp').textContent=TX.slice(0,Math.round(TX.length*pr(t,82.4,1.3)));$('#ancar').style.opacity=Math.floor(t*2.5)%2?1:0;
+   const mk=$('#anmk');const pz=pr(t,84.6,.3);mk.style.transform=`scale(${1-.06*Math.sin(Math.PI*pz)})`;mk.style.filter=t>=84.6&&t<85?'brightness(1.25)':'';
+   const aw=$('#anaw'),w=eo(pr(t,85.1,.6));aw.style.opacity=w;aw.style.transform=`translateX(${(1-w)*120}px)`;$('#ancnt').textContent=t>=85.9?'13':'12';
+   const rv=t>=87.3;$('#ancz').innerHTML=rv?'acute appendicitis':'<span class="bl">[...]</span>';$('#anx').style.display=rv?'block':'none';$('#ansrc').style.opacity=cl(pr(t,85.6,.5))}
+  {const io=$('#anio'),a=eo(pr(t,90.6,.6)),out=pr(t,96.4,.4);io.style.opacity=Math.min(a,1-out);io.style.transform=`translateY(${(1-a)*40}px) scale(${1-.06*out})`;
+   const HT='every box under the risk groups';$('#anhide').textContent=HT.slice(0,Math.round(HT.length*pr(t,91.3,1.3)));
+   const bt=$('#anbox');bt.style.filter=t>=92.8&&t<93.1?'brightness(1.3)':'';bt.style.transform=`scale(${1-.06*Math.sin(Math.PI*pr(t,92.8,.3))})`;
+   ['#eb1','#eb2','#eb3','#eb4'].forEach((id,i)=>{const e=$(id),p=pr(t,93.2+i*.45,.4);e.style.opacity=cl(p*1.5);e.style.transform=`scale(${.6+.4*back(p)})`;e.className='ob'+(p<1?' drw':'')});
+   const ad=$('#anadd');ad.style.opacity=cl(pr(t,95.1,.3));ad.style.transform=`scale(${1-.06*Math.sin(Math.PI*pr(t,95.9,.3))})`;
+   const bg=$('#anbig'),b=eio(pr(t,96.5,.7));bg.style.opacity=b;bg.style.transform=`scale(${.85+.15*b})`;
+   // review: card 1 asks box 2, card 2 asks box 3
+   const c2=t>=100.8,act=c2?2:1,shown=(t>=98.6&&t<100.8)||t>=102.6;
+   ['#kb1','#kb2','#kb3','#kb4'].forEach((id,i)=>{const e=$(id);const isA=i===act;e.className='ob'+(isA?' act':'');e.style.opacity=isA&&shown?0:1;e.style.transform=isA&&!shown?`scale(${1+.03*Math.sin(t*5)})`:''});
+   $('#anfront').style.display=shown?'none':'flex';$('#anback').style.display=shown?'flex':'none';
+   $('#anshow').style.transform=`scale(${1-.06*Math.sin(Math.PI*pr(t,98.3,.3))})`;$('#angood').style.background=t>=100.4&&t<100.8?'#dcf5e4':'';
+   const rc=e=>{const q=e.getBoundingClientRect();if(q.width)e._r=q;return e._r||q};const sh=rc($('#anshow')),gd=rc($('#angood')),bx=$('#anbox').getBoundingClientRect(),dd=$('#anadd').getBoundingClientRect(),r=$('#anio').parentNode.getBoundingClientRect();
+   const K=[[91,[880,700]],[92.4,[bx.left+bx.width*.5,bx.top+bx.height*.6]],[93,[bx.left+bx.width*.5,bx.top+bx.height*.6]],[95.4,[dd.left+dd.width*.5,dd.top+dd.height*.6]],[96.2,[dd.left+dd.width*.5,dd.top+dd.height*.6]],[97.4,[sh.left+sh.width*.5+30,sh.top+sh.height+60]],[98.2,[sh.left+sh.width*.5,sh.top+sh.height*.6]],[99.6,[sh.left+sh.width*.5,sh.top+sh.height*.6]],[100.3,[gd.left+gd.width*.5,gd.top+gd.height*.6]],[100.9,[gd.left+gd.width*.5,gd.top+gd.height*.6]],[102.2,[sh.left+sh.width*.5,sh.top+sh.height*.6]],[104,[sh.left+sh.width*.5,sh.top+sh.height*.6]]];
+   let i=0;while(i<K.length-2&&t>K[i+1][0])i++;const A=K[i],B=K[i+1],u=eio(pr(t,A[0],B[0]-A[0]));const x=A[1][0]+(B[1][0]-A[1][0])*u-r.left,y=A[1][1]+(B[1][1]-A[1][1])*u-r.top;
+   const c=$('#cur2');c.style.opacity=Math.min(pr(t,91.2,.3),1-pr(t,103.4,.4));const press=[92.8,95.9,98.3,100.45,102.3].some(k=>t>=k&&t<k+.25)?.82:1;c.style.transform=`translate(${x}px,${y}px) scale(${press})`;
+   if(t>=102.3&&t<102.6)$('#anshow').style.transform='scale(.94)';}
   $('.grid').style.backgroundPosition=`${t*9}px ${t*6}px`;
-  $('#fade').style.opacity=Math.max(1-pr(T,0,.35),pr(t,70.871,.7));
+  $('#fade').style.opacity=Math.max(1-pr(T,0,.35),(t>=66&&t<79)?pr(t,70.871,.7):0);
 }
 window.seek=seek;seek(0);
 </script></body></html>
