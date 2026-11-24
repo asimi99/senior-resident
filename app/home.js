@@ -31,7 +31,7 @@ function homeHTML(){
     + '<div class="cd"><div class="st">Step 1 <b>Key finding</b></div><h4>The pain began at the umbilicus, then moved to the right lower quadrant. What does the move mean?</h4>'
     + '<div class="o"><kbd>A</kbd>It is spreading across the abdomen</div><div class="o g"><kbd>B</kbd>The lining over one spot is now irritated</div><div class="o"><kbd>C</kbd>It is referred from the ureter</div>'
     + '<div class="fbk"><b>Correct</b>Vague midline pain is visceral. Sharp pain in one spot means the lining there is inflamed.</div></div></div></div></div>' + '</section>';
-    h += vidHTML('../assets/promo.mp4', '../assets/promo-poster.jpg', 'Watch it work', 'One question, start to finish: four decisions, one page to the attending, and the answer you reached yourself.');
+    h += vidHTML('../assets/promo.mp4?v=2', '../assets/promo-poster.jpg', 'Watch it work', 'One question, start to finish: four decisions, one page to the attending, and the answer you reached yourself.');
     h += '<section class="hm-sec"><div class="hm-steps hm-links">'
       + '<div><h3>How it works</h3><p>It reads your question, you make each decision, and you keep the rule.</p><button type="button" class="lnk" data-go="how">See how it works</button></div>'
       + '<div><h3>Study plan</h3><p>Your exam, your question bank, your date. A day-by-day plan ordered by yield, with daily check-ins.</p><button type="button" class="lnk" data-go="schedule">Build yours</button></div>'
@@ -88,7 +88,7 @@ function homeHTML(){
     + '<p class="hm-legal"><b>Subscriptions</b> renew automatically each month at the price shown until you cancel. Cancelling stops the next charge, and you keep your plan until the end of the period you paid for. Prices may change with notice.</p>'
     + '<p class="hm-legal">*Unlimited is for one person studying. A fair use limit stops shared or automated accounts.</p><p class="hm-msg" id="buymsg"></p></section>';
 
-    h += vidHTML('../assets/pricing.mp4', '../assets/pricing-poster.jpg', 'What each plan gets you', '');
+    h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
   }
   h += '<footer class="hm-foot"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body.</span></footer>';
   return h + '</div>';
