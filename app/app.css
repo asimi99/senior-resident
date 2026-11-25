@@ -644,3 +644,5 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-conten
 .ib.av.t-chief,.acav.t-chief{box-shadow:0 0 0 2px var(--gold)}
 .pill.tierp.t-resident,.pill.tierp.t-trial{background:var(--brand-soft);color:var(--brand);border-color:transparent}
 .pill.tierp.t-chief{background:var(--gold-soft);color:var(--gold);border-color:transparent}
+.tier.lg{font-size:14px;padding:5px 12px;gap:5px;margin:0}.tier.lg svg{width:14px;height:14px}
+.acstat{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;margin:4px 0 12px;border-radius:12px;background:var(--raised)}.acstat>span{color:var(--muted);font-size:14px;font-weight:600}

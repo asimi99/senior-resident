@@ -37,7 +37,7 @@ var HELP_IC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" strok
 var acctOpen = false;
 /* which kind of member this is: Free, Resident, Resident trial or Chief */
 function tierKey(){ return plan.name==='chief' ? 'chief' : plan.name==='pro' ? (plan.trial ? 'trial' : 'resident') : 'free'; }
-function tierBadge(){ var k = tierKey(); return '<span class="tier t-'+k+'">'+(k==='chief'?IC.bolt+'Chief':k==='resident'?IC.bolt+'Resident':k==='trial'?'Resident trial':'Free')+'</span>'; }
+function tierBadge(big){ var k = tierKey(); return '<span class="tier t-'+k+(big?' lg':'')+'">'+(k==='chief'?IC.bolt+'Chief':k==='resident'?IC.bolt+'Resident':k==='trial'?'Resident trial':'Free')+'</span>'; }
 function acctMenuHTML(){
   var u = SR.user, pl = plan.name==='chief' ? 'Chief' : plan.name==='pro' ? (plan.trial ? 'Resident (free trial)' : 'Resident') : 'Free';
   if (!u) return '<div class="acmenu" role="menu"><p class="acnm">Not signed in</p><button type="button" data-acct="signin">Sign in</button><button type="button" data-acct="signup">Create account</button><hr><button type="button" data-acct="pricing">Plans and pricing</button></div>';
@@ -328,7 +328,7 @@ function planCardHTML(){
       + '<div class="row"><button type="button" class="btn" data-act="upgrade">See plans</button></div>';
   } else if (plan.name==='pro' || plan.name==='chief'){
     var nm = plan.name==='chief' ? 'Chief' : plan.trial ? 'Resident, free trial' : 'Resident';
-    h += (BILLING_TEST?'<p class="muted sm">Stripe test mode</p>':'')+'<p><b>'+nm+'.</b> '+(plan.until?(plan.trial?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
+    h += (BILLING_TEST?'<p class="muted sm">Stripe test mode</p>':'')+'<p>'+tierBadge(true)+' '+(plan.until?(plan.trial?'Trial ends ':'Renews ')+esc(new Date(plan.until).toLocaleDateString())+'.':'')+'</p>'
       + '<p class="muted sm">Cancel, switch plans, change your card or download receipts.</p>'
       + '<div class="row"><button type="button" class="btn ghost" data-act="portal">Manage subscription</button></div><p class="er" id="portalerr"></p>';
   } else {
@@ -340,7 +340,7 @@ function accountHTML(){
   var u = SR.user, h = '';
   if (!SR.ready) h += '<section class="panel"><h2>Accounts are not switched on</h2><p class="muted">Everything still works without one.</p></section>';
   else if (u){
-    h += '<section class="panel"><h2>Account</h2>'+((u.user_metadata||{}).full_name?'<p><b>'+esc(u.user_metadata.full_name)+'</b> '+tierBadge()+'</p>':'<p>'+tierBadge()+'</p>')+'<p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
+    h += '<section class="panel"><h2>Account</h2><div class="acstat"><span>Status</span>'+tierBadge(true)+'</div>'+((u.user_metadata||{}).full_name?'<p><b>'+esc(u.user_metadata.full_name)+'</b></p>':'')+'<p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
   } else {
     h += '<section class="panel auth"><h2>'+(authMode==='in'?'Sign in':'Create your account')+'</h2><p class="muted">'+(authMode==='in'?'Your plan and history follow you to any device.':'Takes a few seconds.')+'</p>'
       + '<div id="gis"></div><div class="or"><span>or</span></div>'
