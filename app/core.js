@@ -95,7 +95,7 @@ var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||5, until:null };
 (function(){ var m = location.search.match(/[?&]billing=(test|off)/); if (m) lsSet('sr_billing_test', m[1] === 'test'); })();
 var BILLING_TEST = !CFG.BILLING_LIVE && !!lsGet('sr_billing_test', false);
 /* until the live Stripe links are pasted into config.js, checkout uses the test links */
-if (BILLING_TEST || !CFG.STRIPE_LINK){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
+if (BILLING_TEST || !CFG.BILLING_LIVE || !CFG.STRIPE_LINK){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
 function billingLive(){ return !!CFG.BILLING_LIVE || BILLING_TEST; }
 function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
 function canStart(){ return isPro() || plan.used < plan.limit; }
