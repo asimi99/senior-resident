@@ -90,7 +90,11 @@ document.addEventListener('click', function(e){
   else go(a);
 });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && acctOpen){ acctOpen = false; renderTop(); } });
-window.onPlan = function(){ renderTop(); if (view==='account') renderStage(); };
+window.onPlan = function(){
+  renderTop(); if (view==='account') renderStage();
+  /* questions that hit a limit before the plan was known get another go once a paid plan loads */
+  if (isPro()) cases.forEach(function(c){ if (c.error && c.error.code==='rate_limited'){ c.error = null; c.auto = 0; if (!c.steps.length) gen(c); else if (cases[cur]===c) renderStage(); } });
+};
 function tabLabel(c){ var id = c.qid && !/^h/.test(c.qid) ? esc(c.qid) : ''; if (c.num) return 'Q' + esc(c.num) + (id ? '<em> - QID' + id + '</em>' : ''); if (id) return '<em>QID' + id + '</em>'; return esc(c.title || (c.queued ? 'Queued' : 'Reading')); }
 function renderTabs(){
   if (view!=='coach' || !cases.length){ tabsEl.innerHTML = ''; tabsEl.hidden = true; return; }

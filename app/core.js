@@ -100,8 +100,10 @@ function billingLive(){ return !!CFG.BILLING_LIVE || BILLING_TEST; }
 function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
 /* signed out: one coached question to try it, then a free account */
 function guestOut(){ return !!SR.ready && !SR.user && !!lsGet('sr_tried', false); }
-function canStart(){ if (guestOut()) return false; return isPro() || plan.used < plan.limit; }
+/* the server counts and enforces each plan's daily allowance. The browser only stops a signed-out visitor after the free try. */
+function canStart(){ return !guestOut(); }
 function bumpLocal(){ if (SR.ready && !SR.user) lsSet('sr_tried', true); plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
+var planLoaded = false;
 async function loadPlan(){
   plan.name = 'free'; plan.until = null; plan.trial = false;
   if (SR.user && SR.sb){
@@ -110,6 +112,7 @@ async function loadPlan(){
       if (r.data && ['pro','chief','trial'].indexOf(r.data.plan) >= 0 && (!r.data.current_period_end || new Date(r.data.current_period_end) > new Date())){ plan.name = r.data.plan==='chief' ? 'chief' : 'pro'; plan.trial = r.data.plan==='trial'; plan.until = r.data.current_period_end; }
     } catch(e){}
   }
+  planLoaded = true;
   if (window.onPlan) window.onPlan();
 }
 
