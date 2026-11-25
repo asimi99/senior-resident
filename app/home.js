@@ -114,7 +114,15 @@ document.addEventListener('click', function(e){
   e.preventDefault(); homeGo(el.dataset.hm);
 });
 
-/* the site opens on Home. #how, #pricing, #faq, #plan and #coach open that tab, so links can be shared */
-var HASHV = { how:'how', pricing:'pricing', plans:'pricing', faq:'how', questions:'how', exam:'exam', stats:'review', plan:'schedule', coach:'coach', home:'home' };
-if (!EMBED){ var h0 = location.hash.slice(1); view = HASHV[h0] || 'home'; }
-window.addEventListener('hashchange', function(){ var v = HASHV[location.hash.slice(1)]; if (v && v !== view){ view = v; if (v === 'coach') cur = -1; renderAll(); window.scrollTo(0, 0); } });
+/* #plan, #exam, #stats, #try, #signin and #signup open that part of the portal, so links can be shared */
+/* the portal. The website (home, how it works, pricing) is the static pages one level up. */
+var HASHV = { exam:'exam', stats:'review', plan:'schedule', coach:'coach', try:'coach', signin:'account', signup:'account', account:'account' };
+var SITE_HASH = { how:'how.html', pricing:'pricing.html', plans:'pricing.html', faq:'how.html#faq', questions:'how.html', home:'' };
+if (!EMBED){
+  var h0 = location.hash.slice(1);
+  if (SITE_HASH[h0] !== undefined) location.replace('../' + SITE_HASH[h0]);
+  view = HASHV[h0] || 'coach';
+  window.SR_AUTH0 = h0 === 'signup' ? 'up' : h0 === 'signin' ? 'in' : '';
+  if (view !== 'coach' || h0) history.replaceState(null, '', location.pathname + location.search + ({ try:'', signin:'', signup:'' }[h0] !== undefined ? '' : location.hash));
+}
+window.addEventListener('hashchange', function(){ var h1 = location.hash.slice(1); if (!EMBED && SITE_HASH[h1] !== undefined){ location.href = '../' + SITE_HASH[h1]; return; } var v = HASHV[location.hash.slice(1)]; if (v && v !== view){ view = v; if (v === 'coach') cur = -1; renderAll(); window.scrollTo(0, 0); } });

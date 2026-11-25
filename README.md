@@ -16,3 +16,7 @@ A reasoning coach that sits beside your question bank and walks you to the answe
 4. `config.js`: paste the link (and the customer portal link), set `BILLING_LIVE: true`.
 
 Until then everyone has full access and Upgrade collects a waitlist.
+
+## Website and portal
+- The website (index.html, how.html, pricing.html at the root) is static HTML built from app/home.js. After changing home.js, serve the repo root on port 8811 and run `python3 build/landing.py`.
+- The portal is /app/. Signed out, it allows one coached question per browser, then asks for a free account. #try, #signin, #signup, #plan, #exam and #stats open that part of the portal.

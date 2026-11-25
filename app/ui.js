@@ -18,6 +18,7 @@ function money(n){ return '$' + n; }
 
 /* ---------- top bar ---------- */
 function pillHTML(){
+  if (SR.ready && !SR.user && !EMBED) return guestOut() ? '<button type="button" class="pill out" data-acct="signup">Create free account</button>' : '<button type="button" class="pill beta" data-acct="signup">1 free try</button>';
   if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
   if (plan.name==='pro' || plan.name==='chief') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+(plan.name==='chief'?'Chief':'Resident')+'</button>';
   var left = Math.max(0, plan.limit - plan.used);
@@ -63,10 +64,8 @@ function renderTop(){
       + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
     return;
   }
-  var site = [['home','Home'],['how','How it works'],['pricing','Pricing']];
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
-  topEl.innerHTML = '<a class="brand" href="#" data-go="home">'+IC.logo+'<span>Senior Resident</span></a>'
-    + '<nav class="sitetabs" aria-label="Site">' + site.map(function(t){ return '<a href="#'+(t[0]==='schedule'?'plan':t[0]==='home'?'':t[0])+'" data-go="'+t[0]+'" class="'+(view===t[0]?'on':'')+'">'+t[1]+'</a>'; }).join('') + '</nav>'
+  topEl.innerHTML = '<a class="brand" href="#" data-go="new">'+IC.logo+'<span>Senior Resident</span></a>'
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
     + pillHTML()
@@ -212,6 +211,8 @@ function chatHTML(c){
 }
 function paywallHTML(){
   var signed = !!SR.user;
+  if (!signed) return '<div class="paywall">'+IC.logo+'<h2>Make a free account to keep going</h2><p class="muted">That was your free try. A free account gets you '+(CFG.FREE_DAILY||5)+' coached questions a day and your study plan, saved to any device.</p>'
+    + '<div class="row c"><button type="button" class="btn" data-acct="signup">Create free account</button><button type="button" class="btn ghost" data-acct="signin">Sign in</button></div></div>';
   return '<div class="paywall">'+IC.logo+'<h2>That is today\'s '+plan.limit+' free questions</h2><p class="muted">They reset at midnight. Pro gives you '+(CFG.PRO_DAILY||40)+' a day and adds Hardest mode, extra help steps and pearl export.</p>'
     + '<div class="row c"><button type="button" class="btn" data-act="upgrade">See Pro</button>'+(signed?'':'<button type="button" class="btn ghost" data-go="account">Sign in</button>')+'</div></div>';
 }
@@ -310,7 +311,7 @@ function pearlsCSV(){
 }
 
 /* ---------- account and plan ---------- */
-var authMode = 'in', waitlisted = lsGet('sr_waitlist', false);
+var authMode = window.SR_AUTH0 || 'in', waitlisted = lsGet('sr_waitlist', false);
 function planCardHTML(){
   var h = '<section class="panel plan"><h2>Plan</h2>';
   if (!billingLive() && plan.name==='free'){
@@ -438,8 +439,10 @@ function renderStage(){
   if (!imgs.length) requestAnimationFrame(function(){ requestAnimationFrame(release); });
   else Promise.all(imgs.map(function(im){ return new Promise(function(r){ im.addEventListener('load', r, { once:true }); im.addEventListener('error', r, { once:true }); }); })).then(release);
 }
+var SITE_URL = { home:'../', how:'../how.html', pricing:'../pricing.html' };
 function renderAll(){ renderTop(); renderStage(); }
 function go(v){
+  if (!EMBED && SITE_URL[v] !== undefined){ location.href = SITE_URL[v]; return; }
   if (v==='new'){ view = 'coach'; cur = -1; }
   else if (v==='plan'){ if (billingLive() && plan.name!=='pro'){ openModal(pricingHTML()); return; } view = 'account'; }
   else view = v;

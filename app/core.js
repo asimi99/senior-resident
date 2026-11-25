@@ -98,8 +98,10 @@ var BILLING_TEST = !CFG.BILLING_LIVE && !!lsGet('sr_billing_test', false);
 if (BILLING_TEST || !CFG.BILLING_LIVE || !CFG.STRIPE_LINK){ CFG.STRIPE_LINK = CFG.STRIPE_TEST_LINK; CFG.STRIPE_LINK_CHIEF = CFG.STRIPE_TEST_LINK_CHIEF; }
 function billingLive(){ return !!CFG.BILLING_LIVE || BILLING_TEST; }
 function isPro(){ return !billingLive() || plan.name==='pro' || plan.name==='chief'; }
-function canStart(){ return isPro() || plan.used < plan.limit; }
-function bumpLocal(){ plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
+/* signed out: one coached question to try it, then a free account */
+function guestOut(){ return !!SR.ready && !SR.user && !!lsGet('sr_tried', false); }
+function canStart(){ if (guestOut()) return false; return isPro() || plan.used < plan.limit; }
+function bumpLocal(){ if (SR.ready && !SR.user) lsSet('sr_tried', true); plan.used++; lsSet('sr_used', { day:today(), n:plan.used }); }
 async function loadPlan(){
   plan.name = 'free'; plan.until = null; plan.trial = false;
   if (SR.user && SR.sb){

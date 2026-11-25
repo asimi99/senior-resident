@@ -10,6 +10,7 @@ const CORS = {
 };
 const LIVE = (Deno.env.get("BILLING_LIVE") ?? "") === "true";
 const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 5);
+const ANON_DAILY = Number(Deno.env.get("ANON_DAILY") ?? 3);   // signed out, per network: the app allows one try per browser. Kept above 1 because a whole hospital can share one address
 const PRO_DAILY = Number(Deno.env.get("PRO_DAILY") ?? 40);
 const PRO_MONTHLY = Number(Deno.env.get("PRO_MONTHLY") ?? 600);
 const CHIEF_DAILY = Number(Deno.env.get("CHIEF_DAILY") ?? 150);   // "unlimited" for one person; fair-use ceiling
@@ -77,7 +78,7 @@ Deno.serve(async (req) => {
 
   // allowance: a new question counts once. Follow-ups, checks and retries share a generous side bucket.
   const isQuestion = body.kind === "coach";
-  const qLimit = !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
+  const qLimit = !userId ? ANON_DAILY : !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
   const limit = isQuestion ? qLimit : qLimit * 12;
   const { data: n, error } = await admin.rpc("bump_usage", { k: (isQuestion ? "srq:" : "sra:") + who });
   if (error) return fail(500, "usage");
