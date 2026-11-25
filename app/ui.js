@@ -267,7 +267,8 @@ function cardHTML(c){
     if (!st.solved) h += c.helpBusy ? '' : '<button type="button" class="btn" data-act="morehelp">Need more help'+(isPro()?'':' '+IC.bolt)+'</button>';
     else h += '<button type="button" class="btn ghost" data-act="restart">Redo</button>'+(EMBED?'':'<button type="button" class="btn" data-go="new">Next question</button>');
   } else {
-    var can = st.sel[i]!==undefined || (st.other[i]&&st.other[i].saved) || (s.kind2==='elim' && st.cross && st.cross[i] && Object.keys(st.cross[i]).some(function(x){ return st.cross[i][x]; }));
+    var anyRuled = s.kind2==='elim' && st.ruled && s.opts.some(function(o){ return o.v==='good' && st.ruled[String(o.t||'').trim().toLowerCase()]; });   // options struck through on this step count as an answer
+    var can = st.sel[i]!==undefined || anyRuled || (st.other[i]&&st.other[i].saved) || (s.kind2==='elim' && st.cross && st.cross[i] && Object.keys(st.cross[i]).some(function(x){ return st.cross[i][x]; }));
     h += '<button type="button" class="btn" data-act="next"'+(can?'':' disabled')+'>Continue</button>';
   }
   return h + '</div>';
