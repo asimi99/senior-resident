@@ -431,13 +431,32 @@ function renderStage(){
   var keep = document.getElementById('chatTxt'), val = keep ? keep.value : '';
   /* hold the page where it is: re-rendering swaps the images, and for a moment the page is too short to keep its scroll */
   var y = window.scrollY, hgt = stage.offsetHeight; stage.style.minHeight = hgt + 'px';
-  stage.innerHTML = caseHTML(c);
+  if (stage._case === c && stage.firstChild) morph(stage, caseHTML(c)); else { stage.innerHTML = caseHTML(c); stage._case = c; }
   if (val){ var t = document.getElementById('chatTxt'); if (t) t.value = val; }
   if (y) window.scrollTo(0, y);
   var imgs = Array.prototype.slice.call(stage.querySelectorAll('img')).filter(function(im){ return !im.complete; });
   var release = function(){ stage.style.minHeight = ''; };
   if (!imgs.length) requestAnimationFrame(function(){ requestAnimationFrame(release); });
   else Promise.all(imgs.map(function(im){ return new Promise(function(r){ im.addEventListener('load', r, { once:true }); im.addEventListener('error', r, { once:true }); }); })).then(release);
+}
+/* update the page in place: only the parts that changed are replaced, so banners, images and animations do not flash */
+function morph(root, html){
+  var t = document.createElement('div'); t.innerHTML = html; sync(root, t);
+  function sync(a, b){
+    var ac = a.childNodes, bc = b.childNodes, i;
+    for (i = 0; i < bc.length; i++){
+      var x = ac[i], y = bc[i];
+      if (!x){ a.appendChild(y.cloneNode(true)); continue; }
+      if (x.isEqualNode(y)) continue;
+      if (x.nodeType !== y.nodeType || x.nodeName !== y.nodeName || (x.nodeType === 1 && x.id !== y.id)){ a.replaceChild(y.cloneNode(true), x); continue; }
+      if (x.nodeType !== 1){ if (x.nodeValue !== y.nodeValue) x.nodeValue = y.nodeValue; continue; }
+      var j, at = x.attributes, bt = y.attributes;
+      for (j = at.length - 1; j >= 0; j--) if (!y.hasAttribute(at[j].name)) x.removeAttribute(at[j].name);
+      for (j = 0; j < bt.length; j++) if (x.getAttribute(bt[j].name) !== bt[j].value) x.setAttribute(bt[j].name, bt[j].value);
+      sync(x, y);
+    }
+    while (ac.length > bc.length) a.removeChild(a.lastChild);
+  }
 }
 var SITE_URL = { home:'../', how:'../how.html', pricing:'../pricing.html' };
 function renderAll(){ renderTop(); renderStage(); }
