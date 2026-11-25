@@ -69,7 +69,7 @@ function homeHTML(){
   } else if (pg === 'pricing'){
   h += '<section class="hm-sec hm-first" id="plans"><h2>Pricing</h2><p class="hm-sub">Start free. Move up when it is part of your routine. Prices in ' + esc(C.CURRENCY) + '.</p>'
     + '<div class="hm-plans">'
-    + '<div class="hm-plan"><h3>Free</h3><p class="pk">Try the coach</p><div class="pr">$0</div>' + li([C.FREE_DAILY + ' questions a day', 'Guided and Harder levels', 'Works with any question bank']) + '<button type="button" class="btn ghost wide" data-hm="try">Try a question</button></div>'
+    + '<div class="hm-plan"><h3>Free</h3><p class="pk">Try the coach</p><div class="pr">$0</div>' + li([C.FREE_DAILY + ' questions a day', 'Guided and Harder levels', 'Study plan with daily check-ins', 'Works with any question bank']) + '<button type="button" class="btn ghost wide" data-hm="try">Try a question</button></div>'
     + '<div class="hm-plan pro"><span class="tag">Most popular</span><h3>Resident</h3><p class="pk">Your coach for every block</p><div class="pr">$' + C.PRICE_MONTH + ' <small>a month</small></div>'
     + li([C.PRO_DAILY + ' questions a day, a full block', 'Hardest level and narrowing from your cross-outs', 'Page the attending', 'Reasoning profile: where you lose points', 'One tap Anki cards, image occlusion included'])
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">Start the 7-day free trial</button></div>'
@@ -80,6 +80,7 @@ function homeHTML(){
     + '<tr><td>Coached questions a day</td>' + '<td>' + C.FREE_DAILY + '</td>' + '<td>' + C.PRO_DAILY + '</td>' + '<td>' + 'Unlimited*' + '</td>' + '</tr>'
     + '<tr><td>Chrome side panel and web app</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Guided and Harder levels</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
+    + '<tr><td>Study plan with daily check-ins</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Pearls after each question</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Hardest level at exam pace</td>' + '<td class="n"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Narrowing from your cross-outs</td>' + '<td class="n"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
