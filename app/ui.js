@@ -18,10 +18,10 @@ function money(n){ return '$' + n; }
 
 /* ---------- top bar ---------- */
 function pillHTML(){
-  if (SR.user && (plan.name==='pro' || plan.name==='chief')) return '<button type="button" class="pill pro tierp t-'+tierKey()+'" data-go="plan">'+(tierKey()==='chief'?IC.bolt+'Chief':tierKey()==='trial'?IC.bolt+'Resident trial':IC.bolt+'Resident')+'</button>';
+  if (SR.user && (plan.name==='pro' || plan.name==='chief')) return '';   // paid members see their tier in the account menu and account page, not the top bar
   if (SR.ready && !SR.user && !EMBED) return guestOut() ? '<button type="button" class="pill out" data-acct="signup">Create free account</button>' : '<button type="button" class="pill beta" data-acct="signup">1 free try</button>';
   if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
-  if (plan.name==='pro' || plan.name==='chief') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+(plan.name==='chief'?'Chief':'Resident')+'</button>';
+  if (plan.name==='pro' || plan.name==='chief') return '';
   var left = Math.max(0, plan.limit - plan.used);
   return '<button type="button" class="pill'+(left?'':' out')+'" data-go="plan">'+left+' of '+plan.limit+' left today</button>';
 }
