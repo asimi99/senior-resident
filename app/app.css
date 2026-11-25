@@ -633,3 +633,14 @@ body.site .tt[data-go="new"].on{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #14171c}
 a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}a.lnk{text-decoration:none}
 .landing .lnav{display:flex;gap:8px;align-items:center}.landing .lnav .btn{white-space:nowrap}
 @media (max-width:640px){.landing .sitetabs{display:none}.landing .lnav .ghost{display:none}}
+
+.tier{display:inline-flex;align-items:center;gap:3px;margin-top:4px;padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.02em;width:max-content;vertical-align:middle}
+.tier svg{width:11px;height:11px}
+.tier.t-free{background:var(--raised);color:var(--muted)}
+.tier.t-resident,.tier.t-trial{background:var(--brand-soft);color:var(--brand)}
+.tier.t-chief{background:var(--gold-soft);color:var(--gold)}
+.achd>div{display:flex;flex-direction:column;min-width:0}
+.ib.av.t-resident,.ib.av.t-trial,.acav.t-resident,.acav.t-trial{box-shadow:0 0 0 2px var(--brand)}
+.ib.av.t-chief,.acav.t-chief{box-shadow:0 0 0 2px var(--gold)}
+.pill.tierp.t-resident,.pill.tierp.t-trial{background:var(--brand-soft);color:var(--brand);border-color:transparent}
+.pill.tierp.t-chief{background:var(--gold-soft);color:var(--gold);border-color:transparent}

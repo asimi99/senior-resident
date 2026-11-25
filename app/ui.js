@@ -18,6 +18,7 @@ function money(n){ return '$' + n; }
 
 /* ---------- top bar ---------- */
 function pillHTML(){
+  if (SR.user && (plan.name==='pro' || plan.name==='chief')) return '<button type="button" class="pill pro tierp t-'+tierKey()+'" data-go="plan">'+(tierKey()==='chief'?IC.bolt+'Chief':tierKey()==='trial'?IC.bolt+'Resident trial':IC.bolt+'Resident')+'</button>';
   if (SR.ready && !SR.user && !EMBED) return guestOut() ? '<button type="button" class="pill out" data-acct="signup">Create free account</button>' : '<button type="button" class="pill beta" data-acct="signup">1 free try</button>';
   if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
   if (plan.name==='pro' || plan.name==='chief') return '<button type="button" class="pill pro" data-go="plan">'+IC.bolt+(plan.name==='chief'?'Chief':'Resident')+'</button>';
@@ -34,11 +35,14 @@ var EXAM_IC = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" strok
 var PLAN_IC = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 15l2 2 4-4"/></svg>';
 var HELP_IC = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 16.5v.1"/></svg>';
 var acctOpen = false;
+/* which kind of member this is: Free, Resident, Resident trial or Chief */
+function tierKey(){ return plan.name==='chief' ? 'chief' : plan.name==='pro' ? (plan.trial ? 'trial' : 'resident') : 'free'; }
+function tierBadge(){ var k = tierKey(); return '<span class="tier t-'+k+'">'+(k==='chief'?IC.bolt+'Chief':k==='resident'?IC.bolt+'Resident':k==='trial'?'Resident trial':'Free')+'</span>'; }
 function acctMenuHTML(){
   var u = SR.user, pl = plan.name==='chief' ? 'Chief' : plan.name==='pro' ? (plan.trial ? 'Resident (free trial)' : 'Resident') : 'Free';
   if (!u) return '<div class="acmenu" role="menu"><p class="acnm">Not signed in</p><button type="button" data-acct="signin">Sign in</button><button type="button" data-acct="signup">Create account</button><hr><button type="button" data-acct="pricing">Plans and pricing</button></div>';
   var nm = (u.user_metadata||{}).full_name || '';
-  return '<div class="acmenu" role="menu"><div class="achd"><span class="acav">'+userInitials(u)+'</span><div>'+(nm?'<b>'+esc(nm)+'</b>':'')+'<span>'+esc(u.email||'')+'</span></div></div>'
+  return '<div class="acmenu" role="menu"><div class="achd"><span class="acav t-'+tierKey()+'">'+userInitials(u)+'</span><div>'+(nm?'<b>'+esc(nm)+'</b>':'')+'<span>'+esc(u.email||'')+'</span>'+tierBadge()+'</div></div>'
     + '<div class="acplan"><span>Plan</span><b>'+esc(pl)+'</b></div>'
     + (plan.name==='pro'||plan.name==='chief' ? '<button type="button" data-acct="manage">Manage subscription</button>' : '<button type="button" data-acct="pricing">Upgrade</button>')
     + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
@@ -61,7 +65,7 @@ function renderTop(){
     topEl.innerHTML = '<a class="brand" href="#" data-go="coach">'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>' + pillHTML()
       + '<nav class="nav" aria-label="Sections"><button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Your progress" aria-label="Your progress">'+IC.chart+'</button>'
       + '<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback">'+HELP_IC+'</button>'
-      + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av':'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
+      + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av t-'+tierKey():'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
     return;
   }
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
@@ -69,7 +73,7 @@ function renderTop(){
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
     + pillHTML()
-    + '<div class="acwrap"><button type="button" class="ib'+(acctOpen?' on':'')+(u?' av':'')+'" data-acct="toggle" title="Account" aria-label="Account" aria-haspopup="menu" aria-expanded="'+acctOpen+'">'+(u?ini:IC.user)+'</button>'+(acctOpen?acctMenuHTML():'')+'</div>';
+    + '<div class="acwrap"><button type="button" class="ib'+(acctOpen?' on':'')+(u?' av t-'+tierKey():'')+'" data-acct="toggle" title="Account" aria-label="Account" aria-haspopup="menu" aria-expanded="'+acctOpen+'">'+(u?ini:IC.user)+'</button>'+(acctOpen?acctMenuHTML():'')+'</div>';
 }
 document.addEventListener('click', function(e){
   var b = e.target.closest('[data-acct]');
@@ -332,7 +336,7 @@ function accountHTML(){
   var u = SR.user, h = '';
   if (!SR.ready) h += '<section class="panel"><h2>Accounts are not switched on</h2><p class="muted">Everything still works without one.</p></section>';
   else if (u){
-    h += '<section class="panel"><h2>Account</h2>'+((u.user_metadata||{}).full_name?'<p><b>'+esc(u.user_metadata.full_name)+'</b></p>':'')+'<p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
+    h += '<section class="panel"><h2>Account</h2>'+((u.user_metadata||{}).full_name?'<p><b>'+esc(u.user_metadata.full_name)+'</b> '+tierBadge()+'</p>':'<p>'+tierBadge()+'</p>')+'<p>'+esc(u.email||'')+'</p><div class="row"><button type="button" class="btn ghost" data-act="signout">Sign out</button></div></section>';
   } else {
     h += '<section class="panel auth"><h2>'+(authMode==='in'?'Sign in':'Create your account')+'</h2><p class="muted">'+(authMode==='in'?'Your plan and history follow you to any device.':'Takes a few seconds.')+'</p>'
       + '<div id="gis"></div><div class="or"><span>or</span></div>'
