@@ -10,28 +10,107 @@ main{max-width:720px;margin:0 auto;padding:28px max(20px,env(safe-area-inset-rig
 .brand img{width:28px;height:28px}
 h1{font-size:32px;letter-spacing:-.02em;line-height:1.15;margin:0 0 6px} h2{font-size:19px;margin:30px 0 6px}
 p,li{color:#2b3d53} .d{color:var(--muted);font-size:14.5px} a{color:var(--brand)} ul{padding-left:22px}
+</style><style>
+.toc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:18px 0 8px;font-size:15px}.toc ol{margin:6px 0 0;padding-left:20px;columns:2;column-gap:28px}@media(max-width:600px){.toc ol{columns:1}}
+.box{background:#fff;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:10px;padding:12px 16px;margin:14px 0}
+h2{scroll-margin-top:16px} table{border-collapse:collapse;width:100%;font-size:15px;margin:10px 0}td,th{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}th{background:#eef3fa}
+.tw{overflow-x:auto}
 </style></head><body><main>
 <a class="brand" href="./"><img src="assets/logo.svg" alt="">Senior Resident</a>
-<h1>Privacy</h1><p class="d">Last updated November 20, 2026</p>
-<p>Senior Resident is a study aid. This page says what it handles and why, in plain language.</p>
-<h2>What it reads</h2>
-<ul><li><b>The question you are working on.</b> The extension reads the question on the page you are looking at (the text, the answer choices and any images) only when the panel is open or auto-read is on. It does not read other tabs, your history or anything else on your computer.</li>
-<li><b>What you add yourself.</b> Screenshots or text you paste into the app.</li>
-<li><b>What you type.</b> Your own reasoning and follow-up questions.</li></ul>
-<h2>Where it goes</h2>
-<ul><li>The question and your messages are sent to our server and passed to Anthropic's Claude model to write the coaching steps. Anthropic processes them under its commercial terms and does not use them to train its models.</li>
-<li>Your sessions, pearls and statistics are stored in your own browser. Clearing your browser data removes them.</li>
-<li>If you create an account, we store your email address, your plan and a short title for each question you finish, with Supabase, our database provider.</li>
-<li>To enforce daily limits we keep a count of requests per account, or per scrambled network address if you are not signed in.</li>
-<li>Payments are handled by Stripe. We never see or store your card number.</li></ul>
-<h2>Help and feedback</h2><p>Questions you type into Help are answered by the same AI provider that coaches your questions. If you send feedback, report an error or pass a help chat to the team, we store what you wrote, your email if you gave one, and basic technical details (app version, browser, the error) so a person can reply and fix it.</p>
-<h2>What it does not do</h2>
-<ul><li>No advertising, no trackers, no selling or sharing of your data.</li>
-<li>No building of a question database from what you study.</li>
-<li>No changes to your question bank. The extension is read only.</li></ul>
-<h2>Patient information</h2><p>Do not enter patient names or other identifying details. Senior Resident is for exam-style questions, not patient care.</p>
-<h2>Your choices</h2><p>You can use the app without an account. You can delete your account and its data at any time by asking us through the contact address on the extension's store listing.</p>
-</main><script src="config.js?v=5"></script>
-<script src="assets/help-kb.js?v=9"></script>
-<script src="assets/help-widget.js?v=2"></script>
-</body></html>
+<h1>Privacy policy</h1>
+<p class="d">Effective November 24, 2026. This policy covers the Senior Resident website, web app and Chrome extension.</p>
+<div class="box"><b>The short version.</b> We read the question you ask us to coach, use it to write your coaching, and do not keep it. We never sell your data, never show ads, and never use your data or question bank content to train AI.</div>
+<div class="toc"><b>Contents</b><ol>
+<li><a href="#who">Who is responsible</a></li><li><a href="#collect">What we collect</a></li><li><a href="#qbank">Question bank content</a></li><li><a href="#ext">The Chrome extension</a></li>
+<li><a href="#why">Why we use it</a></li><li><a href="#share">Who we share it with</a></li><li><a href="#where">Where it is stored</a></li><li><a href="#keep">How long we keep it</a></li>
+<li><a href="#safe">How we protect it</a></li><li><a href="#rights">Your choices and rights</a></li><li><a href="#patients">Patient information</a></li><li><a href="#kids">Age</a></li>
+<li><a href="#changes">Changes</a></li><li><a href="#contact">Contact and complaints</a></li></ol></div>
+
+<h2 id="who">1. Who is responsible</h2>
+<p>Senior Resident is operated by Asim Ibrahim in Winnipeg, Manitoba, Canada, who is also our privacy officer and is accountable for how your personal information is handled. We follow Canada's Personal Information Protection and Electronic Documents Act (PIPEDA).</p>
+
+<h2 id="collect">2. What we collect</h2>
+<div class="tw"><table><tr><th>What</th><th>When</th><th>Kept where</th></tr>
+<tr><td>Name and email</td><td>When you create an account, or from Google if you sign in with Google</td><td>Our account database (Supabase)</td></tr>
+<tr><td>Password</td><td>If you sign up with email</td><td>Stored only as a secure hash by Supabase. We never see it.</td></tr>
+<tr><td>Plan, billing status and renewal date</td><td>If you subscribe</td><td>Our account database</td></tr>
+<tr><td>Payment details</td><td>At checkout</td><td>Stripe only. We never see or store your card number. We keep a one-way card fingerprint from Stripe to allow one free trial per card.</td></tr>
+<tr><td>Question you ask us to coach (text, answer choices, images)</td><td>Each time you press coach, paste a question or upload a PDF or image</td><td>Sent to our AI provider to write the coaching. Not stored on our servers. See section 3.</td></tr>
+<tr><td>What you type (your reasoning, follow-up questions)</td><td>As you use the coach</td><td>Sent with the question to our AI provider. Not stored on our servers.</td></tr>
+<tr><td>A short title of each finished question and how many tries it took</td><td>If you are signed in</td><td>Our account database, for your history and statistics</td></tr>
+<tr><td>Your study plan</td><td>If you build one</td><td>Your account, so it follows you between devices</td></tr>
+<tr><td>Daily usage counts</td><td>Each coaching request</td><td>Our database, linked to your account or, if signed out, to a scrambled version of your network address</td></tr>
+<tr><td>Help messages and feedback</td><td>When you contact us</td><td>Our database, with your email if you give it and basic technical details (app version, browser, error)</td></tr>
+<tr><td>Sessions, pearls, statistics, settings</td><td>As you use the app</td><td>Your own browser only</td></tr></table></div>
+<p>We do not use advertising, analytics trackers, tracking cookies or third-party pixels. The sign-in and billing pages of Google and Stripe set their own cookies under their policies.</p>
+
+<h2 id="qbank">3. Question bank content</h2>
+<ul><li>The extension reads the question on your screen only when you press Coach, or when you turn on Auto-read yourself. Auto-read is off by default.</li>
+<li>It reads only the question on the page you are looking at: the stem, answer choices and images. It does not read other tabs, your history, your question bank account details, scores or anything else.</li>
+<li>The question is sent once to our AI provider to write your coaching or your Anki card, then discarded. Our server passes it through without saving it and does not log it.</li>
+<li>We do not build a database of questions, share one user's questions with another, publish them or use them to train any AI model.</li>
+<li>Cards for Anki go from your browser to Anki on your own computer, through AnkiConnect, or into a file you save. They do not go to our servers except as part of the request that writes them.</li>
+<li>Images you use for image occlusion stay in your browser and go straight to Anki. If you press Box it for me, the image is sent to our AI provider to place the boxes and is not kept.</li>
+<li>PDFs you turn into an exam are read in your browser. Their text is sent to our AI provider to turn it into questions and is not kept on our servers. The exam is saved in your browser.</li></ul>
+
+<h2 id="ext">4. The Chrome extension</h2>
+<p>The extension asks only for the permissions it needs:</p>
+<ul><li><b>Access to listed question bank sites</b>, to read the question on screen when you ask. The extension is read only. It never clicks, types or changes anything on those sites.</li>
+<li><b>activeTab and scripting</b>, to read the question in the tab you are using when you open the panel.</li>
+<li><b>Side panel and offscreen</b>, to show the coach beside your question bank and prepare it in the background when Auto-read is on.</li>
+<li><b>Storage</b>, to remember your settings in your browser.</li>
+<li><b>Identity</b>, for Sign in with Google.</li>
+<li><b>Local address 127.0.0.1:8765</b>, to send cards to AnkiConnect running in Anki on your own computer. This never leaves your computer.</li></ul>
+<p>The extension does not take screenshots of your screen.</p>
+<div class="box"><b>Chrome Web Store Limited Use.</b> The use of information received from Google APIs and from the Chrome extension will adhere to the Chrome Web Store User Data Policy, including the Limited Use requirements. We use data from the extension only to provide the coaching and card features you can see. We do not sell it, transfer it for advertising, use it to decide creditworthiness or lending, or let humans read it, except with your consent, for security, to comply with the law, or when you send it to us in a help request.</div>
+
+<h2 id="why">5. Why we use it</h2>
+<ul><li>To provide the coaching, cards, exams, history and study plan you ask for.</li>
+<li>To run your account and subscription and to enforce plan limits and fair use.</li>
+<li>To answer help requests and fix problems.</li>
+<li>To keep Senior Resident secure and prevent abuse, such as trial abuse or shared accounts.</li>
+<li>To meet legal, tax and accounting duties.</li></ul>
+<p>We ask your consent when you create an account and accept this policy. We will not use your information for a new purpose without telling you and, where needed, asking again. We will only send marketing email if you opt in, and every such email will have an unsubscribe link, as Canada's Anti-Spam Legislation (CASL) requires.</p>
+
+<h2 id="share">6. Who we share it with</h2>
+<p>We do not sell or rent personal information. We share it only with service providers that help us run Senior Resident, under contracts that limit their use of it:</p>
+<div class="tw"><table><tr><th>Provider</th><th>What they do</th></tr>
+<tr><td>Anthropic</td><td>Runs the Claude AI model that writes the coaching and cards. Under its commercial terms Anthropic does not train its models on our requests. It may keep requests for a limited period for safety and abuse monitoring, then deletes them.</td></tr>
+<tr><td>Supabase</td><td>Account database, sign-in and our server functions</td></tr>
+<tr><td>Stripe</td><td>Payments, subscriptions and invoices</td></tr>
+<tr><td>Google</td><td>Sign in with Google, if you choose it</td></tr>
+<tr><td>GitHub Pages</td><td>Hosts the website files</td></tr></table></div>
+<p>We may also disclose information if the law requires it, to protect our rights or the safety of others, or as part of a sale or reorganization of Senior Resident, in which case this policy continues to apply.</p>
+
+<h2 id="where">7. Where it is stored</h2>
+<p>Our providers store and process data outside Canada, mainly in the United States. While it is there it may be accessed by the courts, law enforcement and national security authorities of that country.</p>
+
+<h2 id="keep">8. How long we keep it</h2>
+<ul><li>Question text and what you type in the coach: not stored on our servers after the response is written.</li>
+<li>Account details, history titles and your study plan: while your account is open, and deleted within 30 days after you ask us to delete your account.</li>
+<li>Help messages and feedback: up to 2 years, so we can follow up and fix recurring problems.</li>
+<li>Billing records: as long as tax law requires, normally 6 years in Canada.</li>
+<li>Card fingerprints for the one-trial rule: as long as needed to prevent trial abuse.</li>
+<li>Data in your browser: until you clear it or delete your sessions.</li></ul>
+
+<h2 id="safe">9. How we protect it</h2>
+<p>All traffic uses encryption (HTTPS). Database access is limited by row-level security so each account can only read its own data, and only our server functions hold privileged keys. No system is perfectly secure. If a breach creates a real risk of significant harm, we will notify you and the Office of the Privacy Commissioner of Canada as the law requires.</p>
+
+<h2 id="rights">10. Your choices and rights</h2>
+<ul><li>You can use the web app without an account.</li>
+<li>You can turn Auto-read off, delete sessions, and clear browser data at any time.</li>
+<li>You can ask to see, correct or delete the personal information we hold about you, or withdraw your consent, by emailing us. We will answer within 30 days. Withdrawing consent may mean we cannot provide some features.</li>
+<li>If you live outside Canada you may have other rights under your local law. Contact us and we will honour them where they apply.</li></ul>
+
+<h2 id="patients">11. Patient information</h2>
+<p>Senior Resident is for exam-style questions, not patient care. Do not enter names, health numbers, dates of birth or any other information that could identify a patient. If you do, we will delete it when we find it.</p>
+
+<h2 id="kids">12. Age</h2>
+<p>Senior Resident is for adults studying medicine. It is not intended for anyone under 18 and we do not knowingly collect their information.</p>
+
+<h2 id="changes">13. Changes</h2>
+<p>We may update this policy. The date at the top shows the current version. If a change is significant we will tell you in the app or by email before it takes effect.</p>
+
+<h2 id="contact">14. Contact and complaints</h2>
+<p>Privacy officer: Asim Ibrahim, <b>asimibrahim1999@gmail.com</b>, Winnipeg, Manitoba, Canada. If you are not satisfied with our answer, you can complain to the <a href="https://www.priv.gc.ca" target="_blank" rel="noopener">Office of the Privacy Commissioner of Canada</a>.</p>
+</main></body></html>

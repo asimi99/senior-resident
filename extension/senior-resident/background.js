@@ -33,7 +33,7 @@ async function ensureOffscreen(){
   await chrome.offscreen.createDocument({ url: 'offscreen.html', reasons: ['IFRAME_SCRIPTING'], justification: 'Prepares the coaching for the question on screen so it is ready when the panel opens.' });
 }
 async function closeOffscreen(){ try { if (await chrome.offscreen.hasDocument()) await chrome.offscreen.closeDocument(); } catch(e){} }
-async function autoOn(){ try { var r = await chrome.storage.local.get({ auto: true }); return r.auto !== false; } catch(e){ return true; } }
+async function autoOn(){ try { var r = await chrome.storage.local.get({ auto: false }); return r.auto === true; } catch(e){ return false; } }
 async function inject(tabId){
   try {
     await chrome.scripting.insertCSS({ target: { tabId: tabId }, files: ['content.css'] });
@@ -46,7 +46,6 @@ async function ask(tabId){
   catch(e){ if (await inject(tabId)){ try { return await chrome.tabs.sendMessage(tabId, { t: 'grab' }); } catch(e2){} } }
   return null;
 }
-async function shot(windowId){ try { return await chrome.tabs.captureVisibleTab(windowId, { format: 'jpeg', quality: 82 }); } catch(e){ return ''; } }
 
 async function bgCoach(tabId, qid){
   if (panelPort || !qid || qid === bgBusy || qid === bgReady || !(await autoOn())) return;
@@ -92,15 +91,12 @@ chrome.runtime.onMessage.addListener(function(m, sender, reply){
       var tab = (tabs || [])[0];
       if (!tab){ reply({ err: 'Open a question first.' }); return; }
       var mode = await siteMode(tab.url || '');
-      if (mode === 'off'){ reply({ err: 'Senior Resident is switched off on this site. Use a screenshot in the web app instead.' }); return; }
+      if (mode === 'off'){ reply({ err: 'Senior Resident is switched off on this site at the request of the site owner.' }); return; }
       if (mode === 'manual' && !m.manual){ reply({ err: '' }); return; }
       var q = await ask(tab.id);
       if (q && q.text){ reply(q); return; }
-      if (m.manual){
-        var img = await shot(tab.windowId);
-        if (img){ reply({ qid: '', src: (q && q.src) || '', text: '', images: [img], shot: true }); return; }
-      }
-      reply({ err: q ? 'No question found on this page yet.' : 'Click the Senior Resident icon in the toolbar while the question is on screen.' });
+      /* No screen capture fallback: several question banks (eg, UWorld) ban capturing screen contents with third-party apps. */
+      reply({ err: q ? 'No question found on this page yet. You can paste the question text into the web app instead.' : 'Click the Senior Resident icon in the toolbar while the question is on screen.' });
     });
     return true;
   }

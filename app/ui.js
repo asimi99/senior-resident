@@ -335,7 +335,8 @@ function accountHTML(){
   } else {
     h += '<section class="panel auth"><h2>'+(authMode==='in'?'Sign in':'Create your account')+'</h2><p class="muted">'+(authMode==='in'?'Your plan and history follow you to any device.':'Takes a few seconds.')+'</p>'
       + '<div id="gis"></div><div class="or"><span>or</span></div>'
-      + '<form id="authform">'+(authMode==='in'?'':'<input class="inp" id="aun" type="text" placeholder="Full name" autocomplete="name" required minlength="3" maxlength="80">')+'<input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required><p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
+      + '<form id="authform">'+(authMode==='in'?'':'<input class="inp" id="aun" type="text" placeholder="Full name" autocomplete="name" required minlength="3" maxlength="80">')+'<input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required>'+(authMode==='in'?'':'<label class="agree"><input type="checkbox" id="auok" required><span>I am 18 or older and agree to the <a href="../terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="../privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I will use Senior Resident in line with my question bank\'s own terms.</span></label>')+'<p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
+      + '<p class="muted sm consent">By continuing with Google you agree to the <a href="../terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="../privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>'
       + '<button type="button" class="lnk" data-act="authsw">'+(authMode==='in'?'New here? Create an account':'Already have an account? Sign in')+'</button></section>';
   }
   h += planCardHTML();
@@ -343,7 +344,7 @@ function accountHTML(){
   h += '<section class="panel"><h2>Preferences</h2><div class="pref"><span>Default difficulty</span>'+'<div class="seg">'+LEVELS.map(function(l){ return '<button type="button" role="radio" aria-checked="'+(l[0]===LEVEL)+'" data-act="lvl" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('')+'</div></div>'
     + (EMBED ? '<div class="pref"><span>Colour</span>'+themesHTML()+'</div>' : '')
     + '<p class="muted sm">Keys: press an option letter to pick it, Enter continues, Backspace goes back. Right-click an option to cross it out.</p></section>'
-    + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank.</span></p>';
+    + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank, Anki or AnKing. Follow your question bank\'s own terms.</span></p>';
   return h;
 }
 var gsiP = null;
@@ -485,6 +486,7 @@ stage.addEventListener('submit', async function(e){
   e.preventDefault();
   var em = document.getElementById('aue').value.trim(), pw = document.getElementById('aup').value, er = document.getElementById('auerr'), btn = e.target.querySelector('button');
   var nmEl = document.getElementById('aun'), nm = nmEl ? nmEl.value.trim().replace(/\s+/g, ' ') : '';
+  var okEl = document.getElementById('auok'); if (authMode!=='in' && okEl && !okEl.checked){ er.textContent = 'Please accept the Terms of Use and Privacy Policy to create an account.'; return; }
   if (authMode!=='in' && nm.split(' ').length < 2){ er.textContent = 'Please enter your first and last name.'; if (nmEl) nmEl.focus(); return; }
   btn.disabled = true; er.textContent = '';
   var r = await (authMode==='in' ? SR.signIn(em, pw) : SR.signUp(em, pw, nm));

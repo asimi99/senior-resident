@@ -626,3 +626,7 @@ body.site .tt[data-go="new"].on{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #14171c}
 .spmv b{font-size:13px;color:var(--muted);font-weight:600;min-width:16px}
 .sprr.dragging{background:var(--surface);box-shadow:0 8px 24px rgba(20,23,28,.14);position:relative;z-index:2;border-radius:10px}
 .sprr.dragging .spdrag{cursor:grabbing}
+
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.45;color:var(--muted);margin:4px 0 2px;text-align:left}.agree input{margin-top:3px;flex:none;width:16px;height:16px;accent-color:var(--brand)}.agree a,.consent a{color:var(--brand)}.consent{margin:10px 0 0;text-align:center}
+.hm-anki{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:22px}.hm-anki>div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0}.hm-anki h3{margin:0 0 6px}.hm-anki p{margin:0;color:var(--muted);font-size:15px}
+.hm-legal{font-size:12.5px;line-height:1.5}

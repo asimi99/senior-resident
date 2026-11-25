@@ -81,8 +81,9 @@ var SR = { sb:null, user:null, ready:false, listeners:[] };
 SR.onAuth = function(f){ SR.listeners.push(f); };
 SR.token = async function(){ if (!SR.sb) return null; var r = await SR.sb.auth.getSession(); return r.data.session ? r.data.session.access_token : null; };
 SR.signIn = function(email, pw){ return SR.sb.auth.signInWithPassword({ email:email, password:pw }); };
+SR.TERMS_VERSION = '2026-11-24';
 SR.signUp = async function(email, pw, name){
-  var r = await SR.sb.auth.signUp({ email:email, password:pw, options:{ data:{ full_name:name || '', name:name || '' } } });
+  var r = await SR.sb.auth.signUp({ email:email, password:pw, options:{ data:{ full_name:name || '', name:name || '', terms_version:SR.TERMS_VERSION, terms_accepted_at:new Date().toISOString() } } });
   if (r.error || (r.data && r.data.session)) return r;
   return SR.sb.auth.signInWithPassword({ email:email, password:pw });
 };

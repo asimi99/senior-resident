@@ -3,7 +3,7 @@
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjjSnDPpdw2+lO779fm0Ys8akXIVacqKb6JrNOb48010yzdbfamkIHsm3UR0uU58wWFKyYR1R2wc+5tkbSiSMPKCK+e763VSzvHKN1AvC1zog4RNttciIkiZZ3/lXJ5RW8iHSmWW9gV3oLQgzdA7kD0Djl6OoC6qLKk5x64wRvNBT5K4IGcOwVeqMwAewxfrv2g4zao90N7eESkQho5lwejUDaLZuTLEw0h7KY2zcC7X0Wn2M3opBIfq0GsAe3ve89LQuvx89vzcTGq/f5VSHAb+EWwYqjNNMhOex8YbUGZuOBUvzpmWhgwQErbryueTwxi8EGcGF/x13uwfoAqvNqwIDAQAB",
   "name": "Senior Resident: Qbank Reasoning Coach",
   "short_name": "Senior Resident",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "A senior resident beside your question bank. It reads the question you are on and walks you to the answer one decision at a time.",
   "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
   "action": { "default_title": "Senior Resident (Alt+S)" },

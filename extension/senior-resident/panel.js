@@ -10,7 +10,7 @@
     port.onDisconnect.addListener(function(){ setTimeout(connect, 200); });
   }
   chrome.runtime.onMessage.addListener(function(m){ if (m && m.t === 'panel-close') window.close(); });
-  chrome.storage.local.get({ auto: true }, function(r){ auto.checked = r.auto !== false; });
+  chrome.storage.local.get({ auto: false }, function(r){ auto.checked = r.auto === true; });
   auto.addEventListener('change', function(){ chrome.storage.local.set({ auto: auto.checked }); });
   var pop = document.getElementById('pop');
   chrome.storage.local.get({ pop: false }, function(r){ pop.checked = r.pop === true; });
