@@ -351,7 +351,7 @@ function accountHTML(){
   }
   h += planCardHTML();
   var R = [['US','American'],['CA','Canadian'],['UK','British']];
-  h += '<section class="panel"><h2>Preferences</h2><div class="pref"><span>Default difficulty</span>'+'<div class="seg">'+LEVELS.map(function(l){ return '<button type="button" role="radio" aria-checked="'+(l[0]===LEVEL)+'" data-act="lvl" data-l="'+l[0]+'">'+l[1]+'</button>'; }).join('')+'</div></div>'
+  h += '<section class="panel"><h2>Preferences</h2>'
     + (EMBED ? '<div class="pref"><span>Colour</span>'+themesHTML()+'</div>' : '')
     + '<p class="muted sm">Keys: press an option letter to pick it, Enter continues, Backspace goes back. Right-click an option to cross it out.</p></section>'
     + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank, Anki or AnKing. Follow your question bank\'s own terms.</span></p>';
