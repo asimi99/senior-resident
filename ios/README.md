@@ -1,4 +1,4 @@
-# Senior Resident for iPhone
+# My Senior Resident for iPhone
 
 A native SwiftUI app. Not a website wrapper: home screen and lock screen widgets with one-tap check-in, a camera scan that reads your question bank's subject list on the phone, local reminders, Siri and Shortcuts, Sign in with Apple, and a coach for practice questions from a photo.
 
@@ -40,22 +40,22 @@ While `Config.billingLive` is false (same as the website's BILLING_LIVE), every 
 
 ## Send it to the App Store
 
-1. App Store Connect, Apps, +, New App: platform iOS, name "Senior Resident: Study Planner", bundle ID com.myseniorresident.app, SKU senior-resident-ios.
+1. App Store Connect, Apps, +, New App: platform iOS, name "My Senior Resident: Study Planner", bundle ID com.myseniorresident.app, SKU senior-resident-ios.
 2. In Xcode: Product, Archive, then Distribute App, App Store Connect, Upload.
 3. TestFlight first: install on your phone, try every screen.
 4. Fill in the listing below, add screenshots (6.9 inch iPhone: 1320 x 2868; take them in the simulator with the iPhone 16 Pro Max), answer App Privacy, and Submit for Review.
 
 ### Listing
 
-- **Name:** Senior Resident: Study Planner
+- **Name:** My Senior Resident: Study Planner
 - **Subtitle:** Med school plan, widget, coach
 - **Category:** Education (secondary: Medical)
 - **Age rating:** 4+ (no objectionable content). Medical/treatment information: none, it is exam study, not medical advice.
 - **Promotional text:** Your question bank plan on your home screen. Snap your subject list, get a day-by-day plan, check off today from the widget.
 - **Description:**
-  Senior Resident turns your question bank into a plan you can actually follow.
+  My Senior Resident turns your question bank into a plan you can actually follow.
 
-  Snap a photo of your question bank's subject list and Senior Resident reads every subject and question count on your phone. Pick your exam date and study days, and it builds a day-by-day plan with practice exams and review days at the end.
+  Snap a photo of your question bank's subject list and My Senior Resident reads every subject and question count on your phone. Pick your exam date and study days, and it builds a day-by-day plan with practice exams and review days at the end.
 
   Today's questions sit on your home screen and lock screen. Check off the day right from the widget, keep a streak, and see if you are on track. Missed a few days? Shift the rest of the plan in one tap.
 
@@ -65,7 +65,7 @@ While `Config.billingLive` is false (same as the website's BILLING_LIVE), every 
 
   Works with UWorld, AMBOSS, NBME practice exams, Kaplan, TrueLearn and more for USMLE, NBME shelf exams and MCCQE.
 
-  Senior Resident is a study aid, not medical advice, and is not affiliated with any question bank or exam body.
+  My Senior Resident is a study aid, not medical advice, and is not affiliated with any question bank or exam body.
 - **Keywords:** usmle,shelf,nbme,uworld,step 1,step 2,study plan,med school,mccqe,qbank,planner
 - **Support URL:** https://myseniorresident.com/
 - **Privacy Policy URL:** https://myseniorresident.com/privacy.html
@@ -78,7 +78,7 @@ While `Config.billingLive` is false (same as the website's BILLING_LIVE), every 
 
 ### Review notes (paste in App Review Information)
 
-> Senior Resident is a study planner for medical students. To review: sign in with the demo account below. On Today, tap Build my plan, pick an exam and dates, then use Take a photo or Screenshot under Subjects to import a question bank's subject list (any photo of a list like "Cardiovascular (120)" works), and Build. Add the Today widget to the home screen to check in from it. Reminders are local notifications. The Coach tab coaches a photographed practice question.
+> My Senior Resident is a study planner for medical students. To review: sign in with the demo account below. On Today, tap Build my plan, pick an exam and dates, then use Take a photo or Screenshot under Subjects to import a question bank's subject list (any photo of a list like "Cardiovascular (120)" works), and Build. Add the Today widget to the home screen to check in from it. Reminders are local notifications. The Coach tab coaches a photographed practice question.
 >
 > Paid plans (Resident, Chief) are sold only on our website. The app has no purchase buttons, prices or links to buy; signed-in subscribers get the coach and photo import. Account deletion: Account tab, Delete my account.
 >

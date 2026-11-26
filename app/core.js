@@ -270,7 +270,7 @@ function errCopy(e){
     rate_limited:'You have used today\'s free questions. They reset at midnight.',
     pro_only:'That is part of Pro.',
     session_expired:'Your sign-in expired. Sign in again and retry.',
-    upstream_error:'Senior Resident could not be reached. Try again in a moment.',
+    upstream_error:'My Senior Resident could not be reached. Try again in a moment.',
     cut_off:'The connection dropped before the steps finished.',
     image_rejected:'One of the images could not be read. Try a different screenshot.',
     unreadable:(e&&e.message)||'The question could not be read from what you added.',

@@ -91,12 +91,12 @@ chrome.runtime.onMessage.addListener(function(m, sender, reply){
       var tab = (tabs || [])[0];
       if (!tab){ reply({ err: 'Open a question first.' }); return; }
       var mode = await siteMode(tab.url || '');
-      if (mode === 'off'){ reply({ err: 'Senior Resident is switched off on this site at the request of the site owner.' }); return; }
+      if (mode === 'off'){ reply({ err: 'My Senior Resident is switched off on this site at the request of the site owner.' }); return; }
       if (mode === 'manual' && !m.manual){ reply({ err: '' }); return; }
       var q = await ask(tab.id);
       if (q && q.text){ reply(q); return; }
       /* No screen capture fallback: several question banks (eg, UWorld) ban capturing screen contents with third-party apps. */
-      reply({ err: q ? 'No question found on this page yet. You can paste the question text into the web app instead.' : 'Click the Senior Resident icon in the toolbar while the question is on screen.' });
+      reply({ err: q ? 'No question found on this page yet. You can paste the question text into the web app instead.' : 'Click the My Senior Resident icon in the toolbar while the question is on screen.' });
     });
     return true;
   }

@@ -1,6 +1,6 @@
 /* ---------- Anki: one card per question, straight into Anki through AnkiConnect, or saved for export ---------- */
 var ANKI = { status:'unknown', queue: lsGet('sr_anki_q', []), sent: lsGet('sr_anki_sent', 0), qid: lsGet('sr_anki_qid', true), type: lsGet('sr_anki_type', 'cloze'), last: '', cfg: false, mode:'q', io:null, synced:{} };
-var ANKI_DECK = 'Senior Resident', ankiSeq = 0, ankiWait = {};
+var ANKI_DECK = 'My Senior Resident', ankiSeq = 0, ankiWait = {};
 ANKI.queue = ANKI.queue.map(function(n){ return n.fields ? n : { type:'basic', fields:{ Front:n.front || '', Back:n.back || '', Source:'' }, tags:n.tags || ['SeniorResident'] }; });
 function isChief(){ return !billingLive() || plan.name === 'chief'; }
 function ankiSave(){ lsSet('sr_anki_q', ANKI.queue); lsSet('sr_anki_sent', ANKI.sent); }
@@ -30,11 +30,11 @@ var IO_JS = '<span id="iod" hidden>{{Occlusion}}</span><script>(function(){try{v
   + 'b.style.left=x[2]*100+"%";b.style.top=x[3]*100+"%";b.style.width=x[4]*100+"%";b.style.height=x[5]*100+"%";io.appendChild(b);}}catch(e){}})();</script>';
 var IO_FACE = '<div class="wrap">{{#Header}}<div class="iohd">{{Header}}</div>{{/Header}}<div class="ioc"><div class="io" id="io">{{Image}}</div></div><div hidden>{{cloze:Occlusion}}</div>';
 var SR_MODELS = {
-  cloze: { modelName:'Senior Resident Cloze', inOrderFields:['Text','Extra','Source'], isCloze:true, css:SR_CSS,
+  cloze: { modelName:'My Senior Resident Cloze', inOrderFields:['Text','Extra','Source'], isCloze:true, css:SR_CSS,
     cardTemplates:[{ Name:'Cloze', Front:'<div class="wrap">{{cloze:Text}}</div>', Back:'<div class="wrap">{{cloze:Text}}<hr class="ans">{{#Extra}}<div class="extra">{{Extra}}</div>{{/Extra}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' }] },
-  basic: { modelName:'Senior Resident Basic', inOrderFields:['Front','Back','Source'], css:SR_CSS,
+  basic: { modelName:'My Senior Resident Basic', inOrderFields:['Front','Back','Source'], css:SR_CSS,
     cardTemplates:[{ Name:'Card 1', Front:'<div class="wrap">{{Front}}</div>', Back:'<div class="wrap">{{Front}}<hr class="ans">{{Back}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' }] },
-  io: { modelName:'Senior Resident Occlusion', inOrderFields:['Occlusion','Image','Header','Back Extra','Source'], isCloze:true, css:SR_CSS,
+  io: { modelName:'My Senior Resident Occlusion', inOrderFields:['Occlusion','Image','Header','Back Extra','Source'], isCloze:true, css:SR_CSS,
     cardTemplates:[{ Name:'Cloze', Front: IO_FACE + '</div>' + IO_JS, Back: IO_FACE + '<i id="ioback"></i>{{#Back Extra}}<hr class="ans"><div class="extra">{{Back Extra}}</div>{{/Back Extra}}{{#Source}}<div class="src">{{Source}}</div>{{/Source}}</div>' + IO_JS }] }
 };
 var TYPES = [['cloze','Fact table','A bold topic, then a table with one blank per row. Red marks the highest yield.'], ['basic','Question and answer','One line on the front. The answer and what to watch for on the back.']];
@@ -88,7 +88,7 @@ function ankiStatusHTML(){
   if (s === 'on') return '<p class="ak-st on"><i></i>Connected to Anki. Cards go straight into the ' + esc(ANKI_DECK) + ' deck.</p>';
   if (s === 'checking' || s === 'unknown') return '<p class="ak-st"><i></i>Looking for Anki</p>';
   if (s === 'asking') return '<p class="ak-st"><i></i>Click Yes in the Anki window that just opened.</p>';
-  if (s === 'needs') return '<p class="ak-st warn"><i></i>Anki is open but has not allowed Senior Resident yet. <button type="button" class="lnk" data-anki="allow">Allow it</button></p>';
+  if (s === 'needs') return '<p class="ak-st warn"><i></i>Anki is open but has not allowed My Senior Resident yet. <button type="button" class="lnk" data-anki="allow">Allow it</button></p>';
   var io = ANKI.mode === 'img';
   return '<p class="ak-st off"><i></i>' + (EMBED ? (io ? 'Image cards go straight into Anki, so open Anki first.' : 'Anki is not open on this computer, so cards are saved for export.') : (io ? 'Image cards need the Chrome extension with Anki open.' : 'Cards are saved here for export. To send them straight to Anki, use the Chrome extension.')) + '</p>'
     + (EMBED ? '<details class="ak-how"><summary>Send cards straight to Anki</summary><ol><li>In desktop Anki, go to Tools, Add-ons, Get Add-ons.</li><li>Paste the code <b>2055492159</b> (AnkiConnect) and restart Anki.</li><li>Keep Anki open while you study, then press <button type="button" class="lnk" data-anki="recheck">Check again</button> and click Yes when Anki asks.</li></ol></details>' : '');
@@ -98,7 +98,7 @@ function ankiCfgHTML(c){
   TYPES.forEach(function(t){ h += '<label class="ak-opt"><input type="radio" name="aktype" data-anki="type" value="' + t[0] + '"' + (ANKI.type === t[0] ? ' checked' : '') + '><span><b>' + t[1] + '</b><small>' + t[2] + '</small></span></label>'; });
   var can = isChief();
   h += '<label class="ak-chk' + (can ? '' : ' dis') + '"><input type="checkbox" data-anki="qid"' + (ANKI.qid && can ? ' checked' : '') + (can ? '' : ' disabled') + '> Add the question ID to each card' + (can ? '' : ' <span class="muted sm">Chief plan</span>') + '</label>';
-  return h + '<p class="muted sm">Cards use the Senior Resident note types. Restyle them any time in Anki under Tools, Manage Note Types.</p></div>';
+  return h + '<p class="muted sm">Cards use the My Senior Resident note types. Restyle them any time in Anki under Tools, Manage Note Types.</p></div>';
 }
 function ankiIOHTML(){
   var io = ANKI.io;

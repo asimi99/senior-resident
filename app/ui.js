@@ -1,4 +1,4 @@
-/* Senior Resident interface */
+/* My Senior Resident interface */
 var stage = document.getElementById('stage'), tabsEl = document.getElementById('tabs'), topEl = document.getElementById('top'), modalEl = document.getElementById('modal');
 var statusMsg = '', LABEL = { good:'Correct', warn:'Partly', bad:'Not quite', note:'Noted' };
 var IC = {
@@ -46,7 +46,7 @@ function acctMenuHTML(){
     + '<div class="acplan"><span>Plan</span><b>'+esc(pl)+'</b></div>'
     + (plan.name==='pro'||plan.name==='chief' ? '<button type="button" data-acct="manage">Manage subscription</button>' : '<button type="button" data-acct="pricing">Upgrade</button>')
     + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
-    + '<button type="button" data-acct="help">Help and feedback</button><a class="acm-link" href="../">Senior Resident website</a><hr><button type="button" data-acct="signout">Sign out</button></div>';
+    + '<button type="button" data-acct="help">Help and feedback</button><a class="acm-link" href="../">My Senior Resident website</a><hr><button type="button" data-acct="signout">Sign out</button></div>';
 }
 var THEMES = [['navy','Navy','#1c4872','#e3e6f0'],['rose','Rose','#7e3453','#b6567d'],['forest','Forest','#2d5443','#438a69'],['mono','Black and white','#2f3338','#f6f6f7'],['plum','Plum','#493b66','#7d66a9'],['teal','Teal','#1f545e','#2c8997']];
 function curTheme(){ return document.documentElement.dataset.sr || 'navy'; }
@@ -62,7 +62,7 @@ function renderTop(){
   document.body.classList.toggle('site', !EMBED);
   var onCoach = view==='coach';
   if (EMBED){
-    topEl.innerHTML = '<a class="brand" href="#" data-go="coach">'+IC.logo+'<span>Senior Resident</span></a><span class="spacer"></span>' + pillHTML()
+    topEl.innerHTML = '<a class="brand" href="#" data-go="coach">'+IC.logo+'<span>My Senior Resident</span></a><span class="spacer"></span>' + pillHTML()
       + '<nav class="nav" aria-label="Sections"><button type="button" class="ib'+(view==='review'?' on':'')+'" data-go="review" title="Your progress" aria-label="Your progress">'+IC.chart+'</button>'
       + '<button type="button" class="ib" data-h="open" title="Help and feedback" aria-label="Help and feedback">'+HELP_IC+'</button>'
       + '<button type="button" class="ib'+(view==='account'?' on':'')+(u?' av t-'+tierKey():'')+'" data-go="account" title="Account" aria-label="Account">'+(u?ini:IC.user)+'</button></nav>';
@@ -70,7 +70,7 @@ function renderTop(){
   }
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
   /* Visitors who came from the website can always get back to it. Members land in the portal. */
-  topEl.innerHTML = '<a class="brand" href="../" title="Senior Resident home">'+IC.logo+'<span>Senior Resident</span></a>'
+  topEl.innerHTML = '<a class="brand" href="../" title="My Senior Resident home">'+IC.logo+'<span>My Senior Resident</span></a>'
     + (u ? '' : '<nav class="sitelinks" aria-label="Website"><a href="../">Home</a><a href="../how.html">How it works</a><a href="../pricing.html">Pricing</a></nav>')
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
@@ -120,7 +120,7 @@ function levelHTML(){
 function uploadHTML(){
   var h = '';
   if (EMBED){
-    h += '<section class="panel hero"><h2>Open a question in your question bank</h2><p class="muted">Senior Resident reads the stem, the answer choices and any images, then walks you to the answer one decision at a time.</p>'
+    h += '<section class="panel hero"><h2>Open a question in your question bank</h2><p class="muted">My Senior Resident reads the stem, the answer choices and any images, then walks you to the answer one decision at a time.</p>'
       + '<div class="row"><button type="button" class="btn" data-act="grab">'+IC.read+'Read the question on screen</button></div>'
       + (statusMsg?'<p class="muted sm" id="status">'+esc(statusMsg)+'</p>':'') + '</section>';
   }
@@ -326,7 +326,7 @@ var authMode = window.SR_AUTH0 || 'in', waitlisted = lsGet('sr_waitlist', false)
 function planCardHTML(){
   var h = '<section class="panel plan"><h2>Plan</h2>';
   if (!billingLive() && plan.name==='free'){
-    h += '<p><b>Early access.</b> Everything is unlocked while Senior Resident is in early access.</p>'
+    h += '<p><b>Early access.</b> Everything is unlocked while My Senior Resident is in early access.</p>'
       + '<p class="muted sm">Resident is '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month with a 7-day free trial.</p>'
       + '<div class="row"><button type="button" class="btn" data-act="upgrade">See plans</button></div>';
   } else if (plan.name==='pro' || plan.name==='chief'){
@@ -347,7 +347,7 @@ function accountHTML(){
   } else {
     h += '<section class="panel auth"><h2>'+(authMode==='in'?'Sign in':'Create your account')+'</h2><p class="muted">'+(authMode==='in'?'Your plan and history follow you to any device.':'Takes a few seconds.')+'</p>'
       + '<div id="gis"></div><div class="or"><span>or</span></div>'
-      + '<form id="authform">'+(authMode==='in'?'':'<input class="inp" id="aun" type="text" placeholder="Full name" autocomplete="name" required minlength="3" maxlength="80">')+'<input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required>'+(authMode==='in'?'':'<label class="agree"><input type="checkbox" id="auok" required><span>I am 18 or older and agree to the <a href="../terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="../privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I will use Senior Resident in line with my question bank\'s own terms.</span></label>')+'<p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
+      + '<form id="authform">'+(authMode==='in'?'':'<input class="inp" id="aun" type="text" placeholder="Full name" autocomplete="name" required minlength="3" maxlength="80">')+'<input class="inp" id="aue" type="email" placeholder="Email" autocomplete="email" required><input class="inp" id="aup" type="password" placeholder="Password (6+ characters)" minlength="6" autocomplete="'+(authMode==='in'?'current-password':'new-password')+'" required>'+(authMode==='in'?'':'<label class="agree"><input type="checkbox" id="auok" required><span>I am 18 or older and agree to the <a href="../terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="../privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I will use My Senior Resident in line with my question bank\'s own terms.</span></label>')+'<p class="er" id="auerr"></p><button class="btn wide" type="submit">'+(authMode==='in'?'Sign in':'Create account')+'</button></form>'
       + '<p class="muted sm consent">By continuing with Google you agree to the <a href="../terms.html" target="_blank" rel="noopener">Terms of Use</a> and <a href="../privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</p>'
       + '<button type="button" class="lnk" data-act="authsw">'+(authMode==='in'?'New here? Create an account':'Already have an account? Sign in')+'</button></section>';
   }
@@ -384,8 +384,8 @@ async function mountGoogle(){
 function pricingHTML(){
   var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
   var live = !!CFG.STRIPE_LINK;
-  return '<div class="sheet" role="dialog" aria-label="Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
-    + '<div class="ph2">'+IC.logo+'<h2>Senior Resident: Resident plan</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
+  return '<div class="sheet" role="dialog" aria-label="My Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
+    + '<div class="ph2">'+IC.logo+'<h2>My Senior Resident: Resident plan</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
     + '<div class="prices one"><div class="price"><b>'+money(CFG.PRICE_MONTH)+'</b><span>a month</span><em>Cancel anytime</em></div></div>'
     + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+'Start the 7-day free trial'+'</button>'

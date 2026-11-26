@@ -1,4 +1,4 @@
--- Senior Resident. Run once in the Supabase SQL editor.
+-- My Senior Resident. Run once in the Supabase SQL editor.
 
 -- Daily counters (shared with the coach function). Safe to re-run.
 create table if not exists public.usage (

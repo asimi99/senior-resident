@@ -1,4 +1,4 @@
-/* Senior Resident exam mode: turn a PDF of practice questions into a sit-down exam with review and coaching.
+/* My Senior Resident exam mode: turn a PDF of practice questions into a sit-down exam with review and coaching.
    The PDF is read in the browser. Its text stays on this device unless the person asks for coaching or an answer key. */
 var exams = lsGet('sr_exams_v1', []);
 var EX = { id:null, screen:'home', mode:'tutor', run:null, rev:-1, busy:'', msg:'', sc:true, pick2:'' };
@@ -199,9 +199,9 @@ function exStartHTML(e){
   var a = e.attempts[0], keyed = e.qs.filter(function(q){ return q.ans; }).length;
   var h = '<div class="qhead"><button type="button" class="lnk" data-ex="home">All exams</button></div><section class="panel"><h2>' + esc(e.title) + '</h2>'
     + (e.locked ? '<div class="fb warn"><b>Free trial</b>This exam has the first ' + e.qs.length + ' of ' + (e.qs.length + e.locked) + ' questions. The other ' + e.locked + ' unlock on the PGY3 tier after your trial. Add the PDF again then.</div>' : '')
-    + '<p class="muted">' + e.qs.length + ' questions' + (e.pages ? ' from ' + e.pages + ' pages' : '') + '. ' + (keyed === e.qs.length ? 'Answer key found.' : keyed ? 'Answer key found for ' + keyed + ' of them.' : 'No answer key in this PDF.') + (e.key === 'ai' ? ' Some answers were keyed by Senior Resident, not the publisher.' : '') + '</p>';
+    + '<p class="muted">' + e.qs.length + ' questions' + (e.pages ? ' from ' + e.pages + ' pages' : '') + '. ' + (keyed === e.qs.length ? 'Answer key found.' : keyed ? 'Answer key found for ' + keyed + ' of them.' : 'No answer key in this PDF.') + (e.key === 'ai' ? ' Some answers were keyed by My Senior Resident, not the publisher.' : '') + '</p>';
   var noWhy = e.qs.some(function(q){ return !q.why; });
-  if (keyed < e.qs.length || noWhy) h += '<div class="row"><button type="button" class="btn ghost sm" data-ex="key"' + (EX.busy ? ' disabled' : '') + '>' + (EX.busy === 'key' ? 'Writing' : (keyed < e.qs.length ? 'Key the rest and write explanations' : 'Write explanations with Senior Resident')) + '</button><span class="muted sm">' + (keyed < e.qs.length ? 'Its best answers and explanations, clearly marked. Not an official key.' : 'A short explanation for every question, shown after you answer.') + '</span></div>';
+  if (keyed < e.qs.length || noWhy) h += '<div class="row"><button type="button" class="btn ghost sm" data-ex="key"' + (EX.busy ? ' disabled' : '') + '>' + (EX.busy === 'key' ? 'Writing' : (keyed < e.qs.length ? 'Key the rest and write explanations' : 'Write explanations with My Senior Resident')) + '</button><span class="muted sm">' + (keyed < e.qs.length ? 'Its best answers and explanations, clearly marked. Not an official key.' : 'A short explanation for every question, shown after you answer.') + '</span></div>';
   h += '<div class="seg" role="radiogroup" aria-label="Mode"><button type="button" role="radio" aria-checked="' + (EX.mode === 'tutor') + '" data-ex="mode" data-m="tutor">Tutor</button><button type="button" role="radio" aria-checked="' + (EX.mode === 'timed') + '" data-ex="mode" data-m="timed">Timed</button></div>'
     + '<p class="muted sm">' + (EX.mode === 'tutor' ? 'See whether you were right after each question, with coaching one tap away.' : '90 seconds a question, ' + exClock(e.qs.length * 90) + ' in total. Scored only when you submit at the end. The review is where the learning happens.') + '</p>'
     + '<button type="button" class="sctog' + (EX.sc ? ' on' : '') + '" role="switch" aria-checked="' + EX.sc + '" data-ex="sc"><i></i><span><b>Second chance</b><em>Miss a question and the answer stays hidden. You get one more try first, in tutor mode straight away and in timed mode during review. Your score still counts your first answer only.</em></span></button>'
@@ -229,8 +229,8 @@ function exRunHTML(e){
   h += '<main class="card"><div class="step"><span>Question ' + (r.i + 1) + ' of ' + e.qs.length + '</span><button type="button" class="flagb' + (r.flags[q.n] ? ' on' : '') + '" data-ex="flag">' + XI.flag + (r.flags[q.n] ? 'Flagged' : 'Flag') + '</button></div>' + exQHTML(e, q, picked, reveal, r.cross[q.n], f1);
   if (f1 && !reveal) h += fbHtml('warn', esc(f1) + ' is not it. The answer stays hidden. Go back to the stem, find the clue that rules ' + esc(f1) + ' out, and pick again.', 'Second chance');
   if (reveal){
-    h += q.ans ? fbHtml(picked === q.ans ? 'good' : 'bad', 'The answer is ' + esc(q.ans) + '.' + (f1 ? (picked === q.ans ? ' You got there on your second chance. Your score counts the first answer.' : ' Two tries. This one is worth working through with your senior.') : '') + (q.ai ? ' Keyed by Senior Resident, not the publisher.' : ''), picked === q.ans ? (f1 ? 'Got it on the second try' : 'Correct') : 'Not quite') : fbHtml('note', 'This PDF has no answer for this question. Work it through with your senior.', 'No key');
-    if (q.why) h += fbHtml('note', esc(q.why), 'Explanation by Senior Resident');
+    h += q.ans ? fbHtml(picked === q.ans ? 'good' : 'bad', 'The answer is ' + esc(q.ans) + '.' + (f1 ? (picked === q.ans ? ' You got there on your second chance. Your score counts the first answer.' : ' Two tries. This one is worth working through with your senior.') : '') + (q.ai ? ' Keyed by My Senior Resident, not the publisher.' : ''), picked === q.ans ? (f1 ? 'Got it on the second try' : 'Correct') : 'Not quite') : fbHtml('note', 'This PDF has no answer for this question. Work it through with your senior.', 'No key');
+    if (q.why) h += fbHtml('note', esc(q.why), 'Explanation by My Senior Resident');
     h += '<div class="row"><button type="button" class="btn ghost sm" data-ex="coach">Coach me through it</button>' + (q.page ? '<button type="button" class="btn ghost sm" data-ex="page">Original page</button>' : '') + '</div>';
   }
   h += '<div class="row foot"><button type="button" class="btn ghost" data-ex="prev"' + (r.i === 0 ? ' disabled' : '') + '>Back</button><span class="spacer"></span>';
@@ -247,7 +247,7 @@ function exResultsHTML(e){
   var h = '<div class="qhead"><button type="button" class="lnk" data-ex="home">All exams</button><span class="spacer"></span><button type="button" class="lnk" data-ex="restart">Sit it again</button></div>';
   h += '<section class="panel exres"><div class="ring" style="--p:' + (s.pct === null ? 0 : s.pct) + '"><b>' + (s.pct === null ? '—' : s.pct + '%') + '</b></div><div><h2>' + esc(e.title) + '</h2><p class="muted">' + (s.pct === null ? 'No answer key, so there is no score. Review each question with your senior.' : s.ok + ' of ' + s.keyed + ' correct on the first pass') + ' · ' + exClock(a.secs) + (blank ? ' · ' + blank + ' left blank' : '') + '</p>'
     + (a.sc && tried.length ? '<p class="scline"><b>' + (s.ok + won) + ' of ' + s.keyed + '</b> after second chance. ' + won + ' of ' + tried.length + ' misses recovered.</p>' : '')
-    + (e.key === 'ai' ? '<p class="muted sm">Some answers were keyed by Senior Resident, not the publisher.</p>' : '') + '</div></section>';
+    + (e.key === 'ai' ? '<p class="muted sm">Some answers were keyed by My Senior Resident, not the publisher.</p>' : '') + '</div></section>';
   if (missed.length) h += '<section class="panel revkey"><div><h2>The score is the start. The review is the point.</h2><p class="muted">' + (left ? left + ' missed ' + (left === 1 ? 'question is' : 'questions are') + ' waiting. The answers stay hidden until you have taken your second chance on each one.' : (a.sc ? 'Every miss has had its second chance. Now work the ones you missed twice with your senior.' : 'Go through every miss and ask what clue you read past.')) + '</p></div>' + (left ? '<button type="button" class="btn" data-ex="scnext">Start second chance review</button>' : '') + '</section>';
   if (EX.rev >= 0 && e.qs[EX.rev]){
     var q = e.qs[EX.rev], picked = a.answers[q.n], isMiss = q.ans && picked !== q.ans, sec = a.second[q.n], hold = a.sc && isMiss && !sec;
@@ -261,7 +261,7 @@ function exResultsHTML(e){
       h += exQHTML(e, q, sec ? sec.pick : picked, true, null, sec ? picked : null)
         + (sec ? fbHtml(sec.ok ? 'good' : 'bad', sec.skip ? 'You asked to see the answer. It is ' + esc(q.ans) + '.' : sec.ok ? 'You found ' + esc(q.ans) + ' on your second chance. Now say out loud which clue you read past the first time.' : 'The answer is ' + esc(q.ans) + '. Two misses on one question means this one needs your senior.', sec.skip ? 'Answer shown' : sec.ok ? 'Got it on the second try' : 'Missed twice') : '')
         + (q.ans ? '' : fbHtml('note', 'This PDF has no answer for this question.', 'No key'))
-        + (q.why ? fbHtml('note', esc(q.why), 'Explanation by Senior Resident') : '')
+        + (q.why ? fbHtml('note', esc(q.why), 'Explanation by My Senior Resident') : '')
         + '<div class="row"><button type="button" class="btn' + (nx >= 0 && !(sec && !sec.ok) ? ' ghost' : '') + '" data-ex="coach">Coach me through it</button>' + (q.page ? '<button type="button" class="btn ghost" data-ex="page">Original page</button>' : '') + '<span class="spacer"></span>' + (nx >= 0 ? '<button type="button" class="btn' + (sec && !sec.ok ? ' ghost' : '') + '" data-ex="scnext">Next miss</button>' : '') + '<button type="button" class="btn ghost" data-ex="revclose">Close</button></div></main>';
     }
   }

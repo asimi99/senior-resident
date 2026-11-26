@@ -21,7 +21,7 @@
   function render(){
     var h = '';
     if (S.open){
-      h += '<div class="pan" role="dialog" aria-label="Help"><div class="hd"><span>Ask Senior Resident<small>Answers about the tool. A person steps in if needed.</small></span><button type="button" data-a="close" aria-label="Close">×</button></div><div class="log" id="srhlog">';
+      h += '<div class="pan" role="dialog" aria-label="Help"><div class="hd"><span>Ask My Senior Resident<small>Answers about the tool. A person steps in if needed.</small></span><button type="button" data-a="close" aria-label="Close">×</button></div><div class="log" id="srhlog">';
       if (!S.chat.length) h += '<div class="m ai">Hi. Ask how something works or what went wrong.</div><div class="chips">' + STARTERS.map(function(q){ return '<button type="button" data-a="q">' + esc(q) + '</button>'; }).join('') + '</div>';
       h += S.chat.map(function(m){ return '<div class="m ' + (m.role === 'user' ? 'me' : 'ai') + '">' + esc(m.content) + '</div>'; }).join('') + (S.busy ? '<div class="m ai" id="srhlive">…</div>' : '') + '</div>';
       if (S.sent) h += '<div class="esc"><b>' + esc(S.sent) + '</b></div>';
@@ -49,7 +49,7 @@
   }
   async function ask(q){
     S.chat.push({ role:'user', content:q }); S.busy = true; S.sent = ''; render();
-    var turns = [{ role:'user', content:window.SR_HELP_RULES('the Senior Resident website, not signed in') }].concat(S.chat.slice(-10));
+    var turns = [{ role:'user', content:window.SR_HELP_RULES('the My Senior Resident website, not signed in') }].concat(S.chat.slice(-10));
     try {
       var t = await call(turns, function(x){ var el = document.getElementById('srhlive'); if (el){ el.textContent = x.replace(/\[\[ESC[A-Z\]]*$/, '') || '…'; el.parentNode.scrollTop = el.parentNode.scrollHeight; } });
       t = String(t || '').trim(); if (/\[\[ESCALATE\]\]/.test(t)){ S.esc = true; t = t.replace(/\s*\[\[ESCALATE\]\]\s*/g, '').trim(); }

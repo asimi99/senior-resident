@@ -36,7 +36,7 @@ struct SettingsView: View {
                 .onChange(of: morning) { _, _ in saveReminders() }
                 .onChange(of: evening) { _, _ in saveReminders() }
                 Section("Widget") {
-                    Label("Add the Today widget: press and hold your home screen, tap Edit, then Add Widget and pick Senior Resident. It also works on the lock screen.", systemImage: "square.grid.2x2")
+                    Label("Add the Today widget: press and hold your home screen, tap Edit, then Add Widget and pick My Senior Resident. It also works on the lock screen.", systemImage: "square.grid.2x2")
                         .font(.footnote)
                 }
                 Section {

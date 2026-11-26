@@ -58,7 +58,7 @@ function helpHTML(){
 function helpRender(){ openModal(helpHTML()); }
 function openHelp(tab, err){ HELP.tab = tab || 'ask'; HELP.err = err || null; if (err) HELP.kind = 'problem'; HELP.sent = ''; helpRender(); var f = document.getElementById(HELP.tab === 'ask' ? 'hq' : 'hfb'); if (f && !('ontouchstart' in window)) f.focus(); }
 function reportError(err, where){ openHelp('fb', { code:(err && err.code) || 'error', message:String((err && err.message) || err || '').slice(0, 500), where:where || '' }); }
-function sentCopy(ok, person){ return ok ? (person ? 'Sent. A person will reply by email within 24 hours.' : 'Thank you. It has been sent.') : 'It could not be sent right now. It is saved on this device and will send the next time you open Senior Resident.'; }
+function sentCopy(ok, person){ return ok ? (person ? 'Sent. A person will reply by email within 24 hours.' : 'Thank you. It has been sent.') : 'It could not be sent right now. It is saved on this device and will send the next time you open My Senior Resident.'; }
 
 document.addEventListener('click', async function(ev){
   var el = ev.target.closest('[data-h]'); if (!el) return; var act = el.dataset.h;

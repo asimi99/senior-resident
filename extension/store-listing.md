@@ -1,10 +1,10 @@
-# Chrome Web Store listing: Senior Resident
+# Chrome Web Store listing: My Senior Resident
 
 Paste these into the Chrome Web Store Developer Dashboard. Replace DOMAIN with the domain once it is bought.
 
 ## Store listing tab
 
-**Name:** Senior Resident: Qbank Reasoning Coach
+**Name:** My Senior Resident: Qbank Reasoning Coach
 
 **Summary (132 characters max):**
 A reasoning coach beside your question bank. Walks you to the answer one decision at a time and turns what you learn into Anki cards.
@@ -14,7 +14,7 @@ A reasoning coach beside your question bank. Walks you to the answer one decisio
 **Language:** English
 
 **Description:**
-Senior Resident sits beside your question bank like a senior resident on rounds. When you are stuck, it reads the question you are on and walks you to the answer one decision at a time, instead of just telling you.
+My Senior Resident sits beside your question bank like a senior resident on rounds. When you are stuck, it reads the question you are on and walks you to the answer one decision at a time, instead of just telling you.
 
 What it does
 - Coaches the question on screen step by step: how sick, where the problem is, the finding that decides it, then ruling out the wrong choices.
@@ -36,7 +36,7 @@ Your data
 - Question text is sent to our server only to coach that question and is never stored or used for training.
 - Anki cards go straight to your own Anki on your computer.
 
-Senior Resident is a study aid, not medical advice. It is independent and not affiliated with or endorsed by any question bank, publisher, exam body, Anki or AnKing. You are responsible for following your question bank's terms of use.
+My Senior Resident is a study aid, not medical advice. It is independent and not affiliated with or endorsed by any question bank, publisher, exam body, Anki or AnKing. You are responsible for following your question bank's terms of use.
 
 **Website:** https://DOMAIN/
 **Support:** https://DOMAIN/app/#help

@@ -21,13 +21,13 @@ function homeHTML(){
   if (pg === 'home'){
     h += '<section class="hm-hero"><div><p class="hm-eye">Reasoning coach for board-style questions</p>'
       + '<h1>Stop guessing answers. <em>Learn to read the stem.</em></h1>'
-      + '<p class="hm-lede">Senior Resident sits beside your question bank and walks you to the answer one decision at a time, the way a good senior does on the wards.</p>'
+      + '<p class="hm-lede">My Senior Resident sits beside your question bank and walks you to the answer one decision at a time, the way a good senior does on the wards.</p>'
       + '<div class="hm-cta"><button type="button" class="btn" data-go="new">' + (SR.user ? 'Coach a question' : 'Try a question free') + '</button><button type="button" class="btn ghost" data-go="schedule">Build a study plan</button>' + (SR.user ? '' : '<button type="button" class="btn ghost" data-hm="signin">Sign in</button>') + '</div>'
       + '<p class="hm-fine">Free to start. A Chrome side panel and this web app. Works with any question bank, PDF, screenshot or pasted question.</p></div>'
       + '<div class="hm-mock" aria-hidden="true"><div class="q"><span class="bar2">Question 14 of 20</span>'
     + '<p>A 19-year-old man has 18 hours of abdominal pain that <mark>began near the umbilicus and moved to the right lower quadrant</mark>. Temperature is 38.6&deg;C. There is <mark>guarding and rebound</mark> at McBurney point.</p>'
     + '<p>Which of the following is the most likely diagnosis?</p><ol><li>Mesenteric adenitis</li><li>Acute appendicitis</li><li class="out">Gastroenteritis</li><li class="out">Kidney stone</li></ol></div>'
-    + '<div class="p"><div class="ph">' + IC.logo + 'Senior Resident<span>Step 1 of 4</span></div><div class="pb"><div class="prog"><i class="n"></i><i></i><i></i><i></i></div>'
+    + '<div class="p"><div class="ph">' + IC.logo + 'My Senior Resident<span>Step 1 of 4</span></div><div class="pb"><div class="prog"><i class="n"></i><i></i><i></i><i></i></div>'
     + '<div class="cd"><div class="st">Step 1 <b>Key finding</b></div><h4>The pain began at the umbilicus, then moved to the right lower quadrant. What does the move mean?</h4>'
     + '<div class="o"><kbd>A</kbd>It is spreading across the abdomen</div><div class="o g"><kbd>B</kbd>The lining over one spot is now irritated</div><div class="o"><kbd>C</kbd>It is referred from the ureter</div>'
     + '<div class="fbk"><b>Correct</b>Vague midline pain is visceral. Sharp pain in one spot means the lining there is inflamed.</div></div></div></div></div>' + '</section>';
@@ -38,7 +38,7 @@ function homeHTML(){
       + '<div><h3>Study plan</h3><p>Your exam, your question bank, your date. A day-by-day plan ordered by yield, with daily check-ins.</p><button type="button" class="lnk" data-go="schedule">Build yours</button></div>'
       + '<div><h3>Pricing</h3><p>Free to start. Resident is $' + C.PRICE_MONTH + ' a month with a 7-day free trial.</p><button type="button" class="lnk" data-go="pricing">Compare plans</button></div></div></section>';
   } else if (pg === 'how'){
-  h += '<section class="hm-sec hm-first" id="how"><h2>You answer the question. It makes sure you know why.</h2><p class="hm-sub">Sometimes a miss is a knowledge gap. Sometimes it is a clue you read past. Senior Resident trains both.</p>'
+  h += '<section class="hm-sec hm-first" id="how"><h2>You answer the question. It makes sure you know why.</h2><p class="hm-sub">Sometimes a miss is a knowledge gap. Sometimes it is a clue you read past. My Senior Resident trains both.</p>'
     + '<div class="hm-steps"><div><h3>It reads your question</h3><p>Open a question in your bank and it picks up the stem, the choices and the images. Or drop in a screenshot.</p></div>'
     + '<div><h3>You make each decision</h3><p>How sick, where the problem is, which finding separates the look-alikes. Then you rule the choices out one by one.</p></div>'
     + '<div><h3>You keep the rule</h3><p>Every question ends with one pearl and the trap that goes with it, ready to send to Anki.</p></div>'
@@ -54,15 +54,15 @@ function homeHTML(){
     + '<div><h3>Your own words</h3><p>Cards are written fresh from your reasoning, not copied from your question bank, so they stay yours.</p></div></div></section>';
 
   var faq = [['Does it just tell me the answer?', 'No. You make each decision and rule choices out until one is left. Then check it against your question bank.'],
-    ['Which question banks does it work with?', 'Any of them. Senior Resident is independent and is not affiliated with or endorsed by any question bank or exam body.'],
+    ['Which question banks does it work with?', 'Any of them. My Senior Resident is independent and is not affiliated with or endorsed by any question bank or exam body.'],
     ['What happens to my questions?', 'The question you are on is sent to the AI model to build that session, then kept in your own browser. It is not sold, shared or used to build a question database.'],
-    ['Does it work with Anki?', 'Yes. Install Anki and the free AnkiConnect add-on, and cards go straight into your deck. Senior Resident is not affiliated with Anki, AnkiWeb or AnKing.'],
-    ['Is it allowed by my question bank?', 'Senior Resident is read only. It never clicks, answers or changes anything, never copies screens, and never stores or shares questions. Each bank sets its own rules, so check yours. You are responsible for following them.'],
+    ['Does it work with Anki?', 'Yes. Install Anki and the free AnkiConnect add-on, and cards go straight into your deck. My Senior Resident is not affiliated with Anki, AnkiWeb or AnKing.'],
+    ['Is it allowed by my question bank?', 'My Senior Resident is read only. It never clicks, answers or changes anything, never copies screens, and never stores or shares questions. Each bank sets its own rules, so check yours. You are responsible for following them.'],
     ['Can it be wrong?', 'Yes. It is an AI study aid and it can make mistakes. When it disagrees with your question bank, trust the bank. It is not medical advice.'],
     ['Can I cancel?', 'Yes, anytime, from Manage subscription in your account. You keep your plan until the end of the period you paid for.']];
   h += '<section class="hm-sec" id="faq"><h2>Common questions</h2>' + faq.map(function(f){ return '<details class="hm-faq"><summary>' + f[0] + '</summary><p>' + f[1] + '</p></details>'; }).join('') + '</section>';
   h += '<section class="hm-sec" id="install"><h2>Add it to Chrome</h2><p class="hm-sub">About a minute. Works in Chrome, Edge, Brave and Arc on a computer.</p><div class="hm-two">'
-    + '<div class="hm-box"><a class="btn" href="../extension/senior-resident.zip" download>Download the extension</a><ol><li>Unzip it. You get a folder called <code>senior-resident</code>.</li><li>Go to <code>chrome://extensions</code> and turn on <b>Developer mode</b>.</li><li>Click <b>Load unpacked</b> and pick the folder.</li><li>Open a question and click the blue <b>Senior Resident</b> tab on the right edge, or press <code>Alt+S</code>.</li></ol></div>'
+    + '<div class="hm-box"><a class="btn" href="../extension/senior-resident.zip" download>Download the extension</a><ol><li>Unzip it. You get a folder called <code>senior-resident</code>.</li><li>Go to <code>chrome://extensions</code> and turn on <b>Developer mode</b>.</li><li>Click <b>Load unpacked</b> and pick the folder.</li><li>Open a question and click the blue <b>My Senior Resident</b> tab on the right edge, or press <code>Alt+S</code>.</li></ol></div>'
     + '<div class="hm-box"><h3>No extension? No problem</h3><p class="muted">On a phone, tablet or locked-down computer, use it right here. Paste a question or drop in a screenshot.</p><button type="button" class="btn ghost" data-hm="try">Try a question here</button></div></div></section>';
 
 
@@ -100,12 +100,12 @@ function homeHTML(){
     h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
   }
   h += '<footer class="hm-foot"><div class="hf-grid">'
-    + '<div><b>Senior Resident</b><p>A reasoning coach for board-style questions, built in Winnipeg by a medical student who wanted a senior resident beside him on every question.</p></div>'
+    + '<div><b>My Senior Resident</b><p>A reasoning coach for board-style questions, built in Winnipeg by a medical student who wanted a senior resident beside him on every question.</p></div>'
     + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>hello@myseniorresident.com<br>We reply within 24 hours.</p></div>'
     + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">Pricing</a><br><a href="../app/#try">Try it free</a></p></div>'
     + '<div><b>Legal</b><p><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><br><a href="../terms.html" target="_blank" rel="noopener">Terms</a></p></div>'
-    + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. Senior Resident never copies, stores or shares question bank content.</p></details>'
-    + '<p class="hf-copy">© 2026 Senior Resident</p></footer>';
+    + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. My Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. My Senior Resident never copies, stores or shares question bank content.</p></details>'
+    + '<p class="hf-copy">© 2026 My Senior Resident</p></footer>';
   return h + '</div>';
 }
 function homeGo(where){

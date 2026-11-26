@@ -47,7 +47,7 @@ struct TodayWidgetView: View {
     @ViewBuilder var content: some View {
         switch family {
         case .accessoryInline:
-            Text(entry.day == nil ? "Senior Resident" : "\(title) today")
+            Text(entry.day == nil ? "My Senior Resident" : "\(title) today")
         case .accessoryRectangular:
             VStack(alignment: .leading, spacing: 1) {
                 Text("TODAY").font(.caption2.weight(.semibold))
@@ -68,7 +68,7 @@ struct TodayWidgetView: View {
                     if let d = entry.daysToExam { Text("\(d)d to exam").font(.caption2).foregroundStyle(.secondary) }
                 }
                 Text(title).font(.title3.weight(.bold))
-                Text(entry.day?.what ?? "Open Senior Resident to build your study plan.")
+                Text(entry.day?.what ?? "Open My Senior Resident to build your study plan.")
                     .font(.caption).foregroundStyle(.secondary).lineLimit(family == .systemSmall ? 3 : 2)
                 Spacer(minLength: 0)
                 if entry.day != nil && entry.day?.kind != "off" {

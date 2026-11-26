@@ -32,7 +32,7 @@ targets:
     info:
       path: SeniorResident/Info.plist
       properties:
-        CFBundleDisplayName: Senior Resident
+        CFBundleDisplayName: My Senior Resident
         LSApplicationCategoryType: public.app-category.education
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
@@ -62,7 +62,7 @@ targets:
     info:
       path: Widget/Info.plist
       properties:
-        CFBundleDisplayName: Senior Resident
+        CFBundleDisplayName: My Senior Resident
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     settings:

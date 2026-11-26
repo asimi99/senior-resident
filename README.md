@@ -1,4 +1,4 @@
-# Senior Resident
+# My Senior Resident
 
 A reasoning coach that sits beside your question bank and walks you to the answer one decision at a time.
 

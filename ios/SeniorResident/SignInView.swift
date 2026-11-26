@@ -13,7 +13,7 @@ struct SignInView: View {
             VStack(spacing: 18) {
                 Image("Logo").resizable().scaledToFit().frame(width: 72, height: 72).clipShape(RoundedRectangle(cornerRadius: 18))
                     .padding(.top, 40)
-                Text("Senior Resident").font(.largeTitle.weight(.bold))
+                Text("My Senior Resident").font(.largeTitle.weight(.bold))
                 Text("Your study plan on your home screen, and a coach for the questions that trip you up.")
                     .multilineTextAlignment(.center).foregroundStyle(.secondary)
 

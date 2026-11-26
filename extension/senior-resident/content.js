@@ -10,15 +10,15 @@
   var IS_UW = /uworld\.com$/.test(host);
 
   var tab = document.createElement('button'); tab.id = 'sr-tab'; tab.type = 'button';
-  tab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11l7-6 7 6"/><path d="M5 19l7-6 7 6" opacity=".6"/></svg><span class="sr-label">Senior Resident</span><span class="sr-arrow" aria-hidden="true">&#8250;</span>';
-  tab.title = 'Senior Resident (Alt+S)';
+  tab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11l7-6 7 6"/><path d="M5 19l7-6 7 6" opacity=".6"/></svg><span class="sr-label">My Senior Resident</span><span class="sr-arrow" aria-hidden="true">&#8250;</span>';
+  tab.title = 'My Senior Resident (Alt+S)';
   document.documentElement.appendChild(tab);
   var isOpen = false, bgState = 'idle';
-  function setOpen(v){ isOpen = v; tab.classList.remove('closing'); tab.classList.toggle('open', v); tab.title = v ? 'Close Senior Resident' : 'Senior Resident (Alt+S)'; }
+  function setOpen(v){ isOpen = v; tab.classList.remove('closing'); tab.classList.toggle('open', v); tab.title = v ? 'Close My Senior Resident' : 'My Senior Resident (Alt+S)'; }
   function send(m, cb){ try { chrome.runtime.sendMessage(m, function(r){ void chrome.runtime.lastError; if (cb) cb(r); }); } catch(e){ if (cb) cb(null); } }
   tab.addEventListener('click', function(){
     if (isOpen){ tab.classList.add('closing'); send({ t: 'close' }); setTimeout(function(){ setOpen(false); }, 280); return; }
-    send({ t: 'open' }, function(r){ if (!r || !r.ok) tab.title = 'Click the Senior Resident icon in the toolbar to open'; });
+    send({ t: 'open' }, function(r){ if (!r || !r.ok) tab.title = 'Click the My Senior Resident icon in the toolbar to open'; });
   });
 
   function clean(t){ return (t || '').replace(/ /g, ' ').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim(); }
@@ -122,7 +122,7 @@
   });
   function setBg(state){
     bgState = state; tab.classList.toggle('reading', state === 'reading'); tab.classList.toggle('ready', state === 'ready');
-    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? "Let's review" : 'Senior Resident');
+    tab.querySelector('.sr-label').textContent = state === 'reading' ? 'Reading…' : (state === 'ready' ? "Let's review" : 'My Senior Resident');
   }
   // By default the panel never opens on its own: the tab says it is ready and pulses. "Open when ready" in the panel footer turns the pop-out on.
   var POP = false;
