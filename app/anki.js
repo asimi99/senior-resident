@@ -106,7 +106,7 @@ function ankiIOHTML(){
   var h = '<div class="ak-io" id="akIO"><img src="' + io.src + '" alt="" draggable="false">';
   io.boxes.forEach(function(b, i){ h += '<div class="ak-b" style="left:' + b.x * 100 + '%;top:' + b.y * 100 + '%;width:' + b.w * 100 + '%;height:' + b.h * 100 + '%"><span>' + (i + 1) + '</span><button type="button" data-anki="rmbox" data-i="' + i + '" aria-label="Remove box ' + (i + 1) + '">×</button></div>'; });
   h += '</div><p class="muted sm">' + (io.boxes.length ? io.boxes.length + ' box' + (io.boxes.length > 1 ? 'es' : '') + '. Each one becomes its own card. Drag to add more.' : 'Drag across the image to hide a part.') + '</p>';
-  h += '<div class="ak-row ak-hide"><input class="ak-in" id="akHide" placeholder="What should be hidden? eg, every label, the drug names" value="' + esc(io.hide || '') + '"><button type="button" class="btn ghost sm" data-anki="ioauto"' + (io.auto ? ' disabled' : '') + '>' + (io.auto ? 'Boxing' : 'Box it for me') + '</button></div>';
+  h += '<div class="ak-row ak-hide"><input class="ak-in" id="akHide" placeholder="What should be hidden? eg, every label, the drug names" value="' + esc(io.hide || '') + '"><button type="button" class="btn ghost sm" data-anki="ioauto"' + (io.auto || !isChief() ? ' disabled' : '') + (isChief() ? '' : ' title="Chief plan"') + '>' + (io.auto ? 'Boxing' : 'Box it for me') + (isChief() ? '' : ' <span class="muted sm">Chief</span>') + '</button></div>';
   h += '<input class="ak-in" id="akHead" placeholder="Title on the card (optional)" value="' + esc(io.header || '') + '">';
   h += '<input class="ak-in" id="akExtra" placeholder="Note on the back (optional)" value="' + esc(io.extra || '') + '">';
   if (io.msg) h += '<p class="ak-msg">' + esc(io.msg) + '</p>';
@@ -208,7 +208,7 @@ function ioLoad(file){
 function ioKeep(){ var io = ANKI.io; if (!io) return; var a = document.getElementById('akHead'), b = document.getElementById('akExtra'), d = document.getElementById('akHide'); if (a) io.header = a.value; if (b) io.extra = b.value; if (d) io.hide = d.value; }
 /* Describe what to hide and the model places the boxes. They land as normal boxes, so any can be removed or redrawn. */
 async function ioAuto(){
-  var io = ANKI.io; if (!io || !io.src || io.auto) return;
+  var io = ANKI.io; if (!io || !io.src || io.auto || !isChief()) return;
   ioKeep(); var want = String(io.hide || '').trim();
   if (!want){ io.msg = 'Write what should be hidden first, for example every label.'; renderStage(); return; }
   io.auto = true; io.msg = ''; renderStage();

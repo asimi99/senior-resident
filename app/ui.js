@@ -221,9 +221,9 @@ function chatHTML(c){
 }
 function paywallHTML(){
   var signed = !!SR.user;
-  if (!signed) return '<div class="paywall">'+IC.logo+'<h2>Make a free account to keep going</h2><p class="muted">That was your free try. A free account gets you '+(CFG.FREE_DAILY||5)+' coached questions a day and your study plan, saved to any device.</p>'
+  if (!signed) return '<div class="paywall">'+IC.logo+'<h2>Make a free account to keep going</h2><p class="muted">That was your free try. A free account gets you '+(CFG.FREE_DAILY||3)+' coached questions a day and your study plan, saved to any device.</p>'
     + '<div class="row c"><button type="button" class="btn" data-acct="signup">Create free account</button><button type="button" class="btn ghost" data-acct="signin">Sign in</button></div></div>';
-  return '<div class="paywall">'+IC.logo+'<h2>That is today\'s '+plan.limit+' free questions</h2><p class="muted">They reset at midnight. Pro gives you '+(CFG.PRO_DAILY||40)+' a day and adds Hardest mode, extra help steps and pearl export.</p>'
+  return '<div class="paywall">'+IC.logo+(plan.period==='month' ? '<h2>That is this month\'s '+plan.limit+' questions</h2><p class="muted">They reset on the first of the month. Resident gives you '+(CFG.PRO_MONTHLY||300)+' a month and adds Hardest mode, extra help steps and Anki cards.</p>' : '<h2>That is today\'s '+plan.limit+' questions</h2><p class="muted">They reset at midnight. Resident gives you up to '+(CFG.PRO_DAILY||40)+' a day and adds Hardest mode, extra help steps and Anki cards.</p>')
     + '<div class="row c"><button type="button" class="btn" data-act="upgrade">See Pro</button>'+(signed?'':'<button type="button" class="btn ghost" data-go="account">Sign in</button>')+'</div></div>';
 }
 function optKey(o, k){ var m = String(o.t||'').match(/^\s*([A-J])[.)]\s+/); return m ? m[1] : String.fromCharCode(65 + k); }
@@ -422,12 +422,12 @@ async function mountGoogle(){
   } catch(e){ fallback(); }
 }
 function pricingHTML(){
-  var perks = [(CFG.PRO_DAILY||40)+' questions a day, a full block','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
+  var perks = [(CFG.PRO_MONTHLY||300)+' questions a month, up to '+(CFG.PRO_DAILY||40)+' a day','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
   var live = !!CFG.STRIPE_LINK;
   return '<div class="sheet" role="dialog" aria-label="My Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
     + '<div class="ph2">'+IC.logo+'<h2>My Senior Resident: Resident plan</h2></div><ul class="perks">'+perks.map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
     + '<div class="prices one"><div class="price"><b>'+money(CFG.PRICE_MONTH)+'</b><span>a month</span><em>Cancel anytime</em></div></div>'
-    + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds unlimited questions, the question ID on Anki cards and exam mode from your PDFs.</p>'
+    + '<p class="muted sm c">The Chief plan, '+money(CFG.PRICE_FELLOW||25)+' a month, adds '+(CFG.CHIEF_MONTHLY||450)+' questions a month, image occlusion boxed by AI, the question ID on Anki cards and exam mode from your PDFs.</p>'
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">'+'Start the 7-day free trial'+'</button>'
     + (CFG.STRIPE_LINK_CHIEF ? '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief" style="margin-top:8px">Get Chief</button>' : '')
     + '<p class="muted sm c" id="buymsg">'+esc(TRIAL_NOTE)+' Prices in '+esc(CFG.CURRENCY)+'.'+'</p></div>';

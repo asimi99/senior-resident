@@ -69,15 +69,16 @@ function homeHTML(){
   } else if (pg === 'pricing'){
   h += '<section class="hm-sec hm-first" id="plans"><h2>Pricing</h2><p class="hm-sub">Start free. Move up when it is part of your routine. Prices in ' + esc(C.CURRENCY) + '.</p>'
     + '<div class="hm-plans">'
-    + '<div class="hm-plan"><h3>Free</h3><p class="pk">Try the coach</p><div class="pr">$0</div>' + li([C.FREE_DAILY + ' questions a day', 'Guided and Harder levels', 'Study plan with daily check-ins', 'Works with any question bank']) + '<button type="button" class="btn ghost wide" data-hm="try">Try a question</button></div>'
+    + '<div class="hm-plan"><h3>Free</h3><p class="pk">Try the coach</p><div class="pr">$0</div>' + li([C.FREE_DAILY + ' questions a day, ' + C.FREE_MONTHLY + ' a month', 'Guided and Harder levels', 'Study plan with daily check-ins', 'Works with any question bank']) + '<button type="button" class="btn ghost wide" data-hm="try">Try a question</button></div>'
     + '<div class="hm-plan pro"><span class="tag">Most popular</span><h3>Resident</h3><p class="pk">Your coach for every block</p><div class="pr">$' + C.PRICE_MONTH + ' <small>a month</small></div>'
-    + li([C.PRO_DAILY + ' questions a day, a full block', 'Hardest level and narrowing from your cross-outs', 'Page the attending', 'Reasoning profile: where you lose points', 'One tap Anki cards, image occlusion included'])
+    + li([C.PRO_MONTHLY + ' questions a month, up to ' + C.PRO_DAILY + ' a day', 'Hardest level and narrowing from your cross-outs', 'Page the attending', 'Reasoning profile: where you lose points', 'One tap Anki cards and image occlusion'])
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">Start the 7-day free trial</button></div>'
     + '<div class="hm-plan"><h3>Chief</h3><p class="pk">Everything, plus exams from your PDFs</p><div class="pr">$' + (C.PRICE_FELLOW || 25) + ' <small>a month</small></div>'
-    + li(['Unlimited questions a day*', 'Exam mode: any PDF becomes a timed exam', 'Second chance review', 'Answer keys for PDFs without them', 'Question ID on your Anki cards'])
+    + li([C.CHIEF_MONTHLY + ' questions a month, up to ' + C.CHIEF_DAILY + ' a day', 'Image occlusion boxed for you by AI', 'Exam mode: any PDF becomes a timed exam', 'Second chance review', 'Answer keys for PDFs without them', 'Question ID on your Anki cards'])
     + '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief">Get Chief</button></div></div>'
     + '<div class="hm-tblw"><table class="hm-cmpt"><thead><tr><th></th><th>Free</th><th>Resident</th><th>Chief</th></tr></thead><tbody>'
-    + '<tr><td>Coached questions a day</td>' + '<td>' + C.FREE_DAILY + '</td>' + '<td>' + C.PRO_DAILY + '</td>' + '<td>' + 'Unlimited*' + '</td>' + '</tr>'
+    + '<tr><td>Coached questions a month</td>' + '<td>' + C.FREE_MONTHLY + '</td>' + '<td>' + C.PRO_MONTHLY + '</td>' + '<td>' + C.CHIEF_MONTHLY + '</td>' + '</tr>'
+    + '<tr><td>Most in one day</td>' + '<td>' + C.FREE_DAILY + '</td>' + '<td>' + C.PRO_DAILY + '</td>' + '<td>' + C.CHIEF_DAILY + '</td>' + '</tr>'
     + '<tr><td>Chrome side panel and web app</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Guided and Harder levels</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Study plan with daily check-ins</td>' + '<td class="y"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
@@ -88,6 +89,7 @@ function homeHTML(){
     + '<tr><td>Reasoning profile (where you lose points)</td>' + '<td class="n"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>One tap Anki cards</td>' + '<td class="n"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Image occlusion Anki cards</td>' + '<td class="n"></td>' + '<td class="y"></td>' + '<td class="y"></td>' + '</tr>'
+    + '<tr><td>Image occlusion boxed for you by AI</td>' + '<td class="n"></td>' + '<td class="n"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Exam mode from any PDF</td>' + '<td class="n"></td>' + '<td class="n"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Second chance review</td>' + '<td class="n"></td>' + '<td class="n"></td>' + '<td class="y"></td>' + '</tr>'
     + '<tr><td>Answer keys and explanations for PDFs without them</td>' + '<td class="n"></td>' + '<td class="n"></td>' + '<td class="y"></td>' + '</tr>'
@@ -95,7 +97,7 @@ function homeHTML(){
     + '</tbody></table></div>'
     + '<p class="hm-legal"><b>Free trial:</b> ' + esc(TRIAL_NOTE) + '</p>'
     + '<p class="hm-legal"><b>Subscriptions</b> renew automatically each month at the price shown until you cancel. Cancelling stops the next charge, and you keep your plan until the end of the period you paid for. Prices may change with notice.</p>'
-    + '<p class="hm-legal">*Unlimited is for one person studying. A fair use limit stops shared or automated accounts.</p><p class="hm-msg" id="buymsg"></p></section>';
+    + '<p class="hm-legal">Question allowances reset each day at midnight and on the first of each month. Follow-up questions to the attending do not count.</p><p class="hm-msg" id="buymsg"></p></section>';
 
     h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
   }

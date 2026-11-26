@@ -82,12 +82,12 @@ var SR = { sb:null, user:null, ready:false, listeners:[] };
 SR.onAuth = function(f){ SR.listeners.push(f); };
 SR.token = async function(){ if (!SR.sb) return null; var r = await SR.sb.auth.getSession(); return r.data.session ? r.data.session.access_token : null; };
 SR.signIn = function(email, pw){ return SR.sb.auth.signInWithPassword({ email:email, password:pw }); };
-SR.TERMS_VERSION = '2026-11-24';
-/* Temporary inboxes cannot make accounts (the server also gives them the signed-out allowance only). */
+SR.TERMS_VERSION = '2026-11-26';
+/* Known throwaway inbox services. They can still sign up, but the server gives them the signed-out allowance only. */
 var DISPOSABLE = '10minmail.com 10minutemail.com 10minutemail.net 1secmail.com 1secmail.net 1secmail.org 20minutemail.com 24hourmail.com 33mail.com anonbox.net burnermail.io byom.de cool.fr.nf crazymailing.com cyclelove.cc discard.email discardmail.com discardmail.de dispostable.com dpptd.com dropmail.me email-fake.com emailfake.com emailondeck.com emailtemporanea.net emltmp.com esiix.com etempmail.net ezztt.com fake-mail.net fakeinbox.com fakemail.net fexbox.org fexpost.com getairmail.com getnada.com grr.la guerrillamail.biz guerrillamail.com guerrillamail.de guerrillamail.net guerrillamail.org guerrillamailblock.com gufum.com harakirimail.com inboxkitten.com incognitomail.org instaddr.ch jetable.fr.nf kzccv.com laafd.com linshiyouxiang.net luxusmail.org mail-temp.com mail.gw mail.tm mail7.io mailcatch.com maildrop.cc mailexpire.com mailforspam.com mailinator.com mailinator.net mailinator2.com mailmoat.com mailnesia.com mailnull.com mailpoof.com mailshell.com mailzilla.com mintemail.com minuteinbox.com moakt.cc moakt.com mohmal.com mvrht.com mvrht.net mytemp.email nada.email nospam.ze.tc nowmymail.com objectmail.com oosln.com pokemail.net proxymail.eu qiott.com rcpt.at receiveee.com rteet.com selfdestructingmail.com sharklasers.com shitmail.me smailpro.com sofimail.com spam4.me spambog.com spambog.de spambox.us spamfree24.org spamgourmet.com temp-mail.io temp-mail.org tempemail.net tempinbox.com tempmail.com tempmail.dev tempmail.net tempmail.plus tempmailaddress.com tempmailer.com tempmailo.com tempomail.fr temporaryemail.net temporaryinbox.com tempr.email throwawaymail.com tmail.ws tmails.net tmpbox.net tmpmail.net tmpmail.org trash-mail.com trashmail.com trashmail.de trashmail.me trashmail.net trbvm.com txcct.com vjuum.com vomoto.com wegwerfmail.de wegwerfmail.net wh4f.org wwjmp.com xojxe.com yoggm.com yopmail.com yopmail.fr yopmail.net zetmail.com zippymail.info'.split(' ');
 function isDisposable(email){
   var d = String(email || '').toLowerCase().trim().split('@')[1] || '';
-  return DISPOSABLE.some(function(x){ return d === x || d.slice(-(x.length + 1)) === '.' + x; }) || /^(temp|trash|throwaway|fake|spam|burner|disposable)[a-z0-9-]*mail/.test(d);
+  return DISPOSABLE.some(function(x){ return d === x || d.slice(-(x.length + 1)) === '.' + x; });
 }
 /* One id per browser, or per extension install when the side panel passes it in. Free allowances count per id as well as per account. */
 var DEVICE = (function(){
@@ -96,8 +96,18 @@ var DEVICE = (function(){
   d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2);
   lsSet('sr_dev', d); return d;
 })();
+/* Tells the owner's phone when a sign-up fails, so nobody gets stuck without us knowing. Never blocks the sign-up itself. */
+function alertOwner(event, email, detail){
+  try { fetch(CFG.SUPABASE_URL + '/functions/v1/resident', { method:'POST', keepalive:true, headers:{ 'Content-Type':'application/json', 'apikey':CFG.SUPABASE_ANON_KEY, 'Authorization':'Bearer '+CFG.SUPABASE_ANON_KEY },
+    body:JSON.stringify({ kind:'notify', event:event, email:String(email||'').slice(0,120), detail:String(detail||'').slice(0,300), where:(EMBED?'extension':'web') }) }).catch(function(){}); } catch(e){}
+}
 SR.signUp = async function(email, pw, name){
-  if (isDisposable(email)) return { error:{ message:'Temporary email addresses cannot sign up. Use your school or personal email.' } };
+  var r;
+  try { r = await SR.signUpRaw(email, pw, name); } catch(e){ r = { error:{ message:String(e && e.message || e) } }; }
+  if (r && r.error) alertOwner('signup_failed', email, r.error.message);
+  return r;
+};
+SR.signUpRaw = async function(email, pw, name){
   var r = await SR.sb.auth.signUp({ email:email, password:pw, options:{ data:{ full_name:name || '', name:name || '', terms_version:SR.TERMS_VERSION, terms_accepted_at:new Date().toISOString() } } });
   if (r.error || (r.data && r.data.session)) return r;
   return SR.sb.auth.signInWithPassword({ email:email, password:pw });
@@ -105,7 +115,7 @@ SR.signUp = async function(email, pw, name){
 SR.signOut = function(){ return SR.sb.auth.signOut(); };
 
 /* ---------- plan and allowance ---------- */
-var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||5, until:null };
+var plan = { name:'free', used:0, limit:CFG.FREE_DAILY||3, until:null, period:'day' };
 (function(){ var u = lsGet('sr_used', null); if (u && u.day===today()) plan.used = u.n||0; })();
 (function(){ var m = location.search.match(/[?&]billing=(test|off)/); if (m) lsSet('sr_billing_test', m[1] === 'test'); })();
 var BILLING_TEST = !CFG.BILLING_LIVE && !!lsGet('sr_billing_test', false);
@@ -190,7 +200,7 @@ async function sample(input, o){
   }
   var hu = res.headers.get('x-sr-used'), hl = res.headers.get('x-sr-limit'), hp = res.headers.get('x-sr-plan');
   if (hp){ plan.name = hp==='pro' ? 'pro' : 'free'; }
-  if (hu!=null && hl!=null && body.kind==='coach'){ plan.used = +hu; plan.limit = +hl; lsSet('sr_used', { day:today(), n:plan.used }); if (window.onPlan) window.onPlan(); }
+  if (hu!=null && hl!=null && body.kind==='coach'){ plan.used = +hu; plan.limit = +hl; plan.period = res.headers.get('x-sr-period') || 'day'; lsSet('sr_used', { day:today(), n:plan.used }); if (window.onPlan) window.onPlan(); }
   if (!res.ok){
     var m = ''; try { m = await res.text(); } catch(e){}
     throw { code: res.status===429 ? 'rate_limited' : (res.status===402 ? 'pro_only' : (res.status===401||res.status===403 ? 'session_expired' : 'upstream_error')), message:m };

@@ -6,15 +6,17 @@ const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Expose-Headers": "x-sr-used, x-sr-limit, x-sr-plan",
+  "Access-Control-Expose-Headers": "x-sr-used, x-sr-limit, x-sr-plan, x-sr-period",
 };
 const LIVE = (Deno.env.get("BILLING_LIVE") ?? "") === "true";
-const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 5);
+const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 3);
+const FREE_MONTHLY = Number(Deno.env.get("FREE_MONTHLY") ?? 30);
 const ANON_DAILY = Number(Deno.env.get("ANON_DAILY") ?? 3);   // signed out, per network: the app allows one try per browser. Kept above 1 because a whole hospital can share one address
 const PRO_DAILY = Number(Deno.env.get("PRO_DAILY") ?? 40);
-const PRO_MONTHLY = Number(Deno.env.get("PRO_MONTHLY") ?? 600);
-const CHIEF_DAILY = Number(Deno.env.get("CHIEF_DAILY") ?? 150);   // "unlimited" for one person; fair-use ceiling
-const CHIEF_MONTHLY = Number(Deno.env.get("CHIEF_MONTHLY") ?? 1800);
+const PRO_MONTHLY = Number(Deno.env.get("PRO_MONTHLY") ?? 300);
+const CHIEF_DAILY = Number(Deno.env.get("CHIEF_DAILY") ?? 100);
+const CHIEF_MONTHLY = Number(Deno.env.get("CHIEF_MONTHLY") ?? 450);   // at about CA$0.05 a question, every plan stays above cost at its cap
+const NTFY_TOPIC = Deno.env.get("NTFY_TOPIC") ?? "msr-1ea63d48e6dfab0969d5";
 const EARLY_DAILY = Number(Deno.env.get("EARLY_DAILY") ?? 150);
 const MODELS: Record<string, string> = {
   quick: Deno.env.get("MODEL_QUICK") ?? "claude-haiku-5-5",
@@ -25,7 +27,6 @@ const MODELS: Record<string, string> = {
 const DISPOSABLE = new Set("10minmail.com 10minutemail.com 10minutemail.net 1secmail.com 1secmail.net 1secmail.org 20minutemail.com 24hourmail.com 33mail.com anonbox.net burnermail.io byom.de cool.fr.nf crazymailing.com cyclelove.cc discard.email discardmail.com discardmail.de dispostable.com dpptd.com dropmail.me email-fake.com emailfake.com emailondeck.com emailtemporanea.net emltmp.com esiix.com etempmail.net ezztt.com fake-mail.net fakeinbox.com fakemail.net fexbox.org fexpost.com getairmail.com getnada.com grr.la guerrillamail.biz guerrillamail.com guerrillamail.de guerrillamail.net guerrillamail.org guerrillamailblock.com gufum.com harakirimail.com inboxkitten.com incognitomail.org instaddr.ch jetable.fr.nf kzccv.com laafd.com linshiyouxiang.net luxusmail.org mail-temp.com mail.gw mail.tm mail7.io mailcatch.com maildrop.cc mailexpire.com mailforspam.com mailinator.com mailinator.net mailinator2.com mailmoat.com mailnesia.com mailnull.com mailpoof.com mailshell.com mailzilla.com mintemail.com minuteinbox.com moakt.cc moakt.com mohmal.com mvrht.com mvrht.net mytemp.email nada.email nospam.ze.tc nowmymail.com objectmail.com oosln.com pokemail.net proxymail.eu qiott.com rcpt.at receiveee.com rteet.com selfdestructingmail.com sharklasers.com shitmail.me smailpro.com sofimail.com spam4.me spambog.com spambog.de spambox.us spamfree24.org spamgourmet.com temp-mail.io temp-mail.org tempemail.net tempinbox.com tempmail.com tempmail.dev tempmail.net tempmail.plus tempmailaddress.com tempmailer.com tempmailo.com tempomail.fr temporaryemail.net temporaryinbox.com tempr.email throwawaymail.com tmail.ws tmails.net tmpbox.net tmpmail.net tmpmail.org trash-mail.com trashmail.com trashmail.de trashmail.me trashmail.net trbvm.com txcct.com vjuum.com vomoto.com wegwerfmail.de wegwerfmail.net wh4f.org wwjmp.com xojxe.com yoggm.com yopmail.com yopmail.fr yopmail.net zetmail.com zippymail.info".split(" "));
 function disposable(email: string) {
   const d = (email.split("@")[1] ?? "").toLowerCase();
-  if (/^(temp|trash|throwaway|fake|spam|burner|disposable)[a-z0-9-]*mail/.test(d)) return true;
   const parts = d.split(".");
   for (let i = 0; i < parts.length - 1; i++) if (DISPOSABLE.has(parts.slice(i).join("."))) return true;
   return false;
@@ -75,6 +76,24 @@ Deno.serve(async (req) => {
 
   let body: any;
   try { body = await req.json(); } catch { return fail(400, "bad json"); }
+
+  // phone alert to the owner (sign-up failures). Rate limited per network so it cannot be used to spam.
+  if (body.kind === "notify") {
+    const { data: k } = await admin.rpc("bump_usage", { k: "ntf:" + who });
+    if ((k as number) > 15) return new Response(null, { status: 204, headers: CORS });
+    const em = String(body.email ?? "");
+    const at = em.indexOf("@");
+    const masked = at > 0 ? em.slice(0, Math.min(2, at)) + "\u2022\u2022\u2022" + em.slice(at) : "(no email)";
+    const flag = at > 0 && disposable(em) ? " (throwaway inbox)" : "";
+    await fetch("https://ntfy.sh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic: NTFY_TOPIC, title: "Sign-up failed", priority: 4, tags: ["warning"],
+        message: `${masked}${flag} on the ${body.where === "extension" ? "extension" : "website"}: ${String(body.detail ?? "").slice(0, 300)}`,
+        click: "https://supabase.com/dashboard/project/ldvuigiqzloupwpfucfh/auth/users" }),
+    }).catch(() => {});
+    return new Response(null, { status: 204, headers: CORS });
+  }
   const images = Array.isArray(body.images) ? body.images.slice(0, 4) : [];
   for (const im of images) {
     if (typeof im?.data !== "string" || im.data.length > 3_500_000) return fail(413, "image too large");
@@ -102,7 +121,7 @@ Deno.serve(async (req) => {
   const limit = isQuestion ? qLimit : qLimit * 12;
   const { data: n, error } = await admin.rpc("bump_usage", { k: (isQuestion ? "srq:" : "sra:") + who });
   if (error) return fail(500, "usage");
-  const meter = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro" };
+  const meter: Record<string, string> = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro", "x-sr-period": "day" };
   if ((n as number) > limit) return fail(429, "limit", meter);
   // one free allowance per browser or extension install, however many free accounts sign in on it
   const dev = typeof body.dev === "string" ? body.dev.slice(0, 64) : "";
@@ -110,12 +129,13 @@ Deno.serve(async (req) => {
     const { data: dn, error: de } = await admin.rpc("bump_usage", { k: "srq:d:" + await sha(dev) });
     if (!de && (dn as number) > qLimit) return fail(429, "limit", { ...meter, "x-sr-used": String(dn) });
   }
-  if (isQuestion && LIVE && (plan === "pro" || plan === "chief")) {
-    // monthly fair-use ceiling so one account cannot cost more than it pays
+  if (isQuestion && LIVE && userId && !throwaway) {
+    // monthly allowance, so no account can cost more than it pays
     const first = new Date(); first.setUTCDate(1);
     const { data: rows } = await admin.from("usage").select("n").eq("key", "srq:" + who).gte("day", first.toISOString().slice(0, 10));
     const month = (rows ?? []).reduce((a: number, r: any) => a + (r.n ?? 0), 0);
-    if (month > (plan === "chief" ? CHIEF_MONTHLY : PRO_MONTHLY)) return fail(429, "limit", meter);
+    const cap = plan === "chief" ? CHIEF_MONTHLY : plan === "pro" ? PRO_MONTHLY : FREE_MONTHLY;
+    if (month > cap) return fail(429, "limit", { ...meter, "x-sr-used": String(month), "x-sr-limit": String(cap), "x-sr-period": "month" });
   }
 
   const up = await fetch("https://api.anthropic.com/v1/messages", {

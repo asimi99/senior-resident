@@ -9,8 +9,12 @@ window.SR_CONFIG = {
      To start charging: deploy supabase/functions, run supabase/senior-resident.sql, the live
      Payment Links below are only used once BILLING_LIVE is true. */
   BILLING_LIVE: false,
-  FREE_DAILY: 5,
+  FREE_DAILY: 3,
+  FREE_MONTHLY: 30,
   PRO_DAILY: 40,
+  PRO_MONTHLY: 300,
+  CHIEF_DAILY: 100,
+  CHIEF_MONTHLY: 450,
   CURRENCY: 'CAD',
   PRICE_MONTH: 15,
   PRICE_FELLOW: 25,
