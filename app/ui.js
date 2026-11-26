@@ -46,7 +46,7 @@ function acctMenuHTML(){
     + '<div class="acplan"><span>Plan</span><b>'+esc(pl)+'</b></div>'
     + (plan.name==='pro'||plan.name==='chief' ? '<button type="button" data-acct="manage">Manage subscription</button>' : '<button type="button" data-acct="pricing">Upgrade</button>')
     + '<hr><button type="button" data-acct="account">Account and preferences</button><button type="button" data-acct="schedule">My study plan</button><button type="button" data-acct="review">Statistics</button>'
-    + '<button type="button" data-acct="help">Help and feedback</button><hr><button type="button" data-acct="signout">Sign out</button></div>';
+    + '<button type="button" data-acct="help">Help and feedback</button><a class="acm-link" href="../">Senior Resident website</a><hr><button type="button" data-acct="signout">Sign out</button></div>';
 }
 var THEMES = [['navy','Navy','#1c4872','#e3e6f0'],['rose','Rose','#7e3453','#b6567d'],['forest','Forest','#2d5443','#438a69'],['mono','Black and white','#2f3338','#f6f6f7'],['plum','Plum','#493b66','#7d66a9'],['teal','Teal','#1f545e','#2c8997']];
 function curTheme(){ return document.documentElement.dataset.sr || 'navy'; }
@@ -69,7 +69,9 @@ function renderTop(){
     return;
   }
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
-  topEl.innerHTML = '<a class="brand" href="#" data-go="new">'+IC.logo+'<span>Senior Resident</span></a>'
+  /* Visitors who came from the website can always get back to it. Members land in the portal. */
+  topEl.innerHTML = (u ? '<a class="brand" href="#" data-go="new">' : '<a class="brand" href="../">')+IC.logo+'<span>Senior Resident</span></a>'
+    + (u ? '' : '<nav class="sitelinks" aria-label="Website"><a href="../">Home</a><a href="../how.html">How it works</a><a href="../pricing.html">Pricing</a></nav>')
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
     + pillHTML()
