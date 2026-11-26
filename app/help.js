@@ -91,7 +91,7 @@ var crashed = false;
 function crashBar(msg){
   if (crashed || BG) return; crashed = true;
   var b = document.createElement('div'); b.className = 'crash'; b.setAttribute('role', 'alert');
-  b.innerHTML = '<span>Something went wrong.</span><button type="button" class="btn sm" data-h="report" data-code="crash" data-where="app">Report it</button><button type="button" class="lnk" id="crashx">Dismiss</button>';
+  b.innerHTML = '<svg class="pal" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M16 3.2v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="3.4" r="2.4" fill="#fff" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 19.5C4.5 12.6 9.6 7.5 16 7.5s11.5 5.1 11.5 12c0 5.9-4.6 9.8-11.5 9.8S4.5 25.4 4.5 19.5z" fill="currentColor"/><ellipse cx="11.6" cy="18.2" rx="1.9" ry="2.4" fill="#fff"/><ellipse cx="20.4" cy="18.2" rx="1.9" ry="2.4" fill="#fff"/><circle cx="12" cy="18.8" r="1" fill="#1b2433"/><circle cx="20.8" cy="18.8" r="1" fill="#1b2433"/><ellipse cx="8.6" cy="22.4" rx="1.8" ry="1.1" fill="#ff9fb2" opacity=".9"/><ellipse cx="23.4" cy="22.4" rx="1.8" ry="1.1" fill="#ff9fb2" opacity=".9"/><path d="M13.2 22.6c1.6 1.7 4 1.7 5.6 0" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg><span>Help</span>';
   b.querySelector('[data-h]').dataset.msg = String(msg || '').slice(0, 400);
   document.body.appendChild(b); b.querySelector('#crashx').onclick = function(){ b.remove(); };
 }

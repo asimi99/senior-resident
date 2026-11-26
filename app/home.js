@@ -99,7 +99,13 @@ function homeHTML(){
 
     h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
   }
-  h += '<footer class="hm-foot"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body.</span><span class="hm-legal">UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use. You are responsible for following them. Senior Resident never copies, stores or shares question bank content.</span></footer>';
+  h += '<footer class="hm-foot"><div class="hf-grid">'
+    + '<div><b>Senior Resident</b><p>A reasoning coach for board-style questions, built in Winnipeg by a medical student who wanted a senior resident beside him on every question.</p></div>'
+    + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>We reply within 24 hours.</p></div>'
+    + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">Pricing</a><br><a href="../app/#try">Try it free</a></p></div>'
+    + '<div><b>Legal</b><p><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><br><a href="../terms.html" target="_blank" rel="noopener">Terms</a></p></div>'
+    + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. Senior Resident never copies, stores or shares question bank content.</p></details>'
+    + '<p class="hf-copy">© 2026 Senior Resident</p></footer>';
   return h + '</div>';
 }
 function homeGo(where){
@@ -116,6 +122,7 @@ document.addEventListener('click', function(e){
 
 /* #plan, #exam, #stats, #try, #signin and #signup open that part of the portal, so links can be shared */
 /* the portal. The website (home, how it works, pricing) is the static pages one level up. */
+if (location.hash === '#help') setTimeout(function(){ if (typeof openHelp === 'function') openHelp('fb'); }, 600);
 var HASHV = { exam:'exam', stats:'review', plan:'schedule', coach:'coach', try:'coach', signin:'account', signup:'account', account:'account' };
 var SITE_HASH = { how:'how.html', pricing:'pricing.html', plans:'pricing.html', faq:'how.html#faq', questions:'how.html', home:'' };
 if (!EMBED){
