@@ -1,2 +1,8 @@
 build/
 *.pyc
+
+# Xcode
+ios/*.xcodeproj/
+ios/build/
+ios/DerivedData/
+xcuserdata/
