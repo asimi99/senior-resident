@@ -664,3 +664,5 @@ a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-conten
 .sitelinks a{color:var(--muted);text-decoration:none}.sitelinks a:hover{color:var(--fg)}
 @media (max-width:760px){.sitelinks a:not(:first-child){display:none}}
 .acmenu a.acm-link{display:block;padding:8px 12px;color:var(--fg);text-decoration:none;font-size:14px;border-radius:8px}.acmenu a.acm-link:hover{background:var(--raised)}
+
+.hold{align-self:center;margin-right:auto}

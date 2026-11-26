@@ -271,6 +271,14 @@ function cardHTML(c){
   } else {
     var anyRuled = s.kind2==='elim' && st.ruled && s.opts.some(function(o){ return o.v==='good' && st.ruled[String(o.t||'').trim().toLowerCase()]; });   // options struck through on this step count as an answer
     var can = st.sel[i]!==undefined || anyRuled || (st.other[i]&&st.other[i].saved) || (s.kind2==='elim' && st.cross && st.cross[i] && Object.keys(st.cross[i]).some(function(x){ return st.cross[i][x]; }));
+    if (s.kind2==='elim'){   // eliminating a choice the coach said to keep in play does not move you on
+      var cx = (st.cross && st.cross[i]) || {};
+      var keptCrossed = s.opts.some(function(o,k){ return o.v!=='good' && cx[k]; });
+      var pickedKeep = st.sel[i]!==undefined && s.opts[st.sel[i]] && s.opts[st.sel[i]].v!=='good';
+      var goodCrossed = s.opts.some(function(o,k){ return o.v==='good' && cx[k]; });
+      if (keptCrossed){ can = false; h += '<span class="muted sm hold">Uncross the orange choice to go on. The stem keeps it in play.</span>'; }
+      else if (pickedKeep && !anyRuled && !goodCrossed){ can = false; h += '<span class="muted sm hold">Rule out a choice the stem excludes to go on.</span>'; }
+    }
     h += '<button type="button" class="btn" data-act="next"'+(can?'':' disabled')+'>Continue</button>';
   }
   return h + '</div>';
@@ -655,7 +663,7 @@ stage.addEventListener('click', async function(e){
     var txt = (document.getElementById('otherTxt').value||'').trim(); if (!txt) return;
     st.other[i] = { text:txt, saved:true }; st.otherOpen[i] = true; checkOther(c2, i, txt);
   }
-  else if (act==='next'){ st.i++; renderStage(); window.scrollTo({top:0}); persist(); }
+  else if (act==='next'){ if (el.disabled) return; st.i++; renderStage(); window.scrollTo({top:0}); persist(); }
   else if (act==='back'){ if (st.i>0){ st.i--; renderStage(); } }
   else if (act==='morehelp'){ if (proGate()) moreHelp(c2); }
   else if (act==='restart'){ c2.st = fresh(); renderStage(); window.scrollTo({top:0}); }
