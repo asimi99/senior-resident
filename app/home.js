@@ -101,7 +101,7 @@ function homeHTML(){
   }
   h += '<footer class="hm-foot"><div class="hf-grid">'
     + '<div><b>Senior Resident</b><p>A reasoning coach for board-style questions, built in Winnipeg by a medical student who wanted a senior resident beside him on every question.</p></div>'
-    + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>We reply within 24 hours.</p></div>'
+    + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>hello@myseniorresident.com<br>We reply within 24 hours.</p></div>'
     + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">Pricing</a><br><a href="../app/#try">Try it free</a></p></div>'
     + '<div><b>Legal</b><p><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><br><a href="../terms.html" target="_blank" rel="noopener">Terms</a></p></div>'
     + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. Senior Resident never copies, stores or shares question bank content.</p></details>'
