@@ -220,7 +220,7 @@ struct BuilderView: View {
 }
 
 extension Binding {
-    init<T>(_ source: Binding<T?>, _ fallback: T) where Value == T {
+    init(_ source: Binding<Value?>, _ fallback: Value) {
         self.init(get: { source.wrappedValue ?? fallback }, set: { source.wrappedValue = $0 })
     }
 }

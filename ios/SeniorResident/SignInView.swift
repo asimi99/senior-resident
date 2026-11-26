@@ -4,7 +4,9 @@ import AuthenticationServices
 struct SignInView: View {
     @EnvironmentObject var account: Account
     @State private var creating = false
-    @State private var name = "", email = "", password = ""
+    @State private var name = ""
+    @State private var email = ""
+    @State private var password = ""
     @State private var agreed = false
     @State private var busy = false
 
