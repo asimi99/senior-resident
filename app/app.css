@@ -102,6 +102,7 @@ textarea{min-height:76px;resize:vertical}
 .opt.r-bad{border-color:var(--bad);background:var(--bad-soft)} .opt.r-bad kbd{background:var(--bad)}
 .opt.r-warn{border-color:var(--warn);background:var(--warn-soft)} .opt.r-warn kbd{background:var(--warn)}
 .opt.crossed{opacity:.55} .opt.crossed .t{text-decoration:line-through;color:var(--muted)}
+.opt.sel.crossed{opacity:.85} .opt.sel.r-warn.crossed .t,.opt.sel.r-bad.crossed .t{text-decoration-color:currentColor;color:inherit}
 .opt.ruled .t{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--good)}
 .othl{align-self:flex-start;font-size:13.5px;color:var(--muted);background:none;border:0;padding:2px;cursor:pointer}
 .othl:hover,.othl.on{color:var(--fg)}

@@ -250,7 +250,7 @@ function cardHTML(c){
   s.opts.forEach(function(o,k){
     var rk = String(o.t||'').trim().toLowerCase();
     var ruled = elimLike && o.v==='good' && ((st.sel[i]===k) || (st.ruled && st.ruled[rk]));
-    var picked = st.sel[i]===k, crossed = !picked && !ruled && st.cross && st.cross[i] && st.cross[i][k];
+    var picked = st.sel[i]===k, crossed = !ruled && st.cross && st.cross[i] && st.cross[i][k];   // a picked keep-in-play choice can still be crossed out, it just stays orange
     h += '<button type="button" class="opt'+(picked?' sel r-'+(o.v==='good'?'good':(o.v==='warn'?'warn':'bad')):'')+(ruled&&!picked?' r-good':'')+(crossed?' crossed':'')+(ruled?' ruled':'')+'" data-act="pick" data-k="'+k+'"><kbd>'+optKey(o,k)+'</kbd><span class="t">'+esc(optText(o))+'</span><span class="x" data-act="cross" data-k="'+k+'" role="button" aria-label="Cross out" title="Cross out">abc</span></button>';
   });
   h += '</div>';
@@ -567,7 +567,11 @@ stage.addEventListener('submit', async function(e){
   if (r.error) er.textContent = /invalid login/i.test(r.error.message) ? 'That email and password do not match.' : (/registered/i.test(r.error.message) ? 'That email already has an account. Sign in instead.' : r.error.message);
 });
 function crossToggle(c, i, k){
-  var st = c.st; if (st.sel[i]===k) return;
+  var st = c.st;
+  if (st.sel[i]===k){                                    // crossing out the choice you just picked: allowed when it was not a clean rule-out (orange), it stays orange
+    var po = c.steps[i] && c.steps[i].opts[k]; if (!po || po.v==='good') return;
+    st.cross = st.cross || {}; st.cross[i] = st.cross[i] || {}; st.cross[i][k] = !st.cross[i][k]; renderStage(); persist(); return;
+  }
   var sk = c.steps[i]; if (sk && sk.kind2==='elim' && st.sel[i]===undefined && !(st.cross && st.cross[i] && st.cross[i][k])){ pick(c, k); return; }   // on the elimination step, crossing out IS the answer
   if (markRuled(c, i, k, true)){ renderStage(); return; }
   st.cross = st.cross || {}; st.cross[i] = st.cross[i] || {}; st.cross[i][k] = !st.cross[i][k]; renderStage();
