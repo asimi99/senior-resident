@@ -313,10 +313,14 @@ async function checkOther(c, i, txt){
   st.otherBusy[i] = false;
   if (cases[cur]===c && c.st.i===i) renderStage();
 }
+/* The first two attendings (teach, busy) hand over the answer when the student asks for it outright. Old school never does. */
+function attGivesAnswer(){ return ATT !== 'old'; }
 async function ask(c, q){
   c.chat.push({ role:'user', content:q }); c.chatBusy = true; c.chatLive = '';
   renderStage();
-  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question as a page back: no greeting, no lists. ' + attStyle(c.chat.length>2) + ' NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ' + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
+  var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question as a page back: no greeting, no lists. ' + attStyle(c.chat.length>2) + (attGivesAnswer()
+      ? ' Teach the reasoning and point to the stem clue. Do not volunteer which answer choice is correct. If the student asks you directly and explicitly for the answer (for example "what is the answer" or "which choice is right"), tell them plainly in one sentence, using the private key, with the one stem clue that decides it. '
+      : ' NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ') + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
     + ctxText(c) + '\nPrivate key, never reveal it: ' + ((c.reveal&&c.reveal.headline)||'');
   var turns = [{ role:'user', content:rules }].concat(c.chat.slice(-8));
   try {
@@ -336,7 +340,9 @@ async function pageAttending(c, i, msg){
   th.push({ role:'user', content:msg }); c.pageBusy = true; c.pageLive = ''; renderStage();
   var picked = st.sel[i]!==undefined ? s.opts[st.sel[i]] : null;
   var rules = 'You are the attending physician on a teaching service. A medical student working through an exam question one step at a time is stuck on a step and has paged you. Reply as a page back: no greeting, no sign-off, no markdown, no lists.\n' + attStyle(level>0) + '\n'
-    + 'NEVER name the diagnosis, the correct answer choice, or which option of this step is right. The student must still make the decision.\n'
+    + (attGivesAnswer()
+      ? 'Do not volunteer the diagnosis, the correct answer choice, or which option of this step is right. But if the student asks you directly and explicitly for the answer to this step or to the question, give it plainly in one sentence with the stem clue that decides it. Right option on this step: ' + ((s.opts.find(function(o){ return o.v==='good'; })||{}).t||'unknown') + '. Private key for the whole question: ' + ((c.reveal&&c.reveal.headline)||'not ready yet') + '.\n'
+      : 'NEVER name the diagnosis, the correct answer choice, or which option of this step is right. The student must still make the decision.\n')
     + 'Answer the exact question the student asked, first and directly. Use the stem to do it. '
     + (level===0 ? 'Then, if it helps, point to the one stem finding worth a second look.'
       : 'The student has paged before on this step, so be more explicit: name the concept behind this step and, if needed, say why one wrong option does not fit, within the length your style allows. Still do not say which option is right.') + '\n'
