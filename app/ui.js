@@ -70,7 +70,7 @@ function renderTop(){
   }
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
   /* Visitors who came from the website can always get back to it. Members land in the portal. */
-  topEl.innerHTML = (u ? '<a class="brand" href="#" data-go="new">' : '<a class="brand" href="../">')+IC.logo+'<span>Senior Resident</span></a>'
+  topEl.innerHTML = '<a class="brand" href="../" title="Senior Resident home">'+IC.logo+'<span>Senior Resident</span></a>'
     + (u ? '' : '<nav class="sitelinks" aria-label="Website"><a href="../">Home</a><a href="../how.html">How it works</a><a href="../pricing.html">Pricing</a></nav>')
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
