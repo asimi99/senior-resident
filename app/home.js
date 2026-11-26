@@ -73,7 +73,7 @@ function homeHTML(){
     + '<div class="hm-plan pro"><span class="tag">Most popular</span><h3>Resident</h3><p class="pk">Your coach for every block</p><div class="pr">$' + C.PRICE_MONTH + ' <small>a month</small></div>'
     + li([C.PRO_MONTHLY + ' questions a month, up to ' + C.PRO_DAILY + ' a day', 'Hardest level and narrowing from your cross-outs', 'Page the attending', 'Reasoning profile: where you lose points', 'One tap Anki cards and image occlusion'])
     + '<button type="button" class="btn wide" data-act="buy" data-p="month">Start the 7-day free trial</button></div>'
-    + '<div class="hm-plan"><h3>Chief</h3><p class="pk">Everything, plus exams from your PDFs</p><div class="pr">$' + (C.PRICE_FELLOW || 25) + ' <small>a month</small></div>'
+    + '<div class="hm-plan"><h3>Chief</h3><p class="pk">Everything, plus exams from your PDFs</p><div class="pr">$' + (C.PRICE_FELLOW || 30) + ' <small>a month</small></div>'
     + li([C.CHIEF_MONTHLY + ' questions a month, up to ' + C.CHIEF_DAILY + ' a day', 'Image occlusion boxed for you by AI', 'Exam mode: any PDF becomes a timed exam', 'Second chance review', 'Answer keys for PDFs without them', 'Question ID on your Anki cards'])
     + '<button type="button" class="btn ghost wide" data-act="buy" data-p="chief">Get Chief</button></div></div>'
     + '<div class="hm-tblw"><table class="hm-cmpt"><thead><tr><th></th><th>Free</th><th>Resident</th><th>Chief</th></tr></thead><tbody>'

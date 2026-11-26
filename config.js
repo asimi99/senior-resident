@@ -12,12 +12,12 @@ window.SR_CONFIG = {
   FREE_DAILY: 3,
   FREE_MONTHLY: 30,
   PRO_DAILY: 40,
-  PRO_MONTHLY: 300,
+  PRO_MONTHLY: 400,
   CHIEF_DAILY: 100,
-  CHIEF_MONTHLY: 450,
+  CHIEF_MONTHLY: 550,
   CURRENCY: 'CAD',
-  PRICE_MONTH: 15,
-  PRICE_FELLOW: 25,
+  PRICE_MONTH: 20,
+  PRICE_FELLOW: 30,
   TRIAL_DAYS: 7,        // one free trial of the Resident plan, one per card (card needed at Stripe checkout)
   TRIAL_EXAM_QS: 10,    // during a trial, only this many questions of a PDF become an exam
   STRIPE_LINK: 'https://buy.stripe.com/5kQ5kF652abv74y27tb3q01',        // LIVE Resident plan Payment Link (7-day trial, promo codes allowed)
