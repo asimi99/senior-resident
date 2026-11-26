@@ -83,7 +83,21 @@ SR.onAuth = function(f){ SR.listeners.push(f); };
 SR.token = async function(){ if (!SR.sb) return null; var r = await SR.sb.auth.getSession(); return r.data.session ? r.data.session.access_token : null; };
 SR.signIn = function(email, pw){ return SR.sb.auth.signInWithPassword({ email:email, password:pw }); };
 SR.TERMS_VERSION = '2026-11-24';
+/* Temporary inboxes cannot make accounts (the server also gives them the signed-out allowance only). */
+var DISPOSABLE = '10minmail.com 10minutemail.com 10minutemail.net 1secmail.com 1secmail.net 1secmail.org 20minutemail.com 24hourmail.com 33mail.com anonbox.net burnermail.io byom.de cool.fr.nf crazymailing.com cyclelove.cc discard.email discardmail.com discardmail.de dispostable.com dpptd.com dropmail.me email-fake.com emailfake.com emailondeck.com emailtemporanea.net emltmp.com esiix.com etempmail.net ezztt.com fake-mail.net fakeinbox.com fakemail.net fexbox.org fexpost.com getairmail.com getnada.com grr.la guerrillamail.biz guerrillamail.com guerrillamail.de guerrillamail.net guerrillamail.org guerrillamailblock.com gufum.com harakirimail.com inboxkitten.com incognitomail.org instaddr.ch jetable.fr.nf kzccv.com laafd.com linshiyouxiang.net luxusmail.org mail-temp.com mail.gw mail.tm mail7.io mailcatch.com maildrop.cc mailexpire.com mailforspam.com mailinator.com mailinator.net mailinator2.com mailmoat.com mailnesia.com mailnull.com mailpoof.com mailshell.com mailzilla.com mintemail.com minuteinbox.com moakt.cc moakt.com mohmal.com mvrht.com mvrht.net mytemp.email nada.email nospam.ze.tc nowmymail.com objectmail.com oosln.com pokemail.net proxymail.eu qiott.com rcpt.at receiveee.com rteet.com selfdestructingmail.com sharklasers.com shitmail.me smailpro.com sofimail.com spam4.me spambog.com spambog.de spambox.us spamfree24.org spamgourmet.com temp-mail.io temp-mail.org tempemail.net tempinbox.com tempmail.com tempmail.dev tempmail.net tempmail.plus tempmailaddress.com tempmailer.com tempmailo.com tempomail.fr temporaryemail.net temporaryinbox.com tempr.email throwawaymail.com tmail.ws tmails.net tmpbox.net tmpmail.net tmpmail.org trash-mail.com trashmail.com trashmail.de trashmail.me trashmail.net trbvm.com txcct.com vjuum.com vomoto.com wegwerfmail.de wegwerfmail.net wh4f.org wwjmp.com xojxe.com yoggm.com yopmail.com yopmail.fr yopmail.net zetmail.com zippymail.info'.split(' ');
+function isDisposable(email){
+  var d = String(email || '').toLowerCase().trim().split('@')[1] || '';
+  return DISPOSABLE.some(function(x){ return d === x || d.slice(-(x.length + 1)) === '.' + x; }) || /^(temp|trash|throwaway|fake|spam|burner|disposable)[a-z0-9-]*mail/.test(d);
+}
+/* One id per browser, or per extension install when the side panel passes it in. Free allowances count per id as well as per account. */
+var DEVICE = (function(){
+  var m = location.search.match(/[?&]iid=([\w-]{8,64})/); if (m){ lsSet('sr_dev', m[1]); return m[1]; }
+  var d = lsGet('sr_dev', ''); if (d) return d;
+  d = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2);
+  lsSet('sr_dev', d); return d;
+})();
 SR.signUp = async function(email, pw, name){
+  if (isDisposable(email)) return { error:{ message:'Temporary email addresses cannot sign up. Use your school or personal email.' } };
   var r = await SR.sb.auth.signUp({ email:email, password:pw, options:{ data:{ full_name:name || '', name:name || '', terms_version:SR.TERMS_VERSION, terms_accepted_at:new Date().toISOString() } } });
   if (r.error || (r.data && r.data.session)) return r;
   return SR.sb.auth.signInWithPassword({ email:email, password:pw });
@@ -157,7 +171,7 @@ async function readStream(res, onDelta){
 }
 async function sample(input, o){
   o = o || {};
-  var body = { input:input, tier:o.modelTier || 'default', kind:o.kind || 'aux', app:'sr' };
+  var body = { input:input, tier:o.modelTier || 'default', kind:o.kind || 'aux', app:'sr', dev:DEVICE };
   if (o.images && o.images.length){
     try { body.images = await Promise.all(o.images.map(toB64)); } catch(e){ throw { code:'image_rejected', message:'image' }; }
   }
@@ -431,6 +445,7 @@ async function moreHelp(c){
 
 /* ---------- progress, pearls, stats ---------- */
 var stats = lsGet('sr_stats_v1', { days:{}, skills:{}, done:0, first:0 });
+if (!stats.acc) stats.acc = {};   // per day: steps answered (n), right first try (ok), questions (q), clean questions (c)
 var pearls = lsGet('sr_pearls_v1', []);
 var hist = lsGet('sr_hist_v1', []);
 function streak(){
@@ -441,13 +456,14 @@ function streak(){
 }
 function saveDone(c){
   if (c.saved) return; c.saved = true;
-  var clean = true;
+  var clean = true, dk = today(), a = stats.acc[dk] = stats.acc[dk] || { n:0, ok:0, q:0, c:0 };
   c.steps.forEach(function(s, i){
     var f = c.st.first[i]; if (f===undefined) return;
     var k = s.skill || 'discriminate', b = stats.skills[k] = stats.skills[k] || { n:0, ok:0 };
-    b.n++; if (f==='good') b.ok++; else clean = false;
+    b.n++; a.n++; if (f==='good'){ b.ok++; a.ok++; } else clean = false;
   });
   stats.done++; if (clean) stats.first++;
+  a.q++; if (clean) a.c++;
   stats.days[today()] = (stats.days[today()]||0) + 1;
   lsSet('sr_stats_v1', stats);
   var r = c.reveal || {};

@@ -21,6 +21,23 @@ const MODELS: Record<string, string> = {
   default: Deno.env.get("MODEL_DEFAULT") ?? "claude-sonnet-5-5",
 };
 
+// Temporary inboxes get the signed-out allowance, and free allowances are counted per device and per normalized email too.
+const DISPOSABLE = new Set("10minmail.com 10minutemail.com 10minutemail.net 1secmail.com 1secmail.net 1secmail.org 20minutemail.com 24hourmail.com 33mail.com anonbox.net burnermail.io byom.de cool.fr.nf crazymailing.com cyclelove.cc discard.email discardmail.com discardmail.de dispostable.com dpptd.com dropmail.me email-fake.com emailfake.com emailondeck.com emailtemporanea.net emltmp.com esiix.com etempmail.net ezztt.com fake-mail.net fakeinbox.com fakemail.net fexbox.org fexpost.com getairmail.com getnada.com grr.la guerrillamail.biz guerrillamail.com guerrillamail.de guerrillamail.net guerrillamail.org guerrillamailblock.com gufum.com harakirimail.com inboxkitten.com incognitomail.org instaddr.ch jetable.fr.nf kzccv.com laafd.com linshiyouxiang.net luxusmail.org mail-temp.com mail.gw mail.tm mail7.io mailcatch.com maildrop.cc mailexpire.com mailforspam.com mailinator.com mailinator.net mailinator2.com mailmoat.com mailnesia.com mailnull.com mailpoof.com mailshell.com mailzilla.com mintemail.com minuteinbox.com moakt.cc moakt.com mohmal.com mvrht.com mvrht.net mytemp.email nada.email nospam.ze.tc nowmymail.com objectmail.com oosln.com pokemail.net proxymail.eu qiott.com rcpt.at receiveee.com rteet.com selfdestructingmail.com sharklasers.com shitmail.me smailpro.com sofimail.com spam4.me spambog.com spambog.de spambox.us spamfree24.org spamgourmet.com temp-mail.io temp-mail.org tempemail.net tempinbox.com tempmail.com tempmail.dev tempmail.net tempmail.plus tempmailaddress.com tempmailer.com tempmailo.com tempomail.fr temporaryemail.net temporaryinbox.com tempr.email throwawaymail.com tmail.ws tmails.net tmpbox.net tmpmail.net tmpmail.org trash-mail.com trashmail.com trashmail.de trashmail.me trashmail.net trbvm.com txcct.com vjuum.com vomoto.com wegwerfmail.de wegwerfmail.net wh4f.org wwjmp.com xojxe.com yoggm.com yopmail.com yopmail.fr yopmail.net zetmail.com zippymail.info".split(" "));
+function disposable(email: string) {
+  const d = (email.split("@")[1] ?? "").toLowerCase();
+  if (/^(temp|trash|throwaway|fake|spam|burner|disposable)[a-z0-9-]*mail/.test(d)) return true;
+  const parts = d.split(".");
+  for (let i = 0; i < parts.length - 1; i++) if (DISPOSABLE.has(parts.slice(i).join("."))) return true;
+  return false;
+}
+function normEmail(email: string) {
+  let [u, d] = email.toLowerCase().trim().split("@");
+  u = (u ?? "").split("+")[0];
+  if (d === "googlemail.com") d = "gmail.com";
+  if (d === "gmail.com") u = u.replace(/\./g, "");
+  return u + "@" + (d ?? "");
+}
+
 async function sha(s: string) {
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("").slice(0, 32);
@@ -36,18 +53,21 @@ Deno.serve(async (req) => {
 
   // who is calling, and on which plan
   const token = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
-  let userId: string | null = null;
+  let userId: string | null = null, email = "";
   if (token && token !== Deno.env.get("SUPABASE_ANON_KEY")) {
     const { data } = await admin.auth.getUser(token);
     userId = data?.user?.id ?? null;
+    email = data?.user?.email ?? "";
   }
+  const throwaway = !!userId && disposable(email);
   let plan = "free";
   if (userId && LIVE) {
     const { data } = await admin.from("sr_profiles").select("plan,current_period_end").eq("user_id", userId).maybeSingle();
     if (["pro", "chief", "trial"].includes(data?.plan) && (!data.current_period_end || new Date(data.current_period_end) > new Date())) plan = data.plan === "chief" ? "chief" : "pro";
   }
   let who: string;
-  if (userId) who = "u:" + userId;
+  if (userId && plan === "free" && LIVE && email) who = "e:" + await sha(normEmail(email));   // me+1@gmail.com and m.e@gmail.com share one free allowance
+  else if (userId) who = "u:" + userId;
   else {
     const ip = (req.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
     who = "g:" + await sha(ip);
@@ -78,12 +98,18 @@ Deno.serve(async (req) => {
 
   // allowance: a new question counts once. Follow-ups, checks and retries share a generous side bucket.
   const isQuestion = body.kind === "coach";
-  const qLimit = !userId ? ANON_DAILY : !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
+  const qLimit = (!userId || throwaway) ? ANON_DAILY : !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
   const limit = isQuestion ? qLimit : qLimit * 12;
   const { data: n, error } = await admin.rpc("bump_usage", { k: (isQuestion ? "srq:" : "sra:") + who });
   if (error) return fail(500, "usage");
   const meter = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro" };
   if ((n as number) > limit) return fail(429, "limit", meter);
+  // one free allowance per browser or extension install, however many free accounts sign in on it
+  const dev = typeof body.dev === "string" ? body.dev.slice(0, 64) : "";
+  if (isQuestion && dev && (!userId || throwaway || (LIVE && plan === "free"))) {
+    const { data: dn, error: de } = await admin.rpc("bump_usage", { k: "srq:d:" + await sha(dev) });
+    if (!de && (dn as number) > qLimit) return fail(429, "limit", { ...meter, "x-sr-used": String(dn) });
+  }
   if (isQuestion && LIVE && (plan === "pro" || plan === "chief")) {
     // monthly fair-use ceiling so one account cannot cost more than it pays
     const first = new Date(); first.setUTCDate(1);

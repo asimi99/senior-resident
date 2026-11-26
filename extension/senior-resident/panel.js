@@ -3,7 +3,11 @@
   var coach = document.getElementById('coach'), msg = document.getElementById('msg'), auto = document.getElementById('auto');
   var ready = false, queue = [], port;
   var ANKI_OK = ['version', 'requestPermission', 'createDeck', 'addNote', 'modelNames', 'createModel', 'updateModelStyling', 'updateModelTemplates', 'storeMediaFile'];
-  coach.src = APP + '&t=' + Date.now();
+  chrome.storage.local.get({ iid: '' }, function(r){
+    var iid = r.iid || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2));
+    if (!r.iid) chrome.storage.local.set({ iid: iid });
+    coach.src = APP + '&iid=' + encodeURIComponent(iid) + '&t=' + Date.now();
+  });
   function connect(){
     port = chrome.runtime.connect({ name: 'sr-panel' });
     port.onMessage.addListener(onPort);

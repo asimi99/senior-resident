@@ -296,7 +296,8 @@ function reviewHTML(){
     h += '<p class="muted sm">First-try accuracy by type of decision, weakest first.</p><div class="prof">'+keys.map(function(k){ var b = stats.skills[k], p = Math.round(100*b.ok/b.n);
       return '<div><span>'+esc(SKILLS[k])+'</span><i><u class="'+(p<50?'lo':(p<75?'mid':'hi'))+'" style="width:'+Math.max(4,p)+'%"></u></i><em>'+p+'%</em><small>'+b.n+'</small></div>'; }).join('')+'</div>';
   }
-  h += '</section><section class="panel"><div class="row"><h2>Pearls</h2><span class="spacer"></span>'
+  h += '</section>' + progressHTML();
+  h += '<section class="panel"><div class="row"><h2>Pearls</h2><span class="spacer"></span>'
     + (pearls.length?'<button type="button" class="btn ghost sm" data-act="copypearls">Copy all</button><button type="button" class="btn ghost sm" data-act="exportpearls">Anki export'+(isPro()?'':' '+IC.bolt)+'</button>':'')+'</div>';
   if (!pearls.length) h += '<p class="muted">Every finished question leaves one rule here.</p>';
   else {
@@ -308,6 +309,45 @@ function reviewHTML(){
       return '<div><span class="mk '+(x.clean?'ok':'slip')+'">'+(x.clean?IC.check:IC.x)+'</span><b>'+esc(x.title)+'</b><span>'+esc(new Date(x.ts).toLocaleDateString(undefined,{month:'short',day:'numeric'}))+'</span></div>'; }).join('')+'</div></section>';
   }
   return h;
+}
+/* Accuracy over time: first-try accuracy on reasoning steps, by day (or by week once there are more than 21 study days). */
+function progressSeries(){
+  var days = Object.keys(stats.acc || {}).sort().filter(function(k){ return stats.acc[k].n; });
+  if (days.length > 21){
+    var wk = {}, order = [];
+    days.forEach(function(k){
+      var d = new Date(k + 'T12:00:00'); d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+      var w = d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+      if (!wk[w]){ wk[w] = { n:0, ok:0, q:0 }; order.push(w); }
+      var a = stats.acc[k]; wk[w].n += a.n; wk[w].ok += a.ok; wk[w].q += a.q;
+    });
+    return { by:'week', pts: order.slice(-16).map(function(w){ return { k:w, n:wk[w].n, ok:wk[w].ok, q:wk[w].q }; }) };
+  }
+  return { by:'day', pts: days.map(function(k){ var a = stats.acc[k]; return { k:k, n:a.n, ok:a.ok, q:a.q }; }) };
+}
+function progressHTML(){
+  var s = progressSeries(), pts = s.pts;
+  var h = '<section class="panel"><h2>Accuracy over time</h2>';
+  if (pts.length < 2) return h + '<p class="muted">Your first-try accuracy on each reasoning step, plotted by day. It shows up after questions on two different days.</p></section>';
+  var W = 420, H = 200, L = 36, R = 12, T = 12, B = 26, iw = W - L - R, ih = H - T - B;
+  var x = function(i){ return L + (pts.length === 1 ? iw/2 : iw * i / (pts.length - 1)); };
+  var y = function(p){ return T + ih * (1 - p/100); };
+  var maxQ = Math.max.apply(null, pts.map(function(p){ return p.q; })) || 1, bw = Math.max(3, Math.min(18, iw / pts.length * 0.5));
+  var pct = pts.map(function(p){ return Math.round(100 * p.ok / p.n); });
+  var lab = function(k){ return new Date(k + 'T12:00:00').toLocaleDateString(undefined, { month:'short', day:'numeric' }); };
+  var g = '';
+  [0, 50, 75, 100].forEach(function(v){ g += '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" class="pg-grid'+(v===75?' pg-goal':'')+'"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" class="pg-ax" text-anchor="end">'+v+'%</text>'; });
+  pts.forEach(function(p, i){ var bh = ih * 0.35 * p.q / maxQ; g += '<rect x="'+(x(i)-bw/2)+'" y="'+(T+ih-bh)+'" width="'+bw+'" height="'+bh+'" class="pg-bar"><title>'+p.q+' question'+(p.q===1?'':'s')+'</title></rect>'; });
+  g += '<polyline class="pg-line" points="'+pct.map(function(v, i){ return x(i)+','+y(v); }).join(' ')+'"/>';
+  pct.forEach(function(v, i){ g += '<circle cx="'+x(i)+'" cy="'+y(v)+'" r="3.5" class="pg-dot"><title>'+(s.by==='week'?'Week of ':'')+lab(pts[i].k)+': '+v+'% of '+pts[i].n+' steps</title></circle>'; });
+  var step = Math.ceil(pts.length / 4);
+  pts.forEach(function(p, i){ if (i % step === 0 || i === pts.length - 1) g += '<text x="'+x(i)+'" y="'+(H-8)+'" class="pg-ax" text-anchor="'+(i===0?'start':(i===pts.length-1?'end':'middle'))+'">'+lab(p.k)+'</text>'; });
+  var half = Math.max(1, Math.floor(pts.length / 2)), sum = function(a){ return a.reduce(function(t, p){ return [t[0]+p.ok, t[1]+p.n]; }, [0,0]); };
+  var e = sum(pts.slice(0, half)), l = sum(pts.slice(half)), d = Math.round(100*l[0]/l[1]) - Math.round(100*e[0]/e[1]);
+  var trend = d > 2 ? 'Up '+d+' points from your first '+(s.by==='week'?'weeks':'days')+' here.' : (d < -2 ? 'Down '+(-d)+' points from your first '+(s.by==='week'?'weeks':'days')+' here. Harder material, or a tired stretch?' : 'Holding steady.');
+  return h + '<p class="muted sm">First-try accuracy on reasoning steps, by '+s.by+'. Bars are questions coached. The dashed line is 75%.</p>'
+    + '<div class="pg-wrap"><svg class="pg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="First-try accuracy by '+s.by+', latest '+pct[pct.length-1]+'%">'+g+'</svg></div>'
+    + '<p class="sm"><b>Latest: '+pct[pct.length-1]+'%.</b> '+trend+'</p></section>';
 }
 function pearlListHTML(){
   var q = pearlQ.trim().toLowerCase();
