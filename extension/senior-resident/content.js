@@ -14,7 +14,7 @@
   tab.title = 'My Senior Resident (Alt+S)';
   document.documentElement.appendChild(tab);
   var isOpen = false, bgState = 'idle';
-  function setOpen(v){ isOpen = v; tab.classList.remove('closing'); tab.classList.toggle('open', v); tab.title = v ? 'Close My Senior Resident' : 'My Senior Resident (Alt+S)'; }
+  function setOpen(v){ var was = isOpen; isOpen = v; if (v && !was) setTimeout(function(){ pushStruck(false); }, 600); tab.classList.remove('closing'); tab.classList.toggle('open', v); tab.title = v ? 'Close My Senior Resident' : 'My Senior Resident (Alt+S)'; }
   function send(m, cb){ try { chrome.runtime.sendMessage(m, function(r){ void chrome.runtime.lastError; if (cb) cb(r); }); } catch(e){ if (cb) cb(null); } }
   tab.addEventListener('click', function(){
     if (isOpen){ tab.classList.add('closing'); send({ t: 'close' }); setTimeout(function(){ setOpen(false); }, 280); return; }
@@ -135,13 +135,21 @@
   document.addEventListener('keydown', popIfReady, true);
 
   var last = '', lastStruck = '', tmr = null, OFF = false, MANUAL = false;
-  function check(){
-    if (OFF) return; var id = stemKey(), sc = struckChoices(), sk = sc.join('|');
-    if (!MANUAL && id && id !== last){ last = id; lastStruck = sk; send({ t: 'newq', qid: id }); return; }
-    if (id && sk !== lastStruck){ lastStruck = sk; if (isOpen) send({ t: 'struck', struck: sc }); }   // tell the panel when cross-outs change, so it can offer to narrow
+  // Tell the panel what is crossed out. Only counts as sent while the panel is open, so cross-outs made while it was closed still reach it when it opens.
+  function pushStruck(force){
+    if (OFF || !isOpen || !stemKey()) return;
+    var sc = struckChoices(), sk = sc.join('|');
+    if (force || sk !== lastStruck){ lastStruck = sk; send({ t: 'struck', struck: sc }); }
   }
-  new MutationObserver(function(){ if (!tmr) tmr = setTimeout(function(){ tmr = null; check(); }, IS_UW ? 250 : 700); }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  function check(){
+    if (OFF) return; var id = stemKey();
+    if (!MANUAL && id && id !== last){ last = id; lastStruck = struckChoices().join('|'); send({ t: 'newq', qid: id }); return; }
+    if (id) pushStruck(false);
+  }
+  new MutationObserver(function(){ if (!tmr) tmr = setTimeout(function(){ tmr = null; check(); }, IS_UW ? 250 : 700); })
+    .observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class', 'style', 'aria-checked'] });   // crossing out usually only changes a class
   setInterval(check, IS_UW ? 1500 : 2500);
+  setInterval(function(){ pushStruck(true); }, 45000);   // check-in every 45 seconds in case a cross-out was missed
   setTimeout(check, 800);
   send({ t: 'hello' }, function(r){
     if (r && r.mode === 'off'){ OFF = true; tab.remove(); return; }
