@@ -61,6 +61,13 @@ struct SignInView: View {
 
                 Text("Signing in with Apple or Google means you agree to the Terms of Use and Privacy Policy.")
                     .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center)
+
+                if account.user == nil {
+                    Button(account.guest ? "Not now" : "Continue without an account") { account.guest = true; account.showSignIn = false }
+                        .font(.subheadline.weight(.semibold)).padding(.top, 4)
+                    Text("Your plan, widget and reminders work on this phone without an account. Sign in later to use the coach and sync your plan with the website.")
+                        .font(.caption2).foregroundStyle(.secondary).multilineTextAlignment(.center)
+                }
             }
             .padding(24)
         }

@@ -12,7 +12,7 @@ struct SeniorResidentApp: App {
         WindowGroup {
             Group {
                 if !account.checked { ProgressView() }
-                else if account.user == nil { SignInView() }
+                else if account.user == nil && !account.guest { SignInView() }
                 else {
                     TabView(selection: $tab) {
                         TodayView().tabItem { Label("Today", systemImage: "sun.max") }.tag(0)
@@ -20,6 +20,7 @@ struct SeniorResidentApp: App {
                         CoachView().tabItem { Label("Coach", systemImage: "stethoscope") }.tag(2)
                         SettingsView().tabItem { Label("Account", systemImage: "person.crop.circle") }.tag(3)
                     }
+                    .sheet(isPresented: $account.showSignIn) { SignInView() }
                 }
             }
             .environmentObject(account)

@@ -7,10 +7,16 @@ struct SettingsView: View {
     @State private var morning = Calendar.current.date(from: Reminders.morning) ?? Date()
     @State private var evening = Calendar.current.date(from: Reminders.evening) ?? Date()
     @State private var askDelete = false
+    @State private var att = Attending.current
 
     var body: some View {
         NavigationStack {
             Form {
+                if account.user == nil {
+                    Section {
+                        Button("Sign in or create an account") { account.showSignIn = true }
+                    } footer: { Text("Signing in adds the coach and keeps your plan in step with the website.") }
+                } else {
                 Section {
                     HStack {
                         VStack(alignment: .leading) {
@@ -26,6 +32,13 @@ struct SettingsView: View {
                         Text("The coach, photo import and widget check-ins are included with Resident and Chief.")
                     }
                 }
+                }
+                Section {
+                    Picker("Attending", selection: $att) {
+                        ForEach(Attending.allCases) { a in Text(a.name).tag(a) }
+                    }
+                    .onChange(of: att) { _, v in Attending.current = v }
+                } header: { Text("Who answers your pages") } footer: { Text(att.blurb + (att.givesAnswer ? " Gives you the answer if you ask outright." : " Never gives the answer away.")) }
                 Section("Reminders") {
                     Toggle("Morning: today's questions", isOn: $morningOn)
                     if morningOn { DatePicker("Time", selection: $morning, displayedComponents: .hourAndMinute) }
@@ -46,9 +59,11 @@ struct SettingsView: View {
                 } footer: {
                     Text("Study aid only. Not medical advice. Not affiliated with any question bank, Anki or AnKing. Follow your question bank's own terms.")
                 }
+                if account.user != nil {
                 Section {
                     Button("Sign out") { Task { await account.signOut() } }
                     Button("Delete my account", role: .destructive) { askDelete = true }
+                }
                 }
                 if let e = account.error { Section { Text(e).foregroundStyle(.red).font(.footnote) } }
             }

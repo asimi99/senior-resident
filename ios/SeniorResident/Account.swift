@@ -16,8 +16,11 @@ final class Account: ObservableObject {
     @Published var tier: String = "free"          // free, resident, chief, trial
     @Published var checked = false
     @Published var error: String?
+    @Published var showSignIn = false
+    /// Planner, widget and reminders work without an account. Signing in adds the coach and syncing with the website.
+    @Published var guest = UserDefaults.standard.bool(forKey: "sr_guest") { didSet { UserDefaults.standard.set(guest, forKey: "sr_guest") } }
 
-    static let termsVersion = "2026-11-24"
+    static let termsVersion = "2026-11-26"
 
     /// The coach, the photo scan and the widget check-ins are part of Resident and Chief.
     var unlocked: Bool { !Config.billingLive || tier != "free" }
@@ -28,6 +31,7 @@ final class Account: ObservableObject {
             for await (_, session) in supabase.auth.authStateChanges {
                 self.user = session?.user
                 self.checked = true
+                if session != nil { self.showSignIn = false }
                 if session != nil { await self.refreshTier(); await self.pullPlan() }
                 else { self.tier = "free" }
             }
