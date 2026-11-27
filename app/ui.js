@@ -269,6 +269,7 @@ function cardHTML(c){
     if (!st.solved) h += c.helpBusy ? '' : '<button type="button" class="btn" data-act="morehelp">Need more help'+(isPro()?'':' '+IC.bolt)+'</button>';
     else h += '<button type="button" class="btn ghost" data-act="restart">Redo</button>'+(EMBED?'':'<button type="button" class="btn" data-go="new">Next question</button>');
   } else {
+    var hold = '';
     var anyRuled = s.kind2==='elim' && st.ruled && s.opts.some(function(o){ return o.v==='good' && st.ruled[String(o.t||'').trim().toLowerCase()]; });   // options struck through on this step count as an answer
     var can = st.sel[i]!==undefined || anyRuled || (st.other[i]&&st.other[i].saved) || (s.kind2==='elim' && st.cross && st.cross[i] && Object.keys(st.cross[i]).some(function(x){ return st.cross[i][x]; }));
     if (s.kind2==='elim'){   // eliminating a choice the coach said to keep in play does not move you on
@@ -276,10 +277,11 @@ function cardHTML(c){
       var keptCrossed = s.opts.some(function(o,k){ return o.v!=='good' && cx[k]; });
       var pickedKeep = st.sel[i]!==undefined && s.opts[st.sel[i]] && s.opts[st.sel[i]].v!=='good';
       var goodCrossed = s.opts.some(function(o,k){ return o.v==='good' && cx[k]; });
-      if (keptCrossed){ can = false; h += '<span class="muted sm hold">Uncross the orange choice to go on. The stem keeps it in play.</span>'; }
-      else if (pickedKeep && !anyRuled && !goodCrossed){ can = false; h += '<span class="muted sm hold">Rule out a choice the stem excludes to go on.</span>'; }
+      if (keptCrossed){ can = false; hold = 'Uncross the orange choice to continue. The stem keeps it in play.'; }
+      else if (pickedKeep && !anyRuled && !goodCrossed){ can = false; hold = 'Rule out a choice the stem excludes to continue.'; }
     }
     h += '<button type="button" class="btn" data-act="next"'+(can?'':' disabled')+'>Continue</button>';
+    if (hold) h = h.replace('<div class="row foot">', '<p class="hold">'+hold+'</p><div class="row foot">');
   }
   return h + '</div>';
 }
