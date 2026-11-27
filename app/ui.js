@@ -20,7 +20,7 @@ function money(n){ return '$' + n; }
 function pillHTML(){
   if (SR.user && (plan.name==='pro' || plan.name==='chief')) return '';   // paid members see their tier in the account menu and account page, not the top bar
   if (SR.ready && !SR.user && !EMBED) return guestOut() ? '<button type="button" class="pill out" data-acct="signup">Create free account</button>' : '<button type="button" class="pill beta" data-acct="signup">1 free try</button>';
-  if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">Early access</button>';
+  if (!billingLive()) return EMBED ? '' : '<button type="button" class="pill beta" data-go="plan">'+(CFG.BETA?'Free beta':'Early access')+'</button>';
   if (plan.name==='pro' || plan.name==='chief') return '';
   var left = Math.max(0, plan.limit - plan.used);
   return '<button type="button" class="pill'+(left?'':' out')+'" data-go="plan">'+left+' of '+plan.limit+' left today</button>';
@@ -71,7 +71,7 @@ function renderTop(){
   var tools = [['new','Coach',IC.plus,onCoach],['exam','Exam mode',EXAM_IC,view==='exam'],['schedule','Study plan',PLAN_IC,view==='schedule'],['review','Statistics',IC.chart,view==='review']];
   /* Visitors who came from the website can always get back to it. Members land in the portal. */
   topEl.innerHTML = '<a class="brand" href="../" title="My Senior Resident home">'+IC.logo+'<span>My Senior Resident</span></a>'
-    + (u ? '' : '<nav class="sitelinks" aria-label="Website"><a href="../">Home</a><a href="../how.html">How it works</a><a href="../pricing.html">Pricing</a></nav>')
+    + (u ? '' : '<nav class="sitelinks" aria-label="Website"><a href="../">Home</a><a href="../how.html">How it works</a><a href="../pricing.html">'+(CFG.BETA?'Free beta':'Pricing')+'</a></nav>')
     + '<span class="spacer"></span>'
     + '<nav class="tooltabs" aria-label="Tools">' + tools.map(function(t){ return '<button type="button" data-go="'+t[0]+'" class="tt'+(t[3]?' on':'')+'">'+t[2]+'<span>'+t[1]+'</span></button>'; }).join('') + '</nav>'
     + pillHTML()
@@ -376,7 +376,8 @@ var authMode = window.SR_AUTH0 || 'in', waitlisted = lsGet('sr_waitlist', false)
 function planCardHTML(){
   var h = '<section class="panel plan"><h2>Plan</h2>';
   if (!billingLive() && plan.name==='free'){
-    h += '<p><b>Early access.</b> Everything is unlocked while My Senior Resident is in early access.</p>'
+    h += CFG.BETA ? '<p><b>Free beta.</b> Every feature is open while we test. Send feedback to unlock more questions and get founding-member pricing when paid plans launch.</p>'
+      : '<p><b>Early access.</b> Everything is unlocked while My Senior Resident is in early access.</p>'
       + '<p class="muted sm">Resident is '+money(CFG.PRICE_MONTH)+' '+CFG.CURRENCY+' a month with a 7-day free trial.</p>'
       + '<div class="row"><button type="button" class="btn" data-act="upgrade">See plans</button></div>';
   } else if (plan.name==='pro' || plan.name==='chief'){
@@ -432,6 +433,9 @@ async function mountGoogle(){
   } catch(e){ fallback(); }
 }
 function pricingHTML(){
+  if (CFG.BETA && !billingLive()) return '<div class="sheet" role="dialog" aria-label="Free beta"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'
+    + '<div class="ph2">'+IC.logo+'<h2>My Senior Resident is in free beta</h2></div><ul class="perks">'+['Every feature is open, Anki cards and exam mode included','Your daily questions grow each time you send feedback','Early testers get founding-member pricing when paid plans launch','No card, nothing to pay'].map(function(p){ return '<li>'+IC.check+esc(p)+'</li>'; }).join('')+'</ul>'
+    + '<button type="button" class="btn wide" data-act="closemodal">Keep studying</button></div>';
   var perks = [(CFG.PRO_MONTHLY||400)+' questions a month, up to '+(CFG.PRO_DAILY||40)+' a day','Hardest mode at exam pace','Narrowing from your cross-outs','Page the attending','Reasoning profile: where you lose points','One tap Anki cards'];
   var live = !!CFG.STRIPE_LINK;
   return '<div class="sheet" role="dialog" aria-label="My Senior Resident Pro"><button type="button" class="close" data-act="closemodal" aria-label="Close">×</button>'

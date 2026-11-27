@@ -19,11 +19,11 @@ function homeHTML(){
   if (!SR_CHECKED) return '';
   var C = CFG, pg = sitePage(), h = '<div class="hm">';
   if (pg === 'home'){
-    h += '<section class="hm-hero"><div><p class="hm-eye">Reasoning coach for board-style questions</p>'
+    h += '<section class="hm-hero"><div><p class="hm-eye">' + (C.BETA ? '<span class="hm-beta">Free beta</span> ' : '') + 'Reasoning coach for board-style questions</p>'
       + '<h1>Stop guessing answers. <em>Learn to read the stem.</em></h1>'
       + '<p class="hm-lede">My Senior Resident sits beside your question bank and walks you to the answer one decision at a time, the way a good senior does on the wards.</p>'
       + '<div class="hm-cta"><button type="button" class="btn" data-go="new">' + (SR.user ? 'Coach a question' : 'Try a question free') + '</button><button type="button" class="btn ghost" data-go="schedule">Build a study plan</button>' + (SR.user ? '' : '<button type="button" class="btn ghost" data-hm="signin">Sign in</button>') + '</div>'
-      + '<p class="hm-fine">Free to start. A Chrome side panel and this web app. Works with any question bank, PDF, screenshot or pasted question.</p></div>'
+      + '<p class="hm-fine">' + (C.BETA ? 'Free during beta.' : 'Free to start.') + ' A Chrome side panel and this web app. Works with any question bank, PDF, screenshot or pasted question.</p></div>'
       + '<div class="hm-mock" aria-hidden="true"><div class="q"><span class="bar2">Question 14 of 20</span>'
     + '<p>A 19-year-old man has 18 hours of abdominal pain that <mark>began near the umbilicus and moved to the right lower quadrant</mark>. Temperature is 38.6&deg;C. There is <mark>guarding and rebound</mark> at McBurney point.</p>'
     + '<p>Which of the following is the most likely diagnosis?</p><ol><li>Mesenteric adenitis</li><li>Acute appendicitis</li><li class="out">Gastroenteritis</li><li class="out">Kidney stone</li></ol></div>'
@@ -36,7 +36,8 @@ function homeHTML(){
       + '<div><h3>How it works</h3><p>It reads your question, you make each decision, and you keep the rule.</p><button type="button" class="lnk" data-go="how">See how it works</button></div>'
       + '<div><h3>Anki cards in one tap</h3><p>Every rule you learn becomes a card in your own deck, image occlusion included. No copying, no formatting.</p><button type="button" class="lnk" data-go="how">See Anki cards</button></div>'
       + '<div><h3>Study plan</h3><p>Your exam, your question bank, your date. A day-by-day plan ordered by yield, with daily check-ins.</p><button type="button" class="lnk" data-go="schedule">Build yours</button></div>'
-      + '<div><h3>Pricing</h3><p>Free to start. Resident is $' + C.PRICE_MONTH + ' a month with a 7-day free trial.</p><button type="button" class="lnk" data-go="pricing">Compare plans</button></div></div></section>';
+      + (C.BETA ? '<div><h3>Free beta</h3><p>Every feature is free while we test it. Send feedback to unlock more questions and lock in founding-member pricing.</p><button type="button" class="lnk" data-go="pricing">How the beta works</button></div>'
+        : '<div><h3>Pricing</h3><p>Free to start. Resident is $' + C.PRICE_MONTH + ' a month with a 7-day free trial.</p><button type="button" class="lnk" data-go="pricing">Compare plans</button></div>') + '</div></section>';
   } else if (pg === 'how'){
   h += '<section class="hm-sec hm-first" id="how"><h2>You answer the question. It makes sure you know why.</h2><p class="hm-sub">Sometimes a miss is a knowledge gap. Sometimes it is a clue you read past. My Senior Resident trains both.</p>'
     + '<div class="hm-steps"><div><h3>It reads your question</h3><p>Open a question in your bank and it picks up the stem, the choices and the images. Or drop in a screenshot.</p></div>'
@@ -66,6 +67,13 @@ function homeHTML(){
     + '<div class="hm-box"><h3>No extension? No problem</h3><p class="muted">On a phone, tablet or locked-down computer, use it right here. Paste a question or drop in a screenshot.</p><button type="button" class="btn ghost" data-hm="try">Try a question here</button></div></div></section>';
 
 
+  } else if (pg === 'pricing' && C.BETA){
+  h += '<section class="hm-sec hm-first" id="plans"><h2>Free beta</h2><p class="hm-sub">My Senior Resident is in free beta testing. Nothing to pay and no card needed. Tell us what works and what does not, and help shape what it becomes.</p>'
+    + '<div class="hm-plans">'
+    + '<div class="hm-plan pro"><span class="tag">Open to every tester</span><h3>Every feature</h3><p class="pk">Nothing locked behind a plan</p>' + li(['The coach at every level, Guided to Hardest', 'Narrowing from your cross-outs', 'Page the attending', 'One tap Anki cards and image occlusion', 'Exam mode: any PDF becomes a timed exam', 'Study plan with daily check-ins', 'Reasoning profile: where you lose points']) + '<button type="button" class="btn wide" data-hm="try">Try a question</button></div>'
+    + '<div class="hm-plan"><h3>Questions grow with feedback</h3><p class="pk">A daily allowance that rises as you help</p>' + li(['Every tester starts with a set number of coached questions a day', 'Each piece of useful feedback unlocks more', 'Rate a case, report a bug or tell us what you want next', 'Follow-up questions to the attending do not count']) + '<button type="button" class="btn ghost wide" data-hm="help">Send feedback</button></div>'
+    + '<div class="hm-plan"><h3>Founding members</h3><p class="pk">For the people who test it first</p>' + li(['Paid plans come after the beta', 'Early testers who give feedback get founding-member pricing', 'You will hear from us well before anything changes', 'No charge without you choosing a plan']) + '<button type="button" class="btn ghost wide" data-hm="signup">Join the beta</button></div></div>'
+    + '<p class="hm-legal">The beta is free. Features, limits and the way questions are unlocked may change while we test. Paid plans and prices will be announced before they start, and nobody is moved onto a paid plan automatically.</p></section>';
   } else if (pg === 'pricing'){
   h += '<section class="hm-sec hm-first" id="plans"><h2>Pricing</h2><p class="hm-sub">Start free. Move up when it is part of your routine. Prices in ' + esc(C.CURRENCY) + '.</p>'
     + '<div class="hm-plans">'
@@ -99,12 +107,12 @@ function homeHTML(){
     + '<p class="hm-legal"><b>Subscriptions</b> renew automatically each month at the price shown until you cancel. Cancelling stops the next charge, and you keep your plan until the end of the period you paid for. Prices may change with notice.</p>'
     + '<p class="hm-legal">Question allowances reset each day at midnight and on the first of each month. Follow-up questions to the attending do not count.</p><p class="hm-msg" id="buymsg"></p></section>';
 
-    h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
+    if (!C.BETA) h += vidHTML('../assets/pricing.mp4?v=2', '../assets/pricing-poster.jpg?v=2', 'What each plan gets you', '');
   }
   h += '<footer class="hm-foot"><div class="hf-grid">'
     + '<div><b>My Senior Resident</b><p>A reasoning coach for board-style questions, built in Winnipeg by a medical student who wanted a senior resident beside him on every question.</p></div>'
     + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>hello@myseniorresident.com<br>We reply within 24 hours.</p></div>'
-    + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">Pricing</a><br><a href="../app/#try">Try it free</a></p></div>'
+    + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">' + (C.BETA ? 'Free beta' : 'Pricing') + '</a><br><a href="../app/#try">Try it free</a></p></div>'
     + '<div><b>Legal</b><p><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><br><a href="../terms.html" target="_blank" rel="noopener">Terms</a></p></div>'
     + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. My Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. My Senior Resident never copies, stores or shares question bank content.</p></details>'
     + '<p class="hf-copy">© 2026 My Senior Resident</p></footer>';
@@ -113,6 +121,8 @@ function homeHTML(){
 function homeGo(where){
   if (where === 'try'){ go('new'); return; }
   if (where === 'signin'){ go('account'); return; }
+  if (where === 'signup'){ window.SR_AUTH0 = 'up'; go('account'); return; }
+  if (where === 'help'){ if (typeof openHelp === 'function') openHelp('fb'); return; }
   if (where === 'top'){ go('home'); return; }
   var map = { how:'how', plans:'pricing', pricing:'pricing', faq:'how', install:'how' };
   if (map[where]) go(map[where]);

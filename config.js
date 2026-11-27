@@ -9,6 +9,7 @@ window.SR_CONFIG = {
      To start charging: deploy supabase/functions, run supabase/senior-resident.sql, the live
      Payment Links below are only used once BILLING_LIVE is true. */
   BILLING_LIVE: false,
+  BETA: true,           // free beta: site and app show beta copy, no prices. Set false when paid plans launch.
   FREE_DAILY: 3,
   FREE_MONTHLY: 30,
   PRO_DAILY: 40,

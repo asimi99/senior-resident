@@ -17,7 +17,7 @@ window.SR_HELP_KB = [
  'Second chance is a switch on the exam start screen. With it on, a missed question hides the answer until you retry. The score counts the first answer.',
  'The PDF is read in the browser and stays on the device. Progress, pearls and exams are stored in the browser, so clearing site data removes them.',
  'Sign-in: Google or email and password, from the Account button at the top right.',
- 'Daily limit: the free plan has a few questions a day and resets at midnight. Plans are Free, Resident and Chief. Paid tiers are not open yet. When they open, there is one 7 day free trial with a card on file, on either paid tier: 40 questions a day, every coaching feature, and exam mode on the first 10 questions of a PDF. The tier picked at checkout starts on day 8. During early access everything is unlocked.',
+ 'Beta: My Senior Resident is in free beta testing. Every feature is open, including Anki cards, image occlusion and exam mode. Each tester has a daily question allowance that resets at midnight, and useful feedback (rating a case, reporting a bug, suggesting a feature) unlocks more questions. Paid plans come after the beta, with founding-member pricing for early testers who gave feedback. Nobody is charged or moved onto a paid plan automatically. Do not quote prices.',
  'Error "could not be reached": check the connection, wait a minute and press Try again. If it says the sign-in expired, sign in again from Account.',
  'A blank or stuck panel: close the side panel, reload the question bank tab and open it again.',
  'Dark mode follows the system setting.',
