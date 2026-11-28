@@ -1,6 +1,6 @@
 # Chrome Web Store listing: My Senior Resident
 
-Paste these into the Chrome Web Store Developer Dashboard. Replace DOMAIN with the domain once it is bought.
+Paste these into the Chrome Web Store Developer Dashboard. Free beta version (no prices, no question bank names). Site: https://asimi99.github.io/senior-resident/
 
 ## Store listing tab
 
@@ -26,11 +26,12 @@ What it does
 
 How it works
 - Press Alt+S to open the side panel, then Alt+C (or "Coach this question") to coach the question you are on. Nothing is read until you ask.
-- Works alongside UWorld, AMBOSS, NBME practice exams, Kaplan, TrueLearn, Rosh Review, BoardVitals, Canada QBank and Lecturio.
+- Works alongside the question bank you already use, or with a pasted question or screenshot.
 
-Plans
-- Free: a few coached questions a day and the study plan.
-- Resident and Chief plans add more questions, harder modes and Anki cards. Details at https://DOMAIN/pricing.html
+Free beta
+- My Senior Resident is in free beta testing. Every feature is open, Anki cards included.
+- Testers start with a few coached questions a day, and each feedback note unlocks more.
+- Early testers who send feedback get founding-member pricing when paid plans launch.
 
 Your data
 - Question text is sent to our server only to coach that question and is never stored or used for training.
@@ -38,9 +39,9 @@ Your data
 
 My Senior Resident is a study aid, not medical advice. It is independent and not affiliated with or endorsed by any question bank, publisher, exam body, Anki or AnKing. You are responsible for following your question bank's terms of use.
 
-**Website:** https://DOMAIN/
-**Support:** https://DOMAIN/app/#help
-**Privacy policy:** https://DOMAIN/privacy.html
+**Website:** https://asimi99.github.io/senior-resident/
+**Support:** https://asimi99.github.io/senior-resident/app/#help
+**Privacy policy:** https://asimi99.github.io/senior-resident/privacy.html
 
 ## Graphics needed
 - Icon 128x128: extension/senior-resident/icon128.png (done)
@@ -72,7 +73,7 @@ Coach a medical student through the practice question they are viewing, one reas
 **Data usage (tick these):**
 - Personally identifiable information: yes (email and name for the account).
 - Authentication information: yes (Google sign-in token).
-- Website content: yes (the question text the student chooses to coach, sent to our server to generate coaching, not stored).
+- Website content: yes (the question text the student chooses to coach, sent to our server to generate coaching, not stored by us).
 - Everything else: no.
 
 **Certify:**
@@ -81,11 +82,11 @@ Coach a medical student through the practice question they are viewing, one reas
 - I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
 ## Distribution tab
-- Visibility: Public (or Unlisted for a soft launch to classmates first)
+- Visibility: Unlisted (only people with the link can install it)
 - Regions: Canada and United States at launch
-- Pricing: Free (paid plans are sold on the website through Stripe)
+- Pricing: Free
 
 ## Before submitting
 1. Developer account: one-time US$5 fee at https://chrome.google.com/webstore/devconsole (sign in with the Google account that should own the listing).
-2. Upload extension/senior-resident.zip (version 1.0.20).
+2. Upload extension/senior-resident.zip (version 1.0.23).
 3. Review usually takes a few days. Broad host permissions can add time.
