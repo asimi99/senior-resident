@@ -41,6 +41,9 @@
     for (var i = 0; i < els.length; i++){ try { if ((getComputedStyle(els[i]).textDecorationLine || '').indexOf('line-through') >= 0) return true; } catch(e){} }
     return false;
   }
+  /* after the student submits, the question bank marks the right choice (a check icon with a 'correct' class) */
+  function isKey(row){ if (!row) return false; try { return !!row.querySelector('.correctanswer, [class*="correct-answer" i], [class~="correct"]') && !row.querySelector('[class*="wronganswer" i]'); } catch(e){ return false; } }
+  function bankKey(){ var k = choiceRows().filter(function(o){ return o.key; }); return k.length === 1 ? k[0].t : ''; }
   function choiceRows(){
     var out = [];
     document.querySelectorAll('input[type=radio]').forEach(function(r){
@@ -51,7 +54,7 @@
         var t = clean(el.innerText); if (t.length > 1){ best = t; row = el; }
       }
       best = best.replace(/\s*\(\d{1,3}%\)\s*$/, '').replace(/\s*\n\s*/g, ' ');
-      if (best) out.push({ t:best, struck:isStruck(row) });
+      if (best) out.push({ t:best, struck:isStruck(row), key:isKey(row) });
     });
     out.forEach(function(o, i){ if (!/^[A-J][.)]\s/.test(o.t)) o.t = String.fromCharCode(65 + i) + '. ' + o.t; });
     return out;
@@ -97,10 +100,10 @@
     if (sel.length > 80) return { qid: hash(sel.slice(0, 400)), src: SRC, text: sel.slice(0, 12000), images: [] };
     if (IS_UW){
       var el = uwStem();
-      if (el){ var ch = radioChoices(); return { qid: uwQid(), src: SRC, text: clean(el.innerText) + (ch.length ? '\n\nAnswer choices:\n' + ch.join('\n') : ''), images: await images(el) }; }
+      if (el){ var ch = radioChoices(); return { qid: uwQid(), src: SRC, key: bankKey(), text: clean(el.innerText) + (ch.length ? '\n\nAnswer choices:\n' + ch.join('\n') : ''), images: await images(el) }; }
     }
     var b = questionBlock();
-    if (b){ var t = clean(b.innerText); if (t.length > 120) return { qid: hash(t.slice(0, 400)), src: SRC, text: t.slice(0, 12000), images: await images(b) }; }
+    if (b){ var t = clean(b.innerText); if (t.length > 120) return { qid: hash(t.slice(0, 400)), src: SRC, key: bankKey(), text: t.slice(0, 12000), images: await images(b) }; }
     return null;
   }
   function dataUrl(b){ return new Promise(function(res){ var r = new FileReader(); r.onload = function(){ res(r.result); }; r.readAsDataURL(b); }); }

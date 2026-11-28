@@ -728,7 +728,7 @@ window.addEventListener('message', async function(e){
   if (d.qid){
     var ex = cases.findIndex(function(c){ return c.qid===d.qid; });
     if (ex>=0){
-      var oc = cases[ex]; if (d.num) oc.num = String(d.num);
+      var oc = cases[ex]; if (d.num) oc.num = String(d.num); if (d.key) oc.key = String(d.key).slice(0,300);
       view = 'coach'; cur = ex;
       if (d.reread && !oc.generating && struck.join('|') !== (oc.struck||[]).join('|')){ narrowTo(oc, struck); return; }
       renderAll(); if (d.reread){ statusMsg = ''; flashNote(oc, struck.length ? 'Same cross-outs as before. Nothing to change.' : 'Nothing is crossed out yet.'); }
@@ -736,7 +736,7 @@ window.addEventListener('message', async function(e){
     }
   }
   var files = (d.images||[]).slice(0, 4).map(function(b){ return { blob:b, url:URL.createObjectURL(b) }; });
-  var c = newCase({ qid:d.qid||'', num:String(d.num||''), struck:struck, src:d.src||'', files:files, text:d.text||'' });
+  var c = newCase({ qid:d.qid||'', num:String(d.num||''), struck:struck, src:d.src||'', key:String(d.key||'').slice(0,300), files:files, text:d.text||'' });
   cases.push(c); view = 'coach'; cur = cases.length-1; renderAll(); window.scrollTo({top:0});
   await gen(c);
 });

@@ -88,5 +88,5 @@ Coach a medical student through the practice question they are viewing, one reas
 
 ## Before submitting
 1. Developer account: one-time US$5 fee at https://chrome.google.com/webstore/devconsole (sign in with the Google account that should own the listing).
-2. Upload extension/senior-resident.zip (version 1.0.24).
+2. Upload extension/senior-resident.zip (version 1.0.25).
 3. Review usually takes a few days. Broad host permissions can add time.

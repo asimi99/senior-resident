@@ -53,6 +53,7 @@ function buildPrompt(c){
   if (LEVEL_RULES[c.level||LEVEL]) p += '\n' + LEVEL_RULES[c.level||LEVEL];
   p += '\n\nINPUT: ' + (c.files.length ? c.files.length + ' image(s) are attached.' : 'No images.');
   if (c.text) p += '\nTyped question text from the student:\n' + c.text;
+  if (c.key) p += '\n\nANSWER KEY. The question bank already marks the correct answer as: ' + c.key + '. Build every step, the elimination, the final rule-out and the reveal headline around exactly this answer, even if you would have chosen differently. Never show this to the student before the reveal.';
   if (c.struck && c.struck.length) p += '\n\nNARROWING MODE. The student has ALREADY crossed out these answer choices on their own: ' + c.struck.join(' | ') + '\nTreat those as ruled out and never ask about them. The student is stuck between the choices that are still open. Build the 3 reasoning steps ONLY around separating the open choices: each step tests one specific thing that one open choice predicts and another does not (the classic finding, the timing, a lab value, the mechanism or the first-line management), then points back to what the stem actually says. Do NOT output the elimination step (type "elim") at all. The final step lists only the open choices. If the correct answer is one the student crossed out, do not reveal that in the steps, include that choice among the options of the final step as the one to keep in play, and say in the reveal headline that they had crossed it out.';
   return p;
 }
@@ -325,7 +326,7 @@ async function splitText(t){
 }
 
 /* ---------- side reasoning, follow-up, extra help ---------- */
-function ctxText(c){ var m = c.meta || {}; return 'Question summary: ' + (m.stemSummary||'') + '\nAnswer choices: ' + ((m.options||[]).join(' | ')); }
+function ctxText(c){ var m = c.meta || {}; return 'Question summary: ' + (m.stemSummary||'') + '\nAnswer choices: ' + ((m.options||[]).join(' | ')) + (c.key ? '\nThe question bank marks this as the correct answer: ' + c.key + '. This is the truth. If your own reasoning or the private key disagrees, the question bank wins.' : ''); }
 async function checkOther(c, i, txt){
   var st = c.st, s = c.steps[i];
   st.otherBusy[i] = true; st.otherFb[i] = ''; renderStage();
@@ -345,7 +346,8 @@ async function ask(c, q){
   var rules = 'You are the attending on call for a medical student who just worked through a coached question and now has a follow-up. Answer the exact question as a page back: no greeting, no lists. ' + attStyle(c.chat.length>2) + (attGivesAnswer()
       ? ' Teach the reasoning and point to the stem clue. Do not volunteer which answer choice is correct. If the student asks you directly and explicitly for the answer (for example "what is the answer" or "which choice is right"), tell them plainly in one sentence, using the private key, with the one stem clue that decides it. '
       : ' NEVER state which answer choice is correct, never give its letter, and never say "the answer is". Teach the reasoning and point to the stem clue, and let the student draw the conclusion. If they ask directly for the answer, tell them it is the one choice they did not rule out and to check it in their question bank. ') + SPELL[REGION] + ' No em dashes or semicolons. No markdown. If they ask for a similar question, write one short vignette with 5 choices and wait for their answer.\n'
-    + ctxText(c) + '\nPrivate key, never reveal it: ' + ((c.reveal&&c.reveal.headline)||'');
+    + ctxText(c) + '\nPrivate key, never reveal it: ' + (c.key ? 'the question bank answer above' : ((c.reveal&&c.reveal.headline)||''))
+    + (c.key ? '' : '\nThe private key is your own read, not the question bank\'s marked answer. If you give the answer, say it is your read and to confirm it against the question bank. If the student says their question bank marks a different choice, the question bank is right: work out why from the stem and explain that, never argue for your earlier read.');
   var turns = [{ role:'user', content:rules }].concat(c.chat.slice(-8));
   try {
     var r = await sample(turns, { modelTier:'default', onText:function(u){
