@@ -10,6 +10,9 @@ window.SR_CONFIG = {
      Payment Links below are only used once BILLING_LIVE is true. */
   BILLING_LIVE: false,
   BETA: true,           // free beta: site and app show beta copy, no prices. Set false when paid plans launch.
+  BETA_DAILY: 5,        // beta questions a day before any feedback (the server's BETA_DAILY secret is what counts)
+  BETA_PER_FEEDBACK: 5, // extra questions a day for each feedback note of 40+ characters
+  BETA_MAX_BONUS: 35,   // most extra a day from feedback, so 40 a day at most
   FREE_DAILY: 3,
   FREE_MONTHLY: 30,
   PRO_DAILY: 40,

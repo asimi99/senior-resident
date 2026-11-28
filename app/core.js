@@ -200,7 +200,7 @@ async function sample(input, o){
   }
   var hu = res.headers.get('x-sr-used'), hl = res.headers.get('x-sr-limit'), hp = res.headers.get('x-sr-plan');
   if (hp){ plan.name = hp==='pro' ? 'pro' : 'free'; }
-  if (hu!=null && hl!=null && body.kind==='coach'){ plan.used = +hu; plan.limit = +hl; plan.period = res.headers.get('x-sr-period') || 'day'; lsSet('sr_used', { day:today(), n:plan.used }); if (window.onPlan) window.onPlan(); }
+  if (hu!=null && hl!=null && body.kind==='coach'){ plan.used = +hu; plan.limit = +hl; plan.period = res.headers.get('x-sr-period') || 'day'; plan.beta = res.headers.get('x-sr-beta')==='1'; plan.bonus = +(res.headers.get('x-sr-bonus')||0); lsSet('sr_used', { day:today(), n:plan.used }); if (window.onPlan) window.onPlan(); }
   if (!res.ok){
     var m = ''; try { m = await res.text(); } catch(e){}
     throw { code: res.status===429 ? 'rate_limited' : (res.status===402 ? 'pro_only' : (res.status===401||res.status===403 ? 'session_expired' : 'upstream_error')), message:m };
@@ -291,7 +291,7 @@ async function done(c){
 }
 function errCopy(e){
   var m = {
-    rate_limited:'You have used today\'s free questions. They reset at midnight.',
+    rate_limited:(CFG.BETA ? 'You have used today\'s beta questions. They reset at midnight, and feedback unlocks more.' : 'You have used today\'s free questions. They reset at midnight.'),
     pro_only:'That is part of Pro.',
     session_expired:'Your sign-in expired. Sign in again and retry.',
     upstream_error:'My Senior Resident could not be reached. Try again in a moment.',

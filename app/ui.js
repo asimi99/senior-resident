@@ -223,6 +223,13 @@ function paywallHTML(){
   var signed = !!SR.user;
   if (!signed) return '<div class="paywall">'+IC.logo+'<h2>Make a free account to keep going</h2><p class="muted">That was your free try. A free account gets you '+(CFG.FREE_DAILY||3)+' coached questions a day and your study plan, saved to any device.</p>'
     + '<div class="row c"><button type="button" class="btn" data-acct="signup">Create free account</button><button type="button" class="btn ghost" data-acct="signin">Sign in</button></div></div>';
+  if (CFG.BETA && !billingLive()){
+    var room = (plan.bonus||0) < (CFG.BETA_MAX_BONUS||35);
+    return '<div class="paywall">'+IC.logo+(plan.period==='month'
+      ? '<h2>That is this month\'s beta questions</h2><p class="muted">They reset on the first of the month. Thanks for testing so much. Tell us what to fix or add.</p>'
+      : '<h2>That is today\'s '+plan.limit+' questions</h2><p class="muted">They reset at midnight.'+(room ? ' Each piece of feedback unlocks '+(CFG.BETA_PER_FEEDBACK||5)+' more questions a day for the rest of the beta. A couple of sentences on what worked, what did not, or what you want next.' : ' You have unlocked the most the beta allows. Thank you for all the feedback.')+'</p>')
+      + '<div class="row c"><button type="button" class="btn" data-h="open-fb">Send feedback</button></div></div>';
+  }
   return '<div class="paywall">'+IC.logo+(plan.period==='month' ? '<h2>That is this month\'s '+plan.limit+' questions</h2><p class="muted">They reset on the first of the month. Resident gives you '+(CFG.PRO_MONTHLY||400)+' a month and adds Hardest mode, extra help steps and Anki cards.</p>' : '<h2>That is today\'s '+plan.limit+' questions</h2><p class="muted">They reset at midnight. Resident gives you up to '+(CFG.PRO_DAILY||40)+' a day and adds Hardest mode, extra help steps and Anki cards.</p>')
     + '<div class="row c"><button type="button" class="btn" data-act="upgrade">See Pro</button>'+(signed?'':'<button type="button" class="btn ghost" data-go="account">Sign in</button>')+'</div></div>';
 }

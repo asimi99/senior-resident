@@ -48,7 +48,7 @@ function helpHTML(){
       + (HELP.esc || !HELP.chat.length ? '' : '<button type="button" class="lnk" data-h="wantperson">Not solved? Send it to a person</button>');
   } else {
     var kinds = [['idea', 'Idea'], ['problem', 'Problem'], ['other', 'Other']];
-    h += (HELP.err ? '<p class="muted sm">The error details are attached: ' + esc(HELP.err.code || 'error') + '. Add what you were doing if you can.</p>' : '<p class="muted sm">What should be better? Every message is read.</p>')
+    h += (HELP.err ? '<p class="muted sm">The error details are attached: ' + esc(HELP.err.code || 'error') + '. Add what you were doing if you can.</p>' : '<p class="muted sm">What should be better? Every message is read.'+((typeof CFG!=='undefined' && CFG.BETA && SR.user) ? ' During the beta, each note of a couple of sentences unlocks '+(CFG.BETA_PER_FEEDBACK||5)+' more questions a day.' : '')+'</p>')
       + '<div class="seg" role="radiogroup" aria-label="Type">' + kinds.map(function(k){ return '<button type="button" role="radio" aria-checked="' + (HELP.kind === k[0]) + '" data-h="kind" data-k="' + k[0] + '">' + k[1] + '</button>'; }).join('') + '</div>'
       + '<textarea id="hfb" rows="5" placeholder="' + (HELP.kind === 'problem' ? 'What happened, and what did you expect?' : 'Tell us in your own words') + '" maxlength="4000">' + esc(HELP.note) + '</textarea>' + em
       + '<button type="button" class="btn wide" data-h="sendfb">Send</button>';
@@ -64,6 +64,7 @@ document.addEventListener('click', async function(ev){
   var el = ev.target.closest('[data-h]'); if (!el) return; var act = el.dataset.h;
   var keep = function(){ var a = document.getElementById('hfb'); if (a) HELP.note = a.value; };
   if (act === 'open'){ openHelp('ask'); }
+  if (act === 'open-fb'){ HELP.kind = 'idea'; openHelp('fb'); return; }
   else if (act === 'report'){ var c = cases[cur]; reportError((c && c.error) || { code:el.dataset.code || 'error', message:el.dataset.msg || '' }, el.dataset.where || 'case'); }
   else if (act === 'tab'){ keep(); HELP.tab = el.dataset.t; helpRender(); }
   else if (act === 'kind'){ keep(); HELP.kind = el.dataset.k; helpRender(); }

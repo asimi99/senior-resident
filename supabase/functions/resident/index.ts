@@ -6,7 +6,7 @@ const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Expose-Headers": "x-sr-used, x-sr-limit, x-sr-plan, x-sr-period",
+  "Access-Control-Expose-Headers": "x-sr-used, x-sr-limit, x-sr-plan, x-sr-period, x-sr-beta, x-sr-bonus",
 };
 const LIVE = (Deno.env.get("BILLING_LIVE") ?? "") === "true";
 const FREE_DAILY = Number(Deno.env.get("FREE_DAILY") ?? 3);
@@ -18,6 +18,15 @@ const CHIEF_DAILY = Number(Deno.env.get("CHIEF_DAILY") ?? 100);
 const CHIEF_MONTHLY = Number(Deno.env.get("CHIEF_MONTHLY") ?? 550);   // at about CA$0.05 a question, every plan stays above cost at its cap
 const NTFY_TOPIC = Deno.env.get("NTFY_TOPIC") ?? "msr-1ea63d48e6dfab0969d5";
 const EARLY_DAILY = Number(Deno.env.get("EARLY_DAILY") ?? 150);
+// Free beta (billing off): a small daily allowance that grows with real feedback.
+// Feedback counts when it is an idea, problem or other note of at least BETA_MIN_CHARS characters
+// and its status is not set to 'rejected' (set that in the sr_feedback table to undo spam credit).
+const BETA = (Deno.env.get("BETA") ?? "true") !== "false";
+const BETA_DAILY = Number(Deno.env.get("BETA_DAILY") ?? 5);
+const BETA_PER_FEEDBACK = Number(Deno.env.get("BETA_PER_FEEDBACK") ?? 5);
+const BETA_MAX_BONUS = Number(Deno.env.get("BETA_MAX_BONUS") ?? 35);
+const BETA_MONTHLY = Number(Deno.env.get("BETA_MONTHLY") ?? 300);
+const BETA_MIN_CHARS = Number(Deno.env.get("BETA_MIN_CHARS") ?? 40);
 const MODELS: Record<string, string> = {
   quick: Deno.env.get("MODEL_QUICK") ?? "claude-haiku-5-5",
   default: Deno.env.get("MODEL_DEFAULT") ?? "claude-sonnet-5-5",
@@ -117,11 +126,18 @@ Deno.serve(async (req) => {
 
   // allowance: a new question counts once. Follow-ups, checks and retries share a generous side bucket.
   const isQuestion = body.kind === "coach";
-  const qLimit = (!userId || throwaway) ? ANON_DAILY : !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
+  const beta = !LIVE && BETA && !!userId && !throwaway;
+  let bonus = 0;
+  if (beta) {
+    const { data: fb } = await admin.from("sr_feedback").select("body,kind,status").eq("user_id", userId).limit(200);
+    const good = (fb ?? []).filter((r: any) => ["idea", "problem", "other"].includes(r.kind) && r.status !== "rejected" && String(r.body ?? "").trim().length >= BETA_MIN_CHARS).length;
+    bonus = Math.min(BETA_MAX_BONUS, good * BETA_PER_FEEDBACK);
+  }
+  const qLimit = (!userId || throwaway) ? ANON_DAILY : beta ? BETA_DAILY + bonus : !LIVE ? EARLY_DAILY : (plan === "chief" ? CHIEF_DAILY : plan === "pro" ? PRO_DAILY : FREE_DAILY);
   const limit = isQuestion ? qLimit : qLimit * 12;
   const { data: n, error } = await admin.rpc("bump_usage", { k: (isQuestion ? "srq:" : "sra:") + who });
   if (error) return fail(500, "usage");
-  const meter: Record<string, string> = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro", "x-sr-period": "day" };
+  const meter: Record<string, string> = { "x-sr-used": String(n), "x-sr-limit": String(limit), "x-sr-plan": LIVE ? plan : "pro", "x-sr-period": "day", ...(beta ? { "x-sr-beta": "1", "x-sr-bonus": String(bonus) } : {}) };
   if ((n as number) > limit) return fail(429, "limit", meter);
   // one free allowance per browser or extension install, however many free accounts sign in on it
   const dev = typeof body.dev === "string" ? body.dev.slice(0, 64) : "";
@@ -129,12 +145,12 @@ Deno.serve(async (req) => {
     const { data: dn, error: de } = await admin.rpc("bump_usage", { k: "srq:d:" + await sha(dev) });
     if (!de && (dn as number) > qLimit) return fail(429, "limit", { ...meter, "x-sr-used": String(dn) });
   }
-  if (isQuestion && LIVE && userId && !throwaway) {
+  if (isQuestion && (LIVE || beta) && userId && !throwaway) {
     // monthly allowance, so no account can cost more than it pays
     const first = new Date(); first.setUTCDate(1);
     const { data: rows } = await admin.from("usage").select("n").eq("key", "srq:" + who).gte("day", first.toISOString().slice(0, 10));
     const month = (rows ?? []).reduce((a: number, r: any) => a + (r.n ?? 0), 0);
-    const cap = plan === "chief" ? CHIEF_MONTHLY : plan === "pro" ? PRO_MONTHLY : FREE_MONTHLY;
+    const cap = beta ? BETA_MONTHLY : plan === "chief" ? CHIEF_MONTHLY : plan === "pro" ? PRO_MONTHLY : FREE_MONTHLY;
     if (month > cap) return fail(429, "limit", { ...meter, "x-sr-used": String(month), "x-sr-limit": String(cap), "x-sr-period": "month" });
   }
 
