@@ -57,7 +57,7 @@ function homeHTML(){
   var faq = [['Does it just tell me the answer?', 'No. You make each decision and rule choices out until one is left. Then check it against your question bank.'],
     ['Which question banks does it work with?', 'Any of them. My Senior Resident is independent and is not affiliated with or endorsed by any question bank or exam body.'],
     ['What happens to my questions?', 'The question you are on is sent to the AI model to build that session, then kept in your own browser. It is not sold, shared or used to build a question database.'],
-    ['Does it work with Anki?', 'Yes. Install Anki and the free AnkiConnect add-on, and cards go straight into your deck. My Senior Resident is not affiliated with Anki, AnkiWeb or AnKing.'],
+    ['Does it work with Anki?', 'Yes. Install Anki and its free card-import add-on, and cards go straight into your deck. The setup steps are in the app.'],
     ['Is it allowed by my question bank?', 'My Senior Resident is read only. It never clicks, answers or changes anything, never copies screens, and never stores or shares questions. Each bank sets its own rules, so check yours. You are responsible for following them.'],
     ['Can it be wrong?', 'Yes. It is an AI study aid and it can make mistakes. When it disagrees with your question bank, trust the bank. It is not medical advice.'],
     ['Can I cancel?', 'Yes, anytime, from Manage subscription in your account. You keep your plan until the end of the period you paid for.']];
@@ -114,7 +114,7 @@ function homeHTML(){
     + '<div><b>Contact</b><p><a href="../app/#help">Send us a message</a><br>hello@myseniorresident.com<br>We reply within 24 hours.</p></div>'
     + '<div><b>Product</b><p><a href="../how.html">How it works</a><br><a href="../pricing.html">' + (C.BETA ? 'Free beta' : 'Pricing') + '</a><br><a href="../app/#try">Try it free</a></p></div>'
     + '<div><b>Legal</b><p><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><br><a href="../terms.html" target="_blank" rel="noopener">Terms</a></p></div>'
-    + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. Independent, and not affiliated with or endorsed by any question bank, publisher or exam body. UWorld, AMBOSS, NBME, USMLE, MCCQE, TrueLearn, Kaplan and other names belong to their owners and are used only to describe compatibility. Anki is a trademark of Ankitects Pty Ltd. My Senior Resident is not affiliated with Anki, AnkiWeb, AnkiConnect or AnKing. Each question bank sets its own terms of use, and you are responsible for following them. My Senior Resident never copies, stores or shares question bank content.</p></details>'
+    + '</div><details class="hf-legal"><summary>Disclaimers</summary><p>A study aid for students. Not medical advice. My Senior Resident is an independent product and is not affiliated with, endorsed by or sponsored by any question bank, publisher, flashcard app, medical school or exam body. All trademarks belong to their owners. You are responsible for following the terms of any service you use it with. My Senior Resident never copies, stores or shares question bank content.</p></details>'
     + '<p class="hf-copy">© 2026 My Senior Resident</p></footer>';
   return h + '</div>';
 }

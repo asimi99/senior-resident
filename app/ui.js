@@ -414,7 +414,7 @@ function accountHTML(){
   h += '<section class="panel"><h2>Preferences</h2>'
     + (EMBED ? '<div class="pref"><span>Colour</span>'+themesHTML()+'</div>' : '')
     + '<p class="muted sm">Keys: press an option letter to pick it, Enter continues, Backspace goes back. Right-click an option to cross it out.</p></section>'
-    + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Not affiliated with any question bank, Anki or AnKing. Follow your question bank\'s own terms.</span></p>';
+    + '<p class="legal"><a href="../privacy.html" target="_blank" rel="noopener">Privacy</a><a href="../terms.html" target="_blank" rel="noopener">Terms</a><span>Study aid only. Not medical advice. Independent and not affiliated with any question bank, app or exam body. Follow the terms of the services you use.</span></p>';
   return h;
 }
 var gsiP = null;

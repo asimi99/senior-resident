@@ -4,10 +4,8 @@
   window.__srLoaded = VER;
   var stale = document.getElementById('sr-tab'); if (stale) stale.remove();
 
-  var SITES = [[/uworld\.com$/, 'UWorld'], [/amboss\.com$/, 'AMBOSS'], [/nbme\.org$|starttest\.com$/, 'NBME'], [/kaptest\.com$/, 'Kaplan'], [/truelearn\.(com|net)$/, 'TrueLearn'], [/roshreview\.com$/, 'Rosh Review'], [/boardvitals\.com$/, 'BoardVitals'], [/canadaqbank\.com$/, 'CanadaQBank'], [/lecturio\.com$/, 'Lecturio']];
-  var host = location.hostname, SRC = host.replace(/^www\./, '');
-  SITES.forEach(function(s){ if (s[0].test(host)) SRC = s[1]; });
-  var IS_UW = /uworld\.com$/.test(host);
+  var host = location.hostname, SRC = '';
+  var IS_UW = /uworld\.com$/.test(host);   /* site with a known question layout */
 
   var tab = document.createElement('button'); tab.id = 'sr-tab'; tab.type = 'button';
   tab.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11l7-6 7 6"/><path d="M5 19l7-6 7 6" opacity=".6"/></svg><span class="sr-label">My Senior Resident</span><span class="sr-arrow" aria-hidden="true">&#8250;</span>';
@@ -25,7 +23,7 @@
   function hash(s){ var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0; return 'h' + (h >>> 0).toString(36); }
   function visible(el){ var r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }
 
-  /* UWorld: known layout */
+  /* known question layout */
   function uwQid(){ var m = (document.body.innerText || '').match(/Question Id:?\s*(\d{3,7})/i); return m ? m[1] : ''; }
   function itemNo(){
     var t = document.body.innerText || '';

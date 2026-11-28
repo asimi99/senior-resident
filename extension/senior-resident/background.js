@@ -95,7 +95,7 @@ chrome.runtime.onMessage.addListener(function(m, sender, reply){
       if (mode === 'manual' && !m.manual){ reply({ err: '' }); return; }
       var q = await ask(tab.id);
       if (q && q.text){ reply(q); return; }
-      /* No screen capture fallback: several question banks (eg, UWorld) ban capturing screen contents with third-party apps. */
+      /* No screen capture fallback: several question banks ban capturing screen contents with third-party apps. */
       reply({ err: q ? 'No question found on this page yet. You can paste the question text into the web app instead.' : 'Click the My Senior Resident icon in the toolbar while the question is on screen.' });
     });
     return true;

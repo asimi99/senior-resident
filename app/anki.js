@@ -91,7 +91,7 @@ function ankiStatusHTML(){
   if (s === 'needs') return '<p class="ak-st warn"><i></i>Anki is open but has not allowed My Senior Resident yet. <button type="button" class="lnk" data-anki="allow">Allow it</button></p>';
   var io = ANKI.mode === 'img';
   return '<p class="ak-st off"><i></i>' + (EMBED ? (io ? 'Image cards go straight into Anki, so open Anki first.' : 'Anki is not open on this computer, so cards are saved for export.') : (io ? 'Image cards need the Chrome extension with Anki open.' : 'Cards are saved here for export. To send them straight to Anki, use the Chrome extension.')) + '</p>'
-    + (EMBED ? '<details class="ak-how"><summary>Send cards straight to Anki</summary><ol><li>In desktop Anki, go to Tools, Add-ons, Get Add-ons.</li><li>Paste the code <b>2055492159</b> (AnkiConnect) and restart Anki.</li><li>Keep Anki open while you study, then press <button type="button" class="lnk" data-anki="recheck">Check again</button> and click Yes when Anki asks.</li></ol></details>' : '');
+    + (EMBED ? '<details class="ak-how"><summary>Send cards straight to Anki</summary><ol><li>In desktop Anki, go to Tools, Add-ons, Get Add-ons.</li><li>Paste the code <b>2055492159</b> (the free card-import add-on) and restart Anki.</li><li>Keep Anki open while you study, then press <button type="button" class="lnk" data-anki="recheck">Check again</button> and click Yes when Anki asks.</li></ol></details>' : '');
 }
 function ankiCfgHTML(c){
   var h = '<div class="ak-cfg"><b class="ak-lab">Card style</b>';

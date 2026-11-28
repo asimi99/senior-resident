@@ -20,7 +20,7 @@ What it does
 - Coaches the question on screen step by step: how sick, where the problem is, the finding that decides it, then ruling out the wrong choices.
 - Uses your own cross-outs to narrow the coaching to the choices you still have open.
 - Page the attending when a step does not click.
-- Turns what you learned into Anki cards in one tap, sent straight to your own Anki through AnkiConnect.
+- Turns what you learned into Anki cards in one tap, sent straight to your own Anki on your computer.
 - Image occlusion cards from any image you choose.
 - Builds a day-by-day study plan for your exam.
 
@@ -37,7 +37,7 @@ Your data
 - Question text is sent to our server only to coach that question and is never stored or used for training.
 - Anki cards go straight to your own Anki on your computer.
 
-My Senior Resident is a study aid, not medical advice. It is independent and not affiliated with or endorsed by any question bank, publisher, exam body, Anki or AnKing. You are responsible for following your question bank's terms of use.
+My Senior Resident is a study aid, not medical advice. It is an independent product and is not affiliated with, endorsed by or sponsored by any question bank, publisher, flashcard app, medical school or exam body. You are responsible for following the terms of any service you use it with.
 
 **Website:** https://asimi99.github.io/senior-resident/
 **Support:** https://asimi99.github.io/senior-resident/app/#help
@@ -46,7 +46,7 @@ My Senior Resident is a study aid, not medical advice. It is independent and not
 ## Graphics needed
 - Icon 128x128: extension/senior-resident/icon128.png (done)
 - Screenshots, 1280x800, 1 to 5:
-  1. Side panel coaching a step next to a question bank page (use a made-up demo question, never a real UWorld question)
+  1. Side panel coaching a step next to a question bank page (use a made-up demo question, never a real question bank question)
   2. The elimination step with cross-outs
   3. Page the attending reply
   4. Anki card preview
@@ -64,9 +64,9 @@ Coach a medical student through the practice question they are viewing, one reas
 - scripting: injects the reader into the current tab when the student asks for coaching, for question bank sites not covered by the content script.
 - storage: keeps the student's settings, colour theme and recent coaching sessions on their device.
 - identity: lets the student sign in with Google to keep their plan and progress across devices.
-- offscreen: runs the AnkiConnect request in the background so cards reach the student's local Anki without opening a tab.
+- offscreen: runs the card-import request in the background so cards reach the student's local Anki without opening a tab.
 - Host permissions (question bank sites): the content script adds the "Coach this question" button and reads the visible question and answer choices only when asked.
-- Host permission http://127.0.0.1:8765: AnkiConnect, the student's own Anki on their computer, to add the cards they choose.
+- Host permission http://127.0.0.1:8765: the card-import add-on in the student's own Anki on their computer, to add the cards they choose.
 
 **Remote code:** No. All code ships in the package.
 
@@ -88,5 +88,5 @@ Coach a medical student through the practice question they are viewing, one reas
 
 ## Before submitting
 1. Developer account: one-time US$5 fee at https://chrome.google.com/webstore/devconsole (sign in with the Google account that should own the listing).
-2. Upload extension/senior-resident.zip (version 1.0.23).
+2. Upload extension/senior-resident.zip (version 1.0.24).
 3. Review usually takes a few days. Broad host permissions can add time.
